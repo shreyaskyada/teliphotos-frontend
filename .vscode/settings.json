@@ -1,0 +1,21 @@
+{
+  "workbench.colorTheme": "Dank Neon",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "workbench.iconTheme": "material-icon-theme",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.guides.bracketPairs": true,
+  "editor.guides.bracketPairsHorizontal": true,
+  "workbench.editor.enablePreview": false,
+  "editor.minimap.enabled": false,
+  "editor.codeActionsOnSave": {
+    "source.removeUnusedImports": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.sortMembers": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "eslint.validate": ["typescriptreact", "typescript"],
+  "eslint.format.enable": true
+}

@@ -22,6 +22,6 @@
       "@tphotos/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "notes.js"],
   "exclude": ["node_modules"]
 }

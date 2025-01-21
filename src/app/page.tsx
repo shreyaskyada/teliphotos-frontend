@@ -1,31 +1,64 @@
-const ComingSoon = () => {
+// "use client";
+
+// import axios from "axios";
+// import { useEffect } from "react";
+
+// interface TelegramAuthData {
+//   id: string;
+//   first_name: string;
+//   last_name?: string;
+//   username?: string;
+//   photo_url?: string;
+//   auth_date: string;
+//   hash: string;
+// }
+
+// export default function Home() {
+//   const handleLogin = async (authData: TelegramAuthData) => {
+//     try {
+//       const response = await axios.post(
+//         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/telegram`,
+//         authData
+//       );
+//       if (response.status === 200) {
+//         // Save token in localStorage or cookies
+//         localStorage.setItem("authToken", response.data.token);
+//         alert("Login successful!");
+//       } else {
+//         alert("Login failed.");
+//       }
+//     } catch (error) {
+//       console.error("Login error:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (typeof window !== "undefined") {
+//       const script = document.createElement("script");
+//       script.src = "https://telegram.org/js/telegram-widget.js?22";
+//       script.setAttribute("data-telegram-login", "t_photos_bot");
+//       script.setAttribute("data-size", "large");
+//       script.setAttribute("data-auth-url", "/api/verify-user");
+//       script.setAttribute("data-request-access", "write");
+//       script.onload = () => {
+//         (window as any).TelegramLoginWidgetCallback = handleLogin;
+//       };
+//       document.getElementById("telegram-login")?.appendChild(script);
+//     }
+//   }, []);
+
+//   return <div id="telegram-login"></div>;
+// }
+
+import TelegramLogin from "@tphotos/components/TelegramLogin";
+
+const page = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#1e3a8a] via-[#312e81] to-[#0f172a] text-white relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 z-0 flex justify-center items-center">
-        <div className="relative w-full h-full opacity-40">
-          <div className="absolute top-16 left-12 w-40 h-40 rounded-full bg-gradient-to-br from-[#ec4899] to-[#f59e0b] animate-pulse" />
-          <div className="absolute bottom-32 right-16 w-56 h-56 rounded-full bg-gradient-to-br from-[#34d399] to-[#06b6d4] animate-bounce" />
-          <div className="absolute top-64 left-1/4 w-72 h-72 rounded-full bg-gradient-to-br from-[#4f46e5] to-[#6366f1] animate-pulse" />
-        </div>
-      </div>
-
-      {/* Hero Section */}
-      <div className="relative z-10 text-center">
-        <h1 className="text-6xl font-extrabold mb-4 bg-gradient-to-r from-[#f59e0b] via-[#ec4899] to-[#ef4444] text-transparent bg-clip-text">
-          TeliPhotos
-        </h1>
-        <p className="text-xl text-gray-300">
-          Unlimited storage for your photos and videos, coming soon!
-        </p>
-      </div>
-
-      {/* Footer */}
-      <footer className="absolute bottom-4 text-gray-400 text-sm">
-        © {new Date().getFullYear()} SnapCloud. All rights reserved.
-      </footer>
-    </div>
+    <>
+      Helloo 12
+      <TelegramLogin />
+    </>
   );
 };
 
-export default ComingSoon;
+export default page;
