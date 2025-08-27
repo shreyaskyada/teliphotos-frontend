@@ -19,9 +19,15 @@
       }
     ],
     "paths": {
-      "@tphotos/*": ["./src/*"]
+      "@teliphotos/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "notes.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "notes.js"
+  ],
   "exclude": ["node_modules"]
 }
