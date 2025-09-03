@@ -6,5 +6,5 @@ export default async function LayoutPage({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout children={children} />;
+  return <Layout>{children}</Layout>;
 }

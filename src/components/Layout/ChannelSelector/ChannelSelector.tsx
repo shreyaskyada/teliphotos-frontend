@@ -2,7 +2,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@teliphotos/ui/popover";
+} from "@teliphotos/ui/Popover";
 
 const ChannelSelector = async () => {
   // const token = (await cookies()).get("accessToken")?.value;
