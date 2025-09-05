@@ -13,7 +13,7 @@ import {
 import allCountriesModuleImport from "country-telephone-data";
 import { ChevronDown } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
-import PhoneInput from "react-phone-input-2";
+import PhoneInput, { CountryData } from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
 // Types for country-telephone-data
@@ -29,7 +29,12 @@ interface Country {
 
 // Define your props interface
 interface PhoneInputFieldProps {
-  onChangeFormData: (data: { phone: string; countryCode: string }) => void;
+  onChangeFormData: (data: {
+    value: string;
+    data?: CountryData | {};
+    event?: React.ChangeEvent<HTMLInputElement>;
+    formattedValue: string;
+  }) => void;
   formData?: {
     phone?: string;
     countryCode?: string;
@@ -141,8 +146,8 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
     (country: Country) => {
       setSelectedCountry(country);
       onChangeFormData({
-        phone: "", // Clear phone number when country changes
-        countryCode: country.code,
+        value: "",
+        formattedValue: "",
       });
       setOpen(false);
     },
@@ -150,10 +155,17 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
   );
 
   const handlePhoneChange = useCallback(
-    (value: string) => {
+    (
+      value: string,
+      data: CountryData | {},
+      event: React.ChangeEvent<HTMLInputElement>,
+      formattedValue: string
+    ) => {
       onChangeFormData({
-        phone: value,
-        countryCode: selectedCountry.code,
+        value,
+        data,
+        event,
+        formattedValue,
       });
     },
     [onChangeFormData, selectedCountry.code]

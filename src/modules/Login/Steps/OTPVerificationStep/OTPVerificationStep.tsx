@@ -2,70 +2,22 @@
 
 import { Button } from "@teliphotos/ui";
 import { MessageSquare, RefreshCw } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { OTPVerificationStepProps } from "./types";
+import { useOTPVerificationStep } from "./useOTPVerificationStep";
 
-const OtpVerificationStep: React.FC<OTPVerificationStepProps> = ({
-  phoneNumber,
-}) => {
-  const [otpCode, setOtpCode] = useState(["", "", "", "", "", ""]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [countdown, setCountdown] = useState(60);
-  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  // Countdown timer
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [countdown]);
-
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length <= 1 && /^\d*$/.test(value)) {
-      const newOtp = [...otpCode];
-      newOtp[index] = value;
-      setOtpCode(newOtp);
-      setError("");
-
-      if (value && index < 5) {
-        otpRefs.current[index + 1]?.focus();
-      }
-
-      if (value && index === 5 && newOtp.every((digit) => digit !== "")) {
-        setTimeout(() => handleOtpSubmit(), 300);
-      }
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !otpCode[index] && index > 0) {
-      otpRefs.current[index - 1]?.focus();
-    }
-  };
-
-  const handleOtpSubmit = async () => {
-    const code = otpCode.join("");
-    setIsLoading(true);
-    setError("");
-
-    setTimeout(() => {
-      setIsLoading(false);
-      if (code === "123456") {
-        alert("✅ OTP Verified!");
-      } else {
-        setError("Invalid code. Please try again.");
-      }
-    }, 1500);
-  };
-
-  const handleResendCode = () => {
-    setCountdown(60);
-    setOtpCode(["", "", "", "", "", ""]);
-    setError("");
-    setTimeout(() => otpRefs.current[0]?.focus(), 100);
-  };
+const OtpVerificationStep: React.FC<OTPVerificationStepProps> = () => {
+  const {
+    otpCode,
+    isLoading,
+    error,
+    countdown,
+    otpRefs,
+    handleOtpChange,
+    handleOtpKeyDown,
+    handleResendCode,
+    phoneNumber,
+  } = useOTPVerificationStep();
 
   return (
     <div>
@@ -77,7 +29,7 @@ const OtpVerificationStep: React.FC<OTPVerificationStepProps> = ({
           Check your Telegram
         </h2>
         <p className="text-sm text-slate-300 mb-1">
-          We've sent a 6-digit code to your Telegram account
+          We've sent a 5-digit code to your Telegram account
         </p>
         <p className="text-sm text-slate-400">Code sent to {phoneNumber}</p>
       </div>

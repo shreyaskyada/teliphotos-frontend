@@ -1,3 +1,1 @@
-export interface OTPVerificationStepProps {
-  phoneNumber: string;
-}
+export interface OTPVerificationStepProps {}

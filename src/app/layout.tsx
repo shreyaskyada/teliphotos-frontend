@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scrollbar-thin">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950`}
       >
         {children}
       </body>

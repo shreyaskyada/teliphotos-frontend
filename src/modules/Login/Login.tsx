@@ -10,7 +10,7 @@ const Login = () => {
   const [loginStep, setLoginStep] = useState<LoginStep>("phone");
 
   return (
-    <div className="min-h-screen bg-slate-950 relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0">
         <div
           className={`absolute transition-all duration-1000 ${

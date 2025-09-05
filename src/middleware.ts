@@ -10,6 +10,11 @@ const publicRoutes = ["/", "/login"];
 export async function middleware(req: NextRequest) {
   const accessToken = req.cookies.get("accessToken")?.value;
   const refreshToken = req.cookies.get("refreshToken")?.value;
+  console.log(
+    "🚀 ~ middleware ~ req.cookies:",
+    req.cookies.get("accessToken"),
+    accessToken
+  );
 
   // Allow access to public routes without authentication
   if (publicRoutes.includes(req.nextUrl.pathname)) {
@@ -47,36 +52,36 @@ export async function middleware(req: NextRequest) {
   try {
     console.info("🔄 Access token expired. Attempting to refresh...");
 
-    const refreshResponse = await fetch("http://localhost:5001/refresh-token", {
-      method: "POST",
-      credentials: "include", // Send refresh token via cookies
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // const refreshResponse = await fetch("http://localhost:5001/refresh-token", {
+    //   method: "POST",
+    //   credentials: "include", // Send refresh token via cookies
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
 
-    if (!refreshResponse.ok) {
-      console.error(
-        "❌ Refresh token invalid or expired. Redirecting to login."
-      );
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+    // if (!refreshResponse.ok) {
+    //   console.error(
+    //     "❌ Refresh token invalid or expired. Redirecting to login."
+    //   );
+    //   return NextResponse.redirect(new URL("/login", req.url));
+    // }
 
-    const { accessToken: newAccessToken } = await refreshResponse.json();
+    // const { accessToken: newAccessToken } = await refreshResponse.json();
 
-    if (!newAccessToken) {
-      console.error("❌ No new access token received. Redirecting to login.");
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+    // if (!newAccessToken) {
+    //   console.error("❌ No new access token received. Redirecting to login.");
+    //   return NextResponse.redirect(new URL("/login", req.url));
+    // }
 
     // Set the new access token in cookies
     const response = NextResponse.next();
-    response.cookies.set("accessToken", newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/", // Ensure it's available for all routes
-    });
+    // response.cookies.set("accessToken", newAccessToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: "lax",
+    //   path: "/", // Ensure it's available for all routes
+    // });
 
     console.info("✅ Token refreshed successfully. Allowing access.");
     return response;
