@@ -61,15 +61,22 @@ export const useOTPVerificationStep = () => {
         phoneCodeHash: phoneCodeHash!,
         phoneNumber: phoneNumber!,
       });
-      console.log("🚀 ~ handleOtpSubmit ~ response:", response);
 
-      // Set tokens in cookies
+      // Clear existing cookies first, then set new ones
+      document.cookie =
+        "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie =
+        "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+      // Set new tokens in cookies
       document.cookie = `accessToken=${
         response.data.accessToken
-      }; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+      }; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax`;
       document.cookie = `refreshToken=${
         response.data.refreshToken
-      }; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`;
+      }; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax`;
+
+      console.log("Cookies set:", document.cookie);
 
       router.push("dashboard");
     } catch {
