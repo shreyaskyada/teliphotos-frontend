@@ -1,5 +1,6 @@
+export * from "./Avatar";
 export { Button } from "./Button";
 export * from "./Command";
-export { Input } from "./Input";
+export * from "./Dropdown";
 export { PhoneInputField } from "./PhoneInput";
 export * from "./Popover";
