@@ -10,16 +10,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@teliphotos/ui";
-import { ImageIcon, LogOut, Menu, Search, Upload } from "lucide-react";
+import { ImageIcon, LogOut, Menu, Search, Upload, X } from "lucide-react";
 
-const Header = () => {
+type HeaderProps = {
+  onToggleMenu: () => void;
+  isSidebarOpen: boolean;
+};
+
+const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
   return (
     <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-white/10">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Left side - Logo + Menu */}
         <div className="flex items-center space-x-4">
-          <button className="p-2 hover:bg-white/10 rounded-xl transition-colors duration-200 lg:hidden">
-            <Menu className="w-5 h-5" />
+          <button
+            className="md:p-2 hover:bg-white/10 rounded-xl transition-colors duration-200 lg:hidden"
+            onClick={() => onToggleMenu()}
+          >
+            {isSidebarOpen ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
 
           <div className="flex items-center space-x-3">
