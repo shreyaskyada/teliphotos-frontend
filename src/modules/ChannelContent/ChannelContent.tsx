@@ -1,127 +1,23 @@
 "use client";
 
+import MediaViewer from "@teliphotos/components/MediaViewer/MediaViewer";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useState } from "react";
-
-// Raw message from backend (Telegram-like). Keep as any and normalize below.
-type Message = any;
-
-interface ChannelContentProps {
-  messages: Message[];
-}
-
-const isVideo = (mime?: string) => (mime ? mime.startsWith("video/") : false);
-
-type RenderItem = {
-  id: string | number;
-  kind: "photo" | "video";
-  width: number;
-  height: number;
-  durationSec?: number;
-  fileName?: string;
-  sizeBytes?: number | string;
-  thumbSrc?: string;
-  messageId: string;
-  imageURL?: string;
-};
-
-const extractVideoMeta = (document: Record<string, any>) => {
-  const attrs: any[] = (document?.attributes as any[]) || [];
-  const videoAttr = attrs.find((a) => a.className === "DocumentAttributeVideo");
-  return {
-    width: videoAttr?.w ?? 800,
-    height: videoAttr?.h ?? 600,
-    durationSec: videoAttr?.duration ? Number(videoAttr.duration) : undefined,
-    fileName: attrs.find((a) => a.className === "DocumentAttributeFilename")
-      ?.fileName,
-  };
-};
+import type { ChannelContentProps } from "./types";
+import { useChannelContent } from "./useChannelContent";
 
 const ChannelContent = ({ messages }: ChannelContentProps) => {
-  console.log("🚀 ~ ChannelContent ~ messages:", messages);
-  const [selectedItems, setSelectedItems] = useState<Set<string | number>>(
-    new Set()
-  );
-  const [hoveredItem, setHoveredItem] = useState<string | number | null>(null);
-
-  const { channelId } = useParams();
-
-  const items: RenderItem[] = useMemo(() => {
-    return (messages || [])
-      .map((msg: any) => {
-        const mid = msg?.id ?? Math.random();
-        const media = msg?.media;
-        if (!media) return undefined;
-
-        // Generate R2 image URL
-        const imageKey = `${channelId}/${msg?.id}_thumb1.jpg`;
-        const r2BaseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_BASE;
-        const imageURL = r2BaseUrl ? `${r2BaseUrl}/${imageKey}` : undefined;
-
-        // Media: MessageMediaDocument (both video and photo)
-        if (media.className === "MessageMediaDocument") {
-          const doc = media.document;
-          const mime: string | undefined = doc?.mimeType;
-
-          if (mime && isVideo(mime)) {
-            // Video handling
-            const meta = extractVideoMeta(doc);
-            return {
-              id: doc?.id ?? mid,
-              kind: "video" as const,
-              width: meta.width,
-              height: meta.height,
-              durationSec: meta.durationSec,
-              fileName: meta.fileName,
-              sizeBytes: doc?.size,
-              messageId: msg?.id,
-              imageURL,
-            };
-          } else if (mime && mime.startsWith("image/")) {
-            // Photo handling
-            const attrs: any[] = doc?.attributes || [];
-            const imageSizeAttr = attrs.find(
-              (a) => a.className === "DocumentAttributeImageSize"
-            );
-            const width = imageSizeAttr?.w ?? 800;
-            const height = imageSizeAttr?.h ?? 600;
-
-            return {
-              id: doc?.id ?? mid,
-              kind: "photo" as const,
-              width,
-              height,
-              messageId: msg?.id,
-              imageURL,
-            };
-          }
-          return undefined;
-        }
-        return undefined;
-      })
-      .filter(Boolean) as RenderItem[];
-  }, [messages]);
-
-  const toggleSelection = (itemId: string | number) => {
-    setSelectedItems((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(itemId)) {
-        newSet.delete(itemId);
-      } else {
-        newSet.add(itemId);
-      }
-      return newSet;
-    });
-  };
-
-  const formatFileSize = (bytes: number | string) => {
-    const size = typeof bytes === "string" ? parseInt(bytes) : bytes;
-    if (size < 1024) return `${size} B`;
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
-    return `${(size / (1024 * 1024)).toFixed(1)} MB`;
-  };
+  const {
+    items,
+    viewerItems,
+    selectedItems,
+    toggleSelection,
+    clearSelection,
+    viewerOpen,
+    setViewerOpen,
+    viewerIndex,
+    setViewerIndex,
+    channelId,
+  } = useChannelContent({ messages });
 
   return (
     <div className="w-full h-full">
@@ -140,7 +36,7 @@ const ChannelContent = ({ messages }: ChannelContentProps) => {
                 Delete
               </button>
               <button
-                onClick={() => setSelectedItems(new Set())}
+                onClick={() => clearSelection()}
                 className="text-sm text-gray-600 hover:text-gray-700 dark:text-gray-400"
               >
                 Cancel
@@ -186,16 +82,21 @@ const ChannelContent = ({ messages }: ChannelContentProps) => {
                 item.height && item.width ? item.height / item.width : 3 / 4;
               const isVid = item.kind === "video";
               const isSelected = selectedItems.has(item.id);
-              const isHovered = hoveredItem === item.id;
 
               return (
                 <div
                   key={`${item.id}-${index}`}
                   className="group mb-2 break-inside-avoid overflow-hidden rounded-lg cursor-pointer transition-all duration-200 hover:shadow-lg"
                   style={{ aspectRatio: `${1 / ratio}` }}
-                  onMouseEnter={() => setHoveredItem(item.id)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  onClick={() => toggleSelection(item.id)}
+                  onClick={(e) => {
+                    if (e.metaKey || e.shiftKey || e.ctrlKey) {
+                      toggleSelection(item.id);
+                      return;
+                    }
+                    const idx = index;
+                    setViewerIndex(idx);
+                    setViewerOpen(true);
+                  }}
                 >
                   <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800">
                     {/* Selection overlay */}
@@ -206,7 +107,7 @@ const ChannelContent = ({ messages }: ChannelContentProps) => {
                     {/* Selection checkbox */}
                     <div
                       className={`absolute top-2 left-2 z-20 transition-opacity duration-200 ${
-                        isSelected || isHovered ? "opacity-100" : "opacity-0"
+                        isSelected ? "opacity-100" : "opacity-0"
                       }`}
                     >
                       <div
@@ -321,9 +222,7 @@ const ChannelContent = ({ messages }: ChannelContentProps) => {
                     {/* Play button for videos */}
                     {isVid && (
                       <div
-                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
-                          isHovered ? "opacity-100" : "opacity-0"
-                        }`}
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 opacity-0`}
                       >
                         <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
                           <svg
@@ -336,26 +235,21 @@ const ChannelContent = ({ messages }: ChannelContentProps) => {
                         </div>
                       </div>
                     )}
-
-                    {/* File info on hover */}
-                    {isHovered && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 text-white text-xs">
-                        <div className="truncate">
-                          {item.fileName || `${item.kind} ${item.id}`}
-                        </div>
-                        {item.sizeBytes && (
-                          <div className="text-gray-300">
-                            {formatFileSize(item.sizeBytes)}
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
+      )}
+      {viewerOpen && (
+        <MediaViewer
+          items={viewerItems}
+          startIndex={viewerIndex}
+          channelId={String(channelId)}
+          isOpen={viewerOpen}
+          onClose={() => setViewerOpen(false)}
+        />
       )}
     </div>
   );
