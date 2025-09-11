@@ -17,14 +17,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         onToggleMenu={handleToggleSidebar}
         isSidebarOpen={isSidebarOpen}
       />
-      <section className="flex gap-1">
-        <section className="h-auto">
+      <section className="flex gap-1 ">
+        <section className="h-[calc(100vh-75px)]">
           <Sidebar sidebarOpen={isSidebarOpen} />
         </section>
-        <section>
+        <section className="w-full h-[calc(100vh-75px)] overflow-auto">
           {children}
-
-          <h1>HELLOOoooooooooo</h1>
         </section>
       </section>
     </div>

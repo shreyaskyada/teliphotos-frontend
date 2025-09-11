@@ -75,7 +75,7 @@ const Login = () => {
                     : "opacity-0 transform translate-x-4 absolute pointer-events-none"
                 }`}
               >
-                <OTPVerificationStep phoneNumber="9510598946" />
+                <OTPVerificationStep />
               </div>
             </div>
           </div>

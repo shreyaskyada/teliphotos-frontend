@@ -1,6 +1,7 @@
 "use client";
 import { BookOpen, Hash, Settings, Star, Tag } from "lucide-react";
-import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { ChannelsSelector } from "./ChannelsSelector";
 
 export type Channel = {
@@ -20,28 +21,42 @@ export interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
+  const router = useRouter();
+  const { channelId } = useParams();
+
   const [filterType, setFilterType] = useState<"all" | "photos" | "videos">(
     "all"
   );
   const [selectedChannels, setSelectedChannels] = useState<string[]>(["all"]);
 
-  const toggleChannel = (channelId: string) => {
-    if (channelId === "all") {
-      setSelectedChannels(["all"]);
-    } else {
-      const newSelection = selectedChannels.includes("all")
-        ? [channelId]
-        : selectedChannels.includes(channelId)
-        ? selectedChannels.filter((id) => id !== channelId)
-        : [...selectedChannels.filter((id) => id !== "all"), channelId];
-
-      setSelectedChannels(newSelection.length === 0 ? ["all"] : newSelection);
+  useEffect(() => {
+    if (channelId && typeof channelId === "string") {
+      setSelectedChannels([channelId]);
     }
+  }, [channelId]);
+
+  const toggleChannel = (channelId: string) => {
+    setSelectedChannels([channelId]);
+
+    router.push(`/dashboard/${channelId}`);
+
+    // TODO:
+    // if (channelId === "all") {
+    //   setSelectedChannels(["all"]);
+    // } else {
+    //   const newSelection = selectedChannels.includes("all")
+    //     ? [channelId]
+    //     : selectedChannels.includes(channelId)
+    //     ? selectedChannels.filter((id) => id !== channelId)
+    //     : [...selectedChannels.filter((id) => id !== "all"), channelId];
+
+    //   setSelectedChannels(newSelection.length === 0 ? ["all"] : newSelection);
+    // }
   };
 
   return (
     <aside
-      className={`fixed lg:static inset-y-0 left-0 z-30 w-80 bg-slate-900/50 backdrop-blur-xl border-r border-white/10 transform transition-transform duration-300 h-[calc(100vh-75px)] ${
+      className={`fixed lg:static inset-y-0 left-0 z-30 w-80 bg-slate-900/50 backdrop-blur-xl border-r border-white/10 transform transition-transform duration-300 h-full ${
         sidebarOpen
           ? "translate-x-0 top-[75px]"
           : "-translate-x-full lg:translate-x-0"

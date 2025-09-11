@@ -4,7 +4,7 @@ import {
   getPrivateChannels,
   PrivateChannel,
 } from "@teliphotos/services/channels";
-import { Check, Globe, Lock, Plus } from "lucide-react";
+import { Check, Lock, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface ChannelsSelectorProps {
@@ -41,7 +41,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
   return (
     <div className="flex-1 overflow-y-auto p-6 min-h-0">
       <div className="space-y-2">
-        {/* All Channels */}
+        {/* All Channels
         <button
           onClick={() => toggleChannel("all")}
           className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 ${
@@ -60,11 +60,9 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
           {selectedChannels.includes("all") && (
             <Check className="w-4 h-4 text-violet-400" />
           )}
-        </button>
-
+        </button> */}
         {/* Error State */}
         {error && <div className="text-red-400 text-sm p-3">{error}</div>}
-
         {/* Loading State (Skeletons) */}
         {isLoading &&
           Array.from({ length: 4 }).map((_, idx) => (
@@ -79,7 +77,6 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
               </div>
             </div>
           ))}
-
         {/* Channel list */}
         {!isLoading &&
           !error &&
@@ -96,7 +93,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
                 }`}
               >
                 <div
-                  className={`w-10 h-10 bg-gradient-to-br ${channel.color} rounded-xl flex items-center justify-center`}
+                  className={`w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-700 rounded-xl flex items-center justify-center`}
                 >
                   <Lock className="w-5 h-5 text-white" />
                 </div>
