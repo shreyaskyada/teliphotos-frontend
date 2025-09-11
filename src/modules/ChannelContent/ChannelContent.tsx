@@ -151,12 +151,6 @@ const ChannelContent = ({ messages }: ChannelContentProps) => {
                             .nextElementSibling as HTMLElement;
                           if (fallback) fallback.style.display = "block";
                         }}
-                        onLoad={() => {
-                          console.log(
-                            "✅ Image loaded successfully:",
-                            item.imageURL
-                          );
-                        }}
                       />
                     ) : item.thumbSrc ? (
                       <Image

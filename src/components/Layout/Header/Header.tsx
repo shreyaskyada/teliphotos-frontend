@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
                   src="https://i.pravatar.cc/100"
                   alt="John Doe"
                 />
-                <span className="hidden md:inline text-sm font-medium">
+                <span className="hidden md:inline text-sm font-medium text-nowrap">
                   John Doe
                 </span>
               </button>

@@ -1,6 +1,8 @@
 "use client";
 
 import { getPhotoVideoThumbnailURL } from "@teliphotos/services/media";
+import { Button } from "@teliphotos/ui";
+import { ArrowRight, X } from "lucide-react";
 import Image from "next/image";
 import type { MediaViewerProps } from "./types";
 import { useMediaViewer } from "./useMediaViewer";
@@ -34,19 +36,20 @@ const MediaViewer = ({
       }}
     >
       <div
-        className={`absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-3 transition-opacity duration-200 opacity-0`}
+        className={`absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-3 transition-opacity duration-200`}
       >
         <div className="text-white/80 text-sm select-none">
           {index + 1} / {items.length}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            className="text-white/90 hover:text-white rounded p-2 bg-white/10 hover:bg-white/20"
+          <Button
+            // className="text-white/90 hover:text-white rounded p-2 bg-white/10 hover:bg-white/20"
+            variant="ghost"
             onClick={onClose}
             aria-label="Close"
           >
-            ✕
-          </button>
+            <X />
+          </Button>
         </div>
       </div>
 
@@ -73,7 +76,11 @@ const MediaViewer = ({
           <video
             ref={mediaRef as unknown as React.RefObject<HTMLVideoElement>}
             src={`${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/videos/stream/${channelId}/${current.messageId}`}
-            className="max-h-[90vh] max-w-[95vw]"
+            poster={getPhotoVideoThumbnailURL(
+              channelId as string,
+              current.messageId
+            )}
+            className="max-h-[90vh] max-w-[95vw] h-[90vh] w-[95vw]"
             controls
             autoPlay
             preload="metadata"
@@ -111,31 +118,31 @@ const MediaViewer = ({
 
       {/* Bottom bar */}
       <div
-        className={`pointer-events-none absolute bottom-0 left-0 right-0 transition-opacity duration-200 opacity-0`}
+        className={`pointer-events-none absolute bottom-0 left-0 right-0 transition-opacity duration-200`}
       >
         <div className="h-28 bg-gradient-to-t from-black/60 to-transparent" />
       </div>
 
       {/* Nav buttons */}
       <button
-        className={`absolute left-3 top-1/2 -translate-y-1/2 text-white text-3xl select-none rounded-full w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-opacity opacity-0`}
+        className={`absolute left-3 top-1/2 -translate-y-1/2 text-white text-3xl select-none rounded-full w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-opacity`}
         onClick={(e) => {
           e.stopPropagation();
           goPrev();
         }}
         aria-label="Previous"
       >
-        ‹
+        <ArrowRight className="rotate-180" />
       </button>
       <button
-        className={`absolute right-3 top-1/2 -translate-y-1/2 text-white text-3xl select-none rounded-full w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-opacity opacity-0`}
+        className={`absolute right-3 top-1/2 -translate-y-1/2 text-white text-3xl select-none rounded-full w-12 h-12 flex items-center justify-center bg-white/10 hover:bg-white/20 transition-opacity`}
         onClick={(e) => {
           e.stopPropagation();
           goNext();
         }}
         aria-label="Next"
       >
-        ›
+        <ArrowRight />
       </button>
     </div>
   );
