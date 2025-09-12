@@ -16,4 +16,4 @@ export interface FormData {
   value: string;
 }
 
-export interface UsePhoneNumberStepProps extends PhoneNumberStepProps {}
+export type UsePhoneNumberStepProps = PhoneNumberStepProps;

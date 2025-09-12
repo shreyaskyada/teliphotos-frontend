@@ -1,16 +1,8 @@
 "use client";
 
-import {
-  Avatar,
-  Button,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@teliphotos/ui";
-import { ImageIcon, LogOut, Menu, Search, Upload, X } from "lucide-react";
+import { Button } from "@teliphotos/ui";
+import { ImageIcon, Menu, Search, Upload, X } from "lucide-react";
+import { AvatarProfile } from "./UserProfile";
 
 type HeaderProps = {
   onToggleMenu: () => void;
@@ -63,27 +55,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
           </Button>
 
           {/* Profile Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center space-x-2 focus:outline-none">
-                <Avatar
-                  name="John Doe"
-                  src="https://i.pravatar.cc/100"
-                  alt="John Doe"
-                />
-                <span className="hidden md:inline text-sm font-medium text-nowrap">
-                  John Doe
-                </span>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 bg-slate-900 border border-white/10">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer text-red-400 hover:bg-white/10">
-                <LogOut className="w-4 h-4 mr-2" /> Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <AvatarProfile />
         </div>
       </div>
     </header>
