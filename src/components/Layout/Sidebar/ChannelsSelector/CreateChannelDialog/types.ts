@@ -1,8 +1,6 @@
 export interface CreateChannelDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: CreateChannelData) => Promise<void>;
-  isLoading?: boolean;
 }
 
 export interface CreateChannelData {
@@ -10,7 +8,5 @@ export interface CreateChannelData {
   description?: string;
 }
 
-export interface UseCreateChannelModalProps {
-  onSubmit: (data: CreateChannelData) => Promise<void>;
-  isLoading?: boolean;
-}
+export interface UseCreateChannelModal
+  extends Pick<CreateChannelDialogProps, "onClose"> {}

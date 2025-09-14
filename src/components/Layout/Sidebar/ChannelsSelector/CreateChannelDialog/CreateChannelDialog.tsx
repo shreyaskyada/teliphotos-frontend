@@ -15,22 +15,9 @@ import { useCreateChannelModal } from "./useCreateChannelDialog";
 const CreateChannelDialog: React.FC<CreateChannelDialogProps> = ({
   isOpen,
   onClose,
-  onSubmit,
-  isLoading = false,
 }) => {
-  const {
-    form,
-    handleSubmit,
-    handleClose: resetAndClose,
-  } = useCreateChannelModal({
-    onSubmit,
-    isLoading,
-  });
-
-  const handleClose = () => {
-    resetAndClose();
-    onClose();
-  };
+  const { form, handleSubmit, handleClose, isCreatingChannel } =
+    useCreateChannelModal({ onClose });
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -50,7 +37,7 @@ const CreateChannelDialog: React.FC<CreateChannelDialogProps> = ({
               label="Channel Name"
               required
               placeholder="Enter channel name"
-              disabled={isLoading}
+              disabled={isCreatingChannel}
               maxLength={50}
               helperText={`${form.watch("name")?.length || 0}/50 characters`}
               rules={{
@@ -71,7 +58,7 @@ const CreateChannelDialog: React.FC<CreateChannelDialogProps> = ({
               name="description"
               label="Description (Optional)"
               placeholder="Enter channel description"
-              disabled={isLoading}
+              disabled={isCreatingChannel}
               maxLength={200}
               helperText={`${
                 form.watch("description")?.length || 0
@@ -89,14 +76,14 @@ const CreateChannelDialog: React.FC<CreateChannelDialogProps> = ({
                 type="button"
                 variant="outline"
                 onClick={handleClose}
-                disabled={isLoading}
+                disabled={isCreatingChannel}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 variant="primary"
-                loading={isLoading}
+                loading={isCreatingChannel}
                 disabled={!form.watch("name")?.trim()}
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90"
               >

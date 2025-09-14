@@ -1,1 +1,1 @@
-export * from "./privateChannel.type";
+export * from "../getPrivateChannels/type";

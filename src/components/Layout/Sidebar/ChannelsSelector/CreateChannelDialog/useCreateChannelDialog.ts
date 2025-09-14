@@ -1,10 +1,8 @@
+import { useCreateChannel } from "@teliphotos/services";
 import { useForm } from "react-hook-form";
-import { CreateChannelData, UseCreateChannelModalProps } from "./types";
+import { CreateChannelData, UseCreateChannelModal } from "./types";
 
-export const useCreateChannelModal = ({
-  onSubmit,
-  isLoading = false,
-}: UseCreateChannelModalProps) => {
+export const useCreateChannelModal = ({ onClose }: UseCreateChannelModal) => {
   const form = useForm<CreateChannelData>({
     defaultValues: {
       name: "",
@@ -12,12 +10,18 @@ export const useCreateChannelModal = ({
     },
   });
 
+  const { mutateAsync: createChannel, isPending: isCreatingChannel } =
+    useCreateChannel();
+
   const handleSubmit = async (data: CreateChannelData) => {
     try {
-      await onSubmit({
+      await createChannel({
         name: data.name.trim(),
         description: data.description?.trim() || undefined,
       });
+
+      // queryClient.invalidateQueries({ queryKey: ["privateChannels"] });
+
       form.reset();
     } catch (error) {
       console.error("Failed to create channel:", error);
@@ -25,7 +29,8 @@ export const useCreateChannelModal = ({
   };
 
   const handleClose = () => {
-    if (!isLoading) {
+    onClose();
+    if (!isCreatingChannel) {
       form.reset();
     }
   };
@@ -39,6 +44,6 @@ export const useCreateChannelModal = ({
     handleSubmit,
     handleClose,
     resetForm,
-    isLoading,
+    isCreatingChannel,
   };
 };

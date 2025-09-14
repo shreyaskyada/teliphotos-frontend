@@ -1,7 +1,7 @@
 "use server";
 import axios from "axios";
 import { cookies } from "next/headers";
-import { PrivateChannel } from "./types/privateChannel.type";
+import { PrivateChannel } from "./type";
 
 export interface GetPrivateChannelsResponse {
   message: string;

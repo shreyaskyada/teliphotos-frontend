@@ -5,18 +5,20 @@ import axiosInstance from "@teliphotos/axios/axiosInstance";
 export interface CreateChannelRequest {
   name: string;
   description?: string;
-  photo?: File;
 }
 
 export interface CreateChannelResponse {
   success: boolean;
   data: {
     channel: {
-      id: string;
+      _id: string;
+      channelId: string;
       title: string;
       description?: string;
-      photo?: string;
+      phoneNumber: string;
       createdAt: string;
+      updatedAt: string;
+      __v: number;
     };
   };
   message: string;
@@ -26,22 +28,18 @@ export const createChannel = async (
   data: CreateChannelRequest
 ): Promise<CreateChannelResponse> => {
   try {
-    const formData = new FormData();
-    formData.append("name", data.name);
-
-    if (data.description) {
-      formData.append("description", data.description);
-    }
-
-    if (data.photo) {
-      formData.append("photo", data.photo);
-    }
-
-    const response = await axiosInstance.post("/channels", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
+    const response = await axiosInstance.post(
+      "/channel",
+      {
+        channel_name: data.name,
+        description: data.description,
       },
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return response.data;
   } catch (error: any) {

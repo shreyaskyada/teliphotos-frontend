@@ -6,27 +6,22 @@ import { useChannelSelector } from "./useChannelSelector";
 
 interface ChannelsSelectorProps {
   selectedChannels: string[];
-  setSelectedChannels: React.Dispatch<React.SetStateAction<string[]>>;
   toggleChannel: (channelId: string) => void;
 }
 
 const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
   toggleChannel,
   selectedChannels,
-  setSelectedChannels,
 }) => {
   const {
     channels,
     isLoading,
     error,
     isCreateModalOpen,
-    isCreatingChannel,
-    handleCreateChannel,
     openCreateModal,
     closeCreateModal,
   } = useChannelSelector({
     selectedChannels,
-    setSelectedChannels,
     toggleChannel,
   });
 
@@ -52,14 +47,13 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
         {/* Channel list */}
         {!isLoading &&
           !error &&
-          channels.map((fullChat) => {
-            const channel = fullChat.chats[0];
+          channels.map((channel) => {
             return (
               <button
-                key={channel.id}
-                onClick={() => toggleChannel(channel.id)}
+                key={channel._id}
+                onClick={() => toggleChannel(channel._id)}
                 className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 ${
-                  selectedChannels.includes(channel.id)
+                  selectedChannels.includes(channel._id)
                     ? "bg-gradient-to-r from-violet-500/20 to-cyan-500/20 border border-violet-500/30"
                     : "hover:bg-white/5"
                 }`}
@@ -71,12 +65,8 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
                 </div>
                 <div className="flex-1 text-left">
                   <div className="font-medium">{channel.title}</div>
-                  {/* <div className="text-xs text-slate-400">
-                    {channel.mediaCount.toLocaleString()} items •{" "}
-                    {channel.lastActivity}
-                  </div> */}
                 </div>
-                {selectedChannels.includes(channel.id) && (
+                {selectedChannels.includes(channel._id) && (
                   <Check className="w-4 h-4 text-violet-400" />
                 )}
               </button>
@@ -96,8 +86,6 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
       <CreateChannelDialog
         isOpen={isCreateModalOpen}
         onClose={closeCreateModal}
-        onSubmit={handleCreateChannel}
-        isLoading={isCreatingChannel}
       />
     </div>
   );
