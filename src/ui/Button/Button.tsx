@@ -16,9 +16,9 @@ export const buttonVariants = cva(
         secondary:
           "bg-gradient-to-r from-primary-100 to-primary-200 text-primary-700 hover:from-primary-200 hover:to-primary-300 focus:ring-primary-300/50",
         outline:
-          "border-2 border-primary-500 text-primary-600 bg-white hover:bg-primary-50 focus:ring-primary-500/50",
+          "border-2 border-primary-500 text-primary-600 bg-white dark:bg-gray-900 hover:bg-primary-50 dark:hover:bg-gray-800 focus:ring-primary-500/50",
         ghost:
-          "text-gray-600 bg-transparent hover:bg-gray-100 focus:ring-gray-300/50",
+          "text-gray-600 dark:text-gray-300 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring-gray-300/50",
         linkText:
           "text-primary-600 underline underline-offset-4 hover:text-primary-700 !p-0 !h-auto bg-transparent border-none shadow-none focus:ring-0",
         link: "text-primary-600 bg-transparent hover:text-primary-700 border-none shadow-none focus:ring-0",
