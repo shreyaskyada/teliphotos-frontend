@@ -1,68 +1,34 @@
 "use client";
 
-import {
-  createChannel,
-  getPrivateChannels,
-  PrivateChannel,
-} from "@teliphotos/services/channels";
 import { Check, Lock, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { CreateChannelData, CreateChannelDialog } from "./CreateChannelDialog";
+import { CreateChannelDialog } from "./CreateChannelDialog";
+import { useChannelSelector } from "./useChannelSelector";
 
 interface ChannelsSelectorProps {
   selectedChannels: string[];
-  setSelectedChannels: React.SetStateAction<React.Dispatch<string[]>>;
+  setSelectedChannels: React.Dispatch<React.SetStateAction<string[]>>;
   toggleChannel: (channelId: string) => void;
 }
 
 const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
   toggleChannel,
   selectedChannels,
+  setSelectedChannels,
 }) => {
-  const [channels, setChannels] = useState<PrivateChannel[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isCreatingChannel, setIsCreatingChannel] = useState(false);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const channelData = await getPrivateChannels();
-        setChannels(channelData.data.channels);
-      } catch (err) {
-        setError("Failed to load channels.");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  const handleCreateChannel = async (data: CreateChannelData) => {
-    try {
-      setIsCreatingChannel(true);
-      await createChannel(data);
-
-      // Refresh the channels list
-      const channelData = await getPrivateChannels();
-      setChannels(channelData.data.channels);
-
-      // Close modal
-      setIsCreateModalOpen(false);
-
-      // Clear any previous errors
-      setError(null);
-    } catch (err: any) {
-      console.error("Failed to create channel:", err);
-      setError(err.message || "Failed to create channel. Please try again.");
-    } finally {
-      setIsCreatingChannel(false);
-    }
-  };
+  const {
+    channels,
+    isLoading,
+    error,
+    isCreateModalOpen,
+    isCreatingChannel,
+    handleCreateChannel,
+    openCreateModal,
+    closeCreateModal,
+  } = useChannelSelector({
+    selectedChannels,
+    setSelectedChannels,
+    toggleChannel,
+  });
 
   return (
     <div className="flex-1 overflow-y-auto p-6 min-h-0">
@@ -119,7 +85,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
       </div>
 
       <button
-        onClick={() => setIsCreateModalOpen(true)}
+        onClick={openCreateModal}
         className="w-full mt-4 flex items-center justify-center space-x-2 p-3 border-2 border-dashed border-white/20 rounded-xl text-slate-400 hover:text-white hover:border-white/40 transition-all duration-200 group"
       >
         <Plus className="w-4 h-4" />
@@ -129,7 +95,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
       {/* Create Channel Dialog */}
       <CreateChannelDialog
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={closeCreateModal}
         onSubmit={handleCreateChannel}
         isLoading={isCreatingChannel}
       />
