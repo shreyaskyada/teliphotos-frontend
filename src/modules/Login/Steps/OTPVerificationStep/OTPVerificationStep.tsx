@@ -3,10 +3,9 @@
 import { Button } from "@teliphotos/ui";
 import { MessageSquare, RefreshCw } from "lucide-react";
 import React from "react";
-import { OTPVerificationStepProps } from "./types";
 import { useOTPVerificationStep } from "./useOTPVerificationStep";
 
-const OtpVerificationStep: React.FC<OTPVerificationStepProps> = () => {
+const OtpVerificationStep: React.FC = () => {
   const {
     otpCode,
     isLoading,

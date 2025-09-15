@@ -74,7 +74,7 @@ export const useOTPVerificationStep = () => {
       }; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax`;
       document.cookie = `refreshToken=${
         response.data.refreshToken
-      }; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax`;
+      }; path=/; max-age=${40 * 24 * 60 * 60}; samesite=lax`;
 
       console.log("Cookies set:", document.cookie);
 
