@@ -1,5 +1,6 @@
 export * from "./Avatar";
 export { Button } from "./Button";
+export * from "./Card";
 export * from "./Command";
 export * from "./Dialog";
 export * from "./Dropdown";

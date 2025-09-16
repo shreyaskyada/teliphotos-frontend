@@ -1,7 +1,6 @@
 "use server";
 
-import axios from "axios";
-import { cookies } from "next/headers";
+import serverAxiosInstance from "@teliphotos/axios/serverAxiosInstance";
 
 export interface ChannelMessage {
   id: number;
@@ -50,22 +49,8 @@ export const getChannelsContent = async (
     throw new Error("Backend URL is not configured");
   }
 
-  // Get access token from cookies
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
-
-  if (!accessToken) {
-    throw new Error("Access token not found in cookies");
-  }
-
-  const response = await axios.get<GetChannelContentResponse>(
-    `${baseURL}/channels/${channelId}/content`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    }
+  const response = await serverAxiosInstance.get<GetChannelContentResponse>(
+    `${baseURL}/channels/${channelId}/content`
   );
 
   return response.data;

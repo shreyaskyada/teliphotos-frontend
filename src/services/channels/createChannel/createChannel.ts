@@ -1,6 +1,6 @@
 "use server";
 
-import axiosInstance from "@teliphotos/axios/axiosInstance";
+import serverAxiosInstance from "@teliphotos/axios/serverAxiosInstance";
 
 export interface CreateChannelRequest {
   name: string;
@@ -28,7 +28,7 @@ export const createChannel = async (
   data: CreateChannelRequest
 ): Promise<CreateChannelResponse> => {
   try {
-    const response = await axiosInstance.post(
+    const response = await serverAxiosInstance.post(
       "/channel",
       {
         channel_name: data.name,

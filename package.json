@@ -29,6 +29,7 @@
     "next": "15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.62.0",
     "react-phone-input-2": "^2.15.1",
     "react-phone-number-input": "^3.4.12",

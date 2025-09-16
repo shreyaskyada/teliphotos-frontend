@@ -1,5 +1,5 @@
 "use server";
-import axiosInstance from "@teliphotos/axios/axiosInstance";
+import serverAxiosInstance from "@teliphotos/axios/serverAxiosInstance";
 import { cookies } from "next/headers";
 import { GET_PROFILE } from "../profileAPIRoutes";
 import { UserProfile } from "./types.ts";
@@ -20,7 +20,9 @@ export const getProfile = async (): Promise<GetProfileResponse> => {
     throw new Error("Access token not found in cookies");
   }
 
-  const response = await axiosInstance.get<GetProfileResponse>(GET_PROFILE);
+  const response = await serverAxiosInstance.get<GetProfileResponse>(
+    GET_PROFILE
+  );
 
   return response.data;
 };

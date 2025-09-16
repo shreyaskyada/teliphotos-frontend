@@ -3,7 +3,7 @@ import axios from "axios";
 import { cookies } from "next/headers";
 
 // Create an axios instance
-const axiosInstance = axios.create({
+const serverAxiosInstance = axios.create({
   baseURL: CONFIG.BASE_BACKEND_URL,
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 });
 
 // Add request interceptor
-axiosInstance.interceptors.request.use(
+serverAxiosInstance.interceptors.request.use(
   async (config) => {
     try {
       // Only run cookies logic in a server context
@@ -33,7 +33,7 @@ axiosInstance.interceptors.request.use(
 );
 
 // Optional: Add a response interceptor (e.g., to handle 401 globally)
-axiosInstance.interceptors.response.use(
+serverAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
@@ -43,4 +43,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+export default serverAxiosInstance;

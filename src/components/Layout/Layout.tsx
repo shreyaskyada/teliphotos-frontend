@@ -1,6 +1,7 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { GlobalDropzone } from "./GlobalDropzone";
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { LayoutProps } from "./types";
@@ -26,6 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Sidebar sidebarOpen={isSidebarOpen} />
           </section>
           <section className="w-full h-[calc(100vh-75px)] overflow-auto">
+            <GlobalDropzone />
             {children}
           </section>
         </section>
