@@ -51,7 +51,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
             return (
               <button
                 key={channel._id}
-                onClick={() => toggleChannel(channel._id)}
+                onClick={() => toggleChannel(channel.channelId)}
                 className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 ${
                   selectedChannels.includes(channel._id)
                     ? "bg-gradient-to-r from-violet-500/20 to-cyan-500/20 border border-violet-500/30"

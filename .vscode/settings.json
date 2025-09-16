@@ -1,5 +1,4 @@
 {
-  "workbench.colorTheme": "Cursor Dark Midnight",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "workbench.iconTheme": "symbols",

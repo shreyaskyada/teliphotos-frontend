@@ -109,7 +109,6 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
         {/* Channels - scrollable */}
         <ChannelsSelector
           selectedChannels={selectedChannels}
-          setSelectedChannels={setSelectedChannels}
           toggleChannel={toggleChannel}
         />
 
