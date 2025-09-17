@@ -5,20 +5,6 @@ import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { ChannelContentProps, RenderItem } from "./types";
 
-const isVideo = (mime?: string) => (mime ? mime.startsWith("video/") : false);
-
-const extractVideoMeta = (document: Record<string, any>) => {
-  const attrs: any[] = (document?.attributes as any[]) || [];
-  const videoAttr = attrs.find((a) => a.className === "DocumentAttributeVideo");
-  return {
-    width: videoAttr?.w ?? 800,
-    height: videoAttr?.h ?? 600,
-    durationSec: videoAttr?.duration ? Number(videoAttr.duration) : undefined,
-    fileName: attrs.find((a) => a.className === "DocumentAttributeFilename")
-      ?.fileName,
-  };
-};
-
 export const useChannelContent = ({ messages }: ChannelContentProps) => {
   const [selectedItems, setSelectedItems] = useState<Set<string | number>>(
     new Set()
@@ -40,40 +26,40 @@ export const useChannelContent = ({ messages }: ChannelContentProps) => {
         // const r2BaseUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_BASE;
         // const imageURL = r2BaseUrl ? `${r2BaseUrl}/${imageKey}` : undefined;
 
-        if (media.className === "MessageMediaDocument") {
+        if (media.className === "MessageMediaPhoto") {
           const doc = media.document;
-          const mime: string | undefined = doc?.mimeType;
+          // const mime: string | undefined = doc?.mimeType;
 
-          if (mime && isVideo(mime)) {
-            const meta = extractVideoMeta(doc);
-            return {
-              id: doc?.id ?? mid,
-              kind: "video" as const,
-              width: meta.width,
-              height: meta.height,
-              durationSec: meta.durationSec,
-              fileName: meta.fileName,
-              sizeBytes: doc?.size,
-              messageId: msg?.id,
-              imageURL,
-            };
-          } else if (mime && mime.startsWith("image/")) {
-            const attrs: any[] = doc?.attributes || [];
-            const imageSizeAttr = attrs.find(
-              (a) => a.className === "DocumentAttributeImageSize"
-            );
-            const width = imageSizeAttr?.w ?? 800;
-            const height = imageSizeAttr?.h ?? 600;
+          // if (mime && isVideo(mime)) {
+          //   const meta = extractVideoMeta(doc);
+          //   return {
+          //     id: doc?.id ?? mid,
+          //     kind: "video" as const,
+          //     width: meta.width,
+          //     height: meta.height,
+          //     durationSec: meta.durationSec,
+          //     fileName: meta.fileName,
+          //     sizeBytes: doc?.size,
+          //     messageId: msg?.id,
+          //     imageURL,
+          //   };
+          // } else if (mime && mime.startsWith("image/")) {
+          // }
+          const attrs: any[] = doc?.attributes || [];
+          const imageSizeAttr = attrs.find(
+            (a) => a.className === "DocumentAttributeImageSize"
+          );
+          const width = imageSizeAttr?.w ?? 800;
+          const height = imageSizeAttr?.h ?? 600;
 
-            return {
-              id: doc?.id ?? mid,
-              kind: "photo" as const,
-              width,
-              height,
-              messageId: msg?.id,
-              imageURL,
-            };
-          }
+          return {
+            id: doc?.id ?? mid,
+            kind: "photo" as const,
+            width,
+            height,
+            messageId: msg?.id,
+            imageURL,
+          };
           return undefined;
         }
         return undefined;

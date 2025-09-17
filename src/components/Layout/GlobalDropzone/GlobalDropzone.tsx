@@ -96,7 +96,7 @@ export default function GlobalUploader() {
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className="relative w-full h-full"
+      className="w-full h-full fixed"
     >
       {/* Drag overlay */}
       <AnimatePresence>
