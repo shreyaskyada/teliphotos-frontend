@@ -36,11 +36,11 @@ export interface GetChannelContentResponse {
   message: string;
   data: {
     channel: ChannelInfo;
-    messages: ChannelMessage[];
+    media: ChannelMessage[];
   };
 }
 
-export const getChannelsContent = async (
+export const getChannelContent = async (
   channelId: string
 ): Promise<GetChannelContentResponse> => {
   const baseURL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL;

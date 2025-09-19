@@ -2,10 +2,9 @@
 
 import MediaViewer from "@teliphotos/components/MediaViewer/MediaViewer";
 import Image from "next/image";
-import type { ChannelContentProps } from "./types";
 import { useChannelContent } from "./useChannelContent";
 
-const ChannelContent = ({ messages }: ChannelContentProps) => {
+const ChannelContent = () => {
   const {
     items,
     viewerItems,
@@ -17,7 +16,7 @@ const ChannelContent = ({ messages }: ChannelContentProps) => {
     viewerIndex,
     setViewerIndex,
     channelId,
-  } = useChannelContent({ messages });
+  } = useChannelContent();
 
   return (
     <div className="w-full h-full">

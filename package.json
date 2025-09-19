@@ -33,6 +33,7 @@
     "react-hook-form": "^7.62.0",
     "react-phone-input-2": "^2.15.1",
     "react-phone-number-input": "^3.4.12",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
