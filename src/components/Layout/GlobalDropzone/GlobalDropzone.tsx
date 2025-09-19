@@ -5,6 +5,7 @@ import { isCancel } from "axios"; // Import isCancel from axios
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 interface UploadFile {
@@ -18,8 +19,9 @@ interface UploadFile {
 export default function GlobalUploader() {
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [dragging, setDragging] = useState(false);
+  const { channelId } = useParams();
 
-  const STATIC_CHANNEL_ID = "3051513397"; // TODO: dynamic later
+  const STATIC_CHANNEL_ID = channelId as string;
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
