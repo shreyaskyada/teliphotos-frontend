@@ -9,7 +9,6 @@ const ChannelContent = () => {
     items,
     viewerItems,
     selectedItems,
-    toggleSelection,
     clearSelection,
     viewerOpen,
     setViewerOpen,
@@ -17,6 +16,10 @@ const ChannelContent = () => {
     setViewerIndex,
     channelId,
     liveContentUrls,
+    shareSelectedItems,
+    moveSelectedItems,
+    toggleSelection,
+    isSelectionMode,
   } = useChannelContent();
 
   return (
@@ -34,6 +37,18 @@ const ChannelContent = () => {
               </button>
               <button className="text-sm text-red-600 hover:text-red-700 dark:text-red-400">
                 Delete
+              </button>
+              <button
+                onClick={() => shareSelectedItems()}
+                className="text-sm text-green-600 hover:text-green-700 dark:text-green-400"
+              >
+                Share
+              </button>
+              <button
+                onClick={() => moveSelectedItems()}
+                className="text-sm text-yellow-600 hover:text-yellow-700 dark:text-yellow-400"
+              >
+                Move
               </button>
               <button
                 onClick={() => clearSelection()}
@@ -76,27 +91,18 @@ const ChannelContent = () => {
       {/* Media grid */}
       {items.length > 0 && (
         <div className="w-full px-6 py-4">
-          <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 gap-3 [column-fill:_balance]">
+          <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 gap-1.5 [column-fill:_balance]">
             {items.map((item, index) => {
               const ratio =
                 item.height && item.width ? item.height / item.width : 3 / 4;
               const isVid = item.kind === "video";
-              const isSelected = selectedItems.has(item.id);
+              const isSelected = selectedItems.has(item.messageId);
 
               return (
                 <div
                   key={`${item.id}-${index}`}
-                  className="group mb-2 break-inside-avoid overflow-hidden rounded-lg cursor-pointer transition-all duration-200 hover:shadow-lg"
+                  className="group mb-1.5 break-inside-avoid overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg"
                   style={{ aspectRatio: `${1 / ratio}` }}
-                  onClick={(e) => {
-                    if (e.metaKey || e.shiftKey || e.ctrlKey) {
-                      toggleSelection(item.id);
-                      return;
-                    }
-                    const idx = index;
-                    setViewerIndex(idx);
-                    setViewerOpen(true);
-                  }}
                 >
                   <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800">
                     {/* Selection overlay */}
@@ -106,9 +112,13 @@ const ChannelContent = () => {
 
                     {/* Selection checkbox */}
                     <div
-                      className={`absolute top-2 left-2 z-20 transition-opacity duration-200 ${
+                      className={`absolute top-2 left-2 z-20 transition-opacity duration-200 group-hover:opacity-100 ${
                         isSelected ? "opacity-100" : "opacity-0"
                       }`}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent click from propagating to the image
+                        toggleSelection(item.messageId);
+                      }}
                     >
                       <div
                         className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
@@ -134,11 +144,22 @@ const ChannelContent = () => {
                     </div>
 
                     {/* Media content */}
-                    <MediaContent
-                      item={item}
-                      liveContentUrl={liveContentUrls[item.messageId as any]}
-                      isVid={isVid}
-                    />
+                    <div
+                      className="h-full"
+                      onClick={() => {
+                        if (!isSelectionMode) {
+                          const idx = index;
+                          setViewerIndex(idx);
+                          setViewerOpen(true);
+                        }
+                      }}
+                    >
+                      <MediaContent
+                        item={item}
+                        liveContentUrl={liveContentUrls[item.messageId as any]}
+                        isVid={isVid}
+                      />
+                    </div>
 
                     {/* Video duration badge */}
                     {isVid && item.durationSec && (
@@ -151,7 +172,7 @@ const ChannelContent = () => {
                     {/* Play button for videos */}
                     {isVid && (
                       <div
-                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 opacity-0`}
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 opacity-0 group-hover:opacity-100`}
                       >
                         <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
                           <svg

@@ -1,5 +1,6 @@
+import { Play } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { MediaContentProps } from "./types";
 
 const MediaContent: React.FC<MediaContentProps> = ({
@@ -7,57 +8,50 @@ const MediaContent: React.FC<MediaContentProps> = ({
   liveContentUrl,
   isVid,
 }) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
   return (
-    <>
-      {liveContentUrl ? (
-        <Image
-          src={liveContentUrl}
-          alt={item.fileName || (isVid ? "Video" : "Photo")}
-          width={item.width}
-          height={item.height}
-          className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-          onError={(e) => {
-            console.log("❌ Image failed to load:", item.imageURL);
-            e.currentTarget.style.display = "none";
-            const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-            if (fallback) fallback.style.display = "block";
-          }}
-        />
-      ) : (
-        <div className="h-full w-full flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-2 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
-              {isVid ? (
-                <svg
-                  className="w-6 h-6 text-gray-500"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              ) : (
-                <svg
-                  className="w-6 h-6 text-gray-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              )}
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              {isVid ? "Video" : "Photo"}
-            </div>
+    <div className="relative h-full w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+      <>
+        {/* Skeleton shimmer while image loads */}
+        {(!liveContentUrl || loading) && !error && (
+          <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700" />
+        )}
+
+        {/* Error fallback */}
+        {error && (
+          <div className="flex h-full w-full items-center justify-center text-gray-500 dark:text-gray-400 text-sm">
+            Failed to load {isVid ? "video" : "image"}
           </div>
-        </div>
-      )}
-    </>
+        )}
+
+        {/* Main Image */}
+        {liveContentUrl && !error && (
+          <Image
+            src={liveContentUrl}
+            alt={item.fileName || (isVid ? "Video" : "Photo")}
+            width={item.width}
+            height={item.height}
+            className={`h-full w-full object-cover transition-opacity duration-500 ${
+              loading ? "opacity-0" : "opacity-100"
+            }`}
+            onLoad={() => setLoading(false)}
+            onError={() => {
+              setLoading(false);
+              setError(true);
+            }}
+          />
+        )}
+
+        {/* Play icon overlay for videos */}
+        {isVid && !loading && !error && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+            <Play className="w-12 h-12 text-white drop-shadow-lg" />
+          </div>
+        )}
+      </>
+    </div>
   );
 };
 

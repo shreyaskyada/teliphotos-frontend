@@ -94,6 +94,18 @@ export const useChannelContent = () => {
 
   const clearSelection = () => setSelectedItems(new Set());
 
+  const shareSelectedItems = () => {
+    console.log("Sharing items:", Array.from(selectedItems));
+    // Implement sharing logic here
+  };
+
+  const moveSelectedItems = () => {
+    console.log("Moving items:", Array.from(selectedItems));
+    // Implement moving logic here
+  };
+
+  const isSelectionMode = selectedItems.size;
+
   return {
     items,
     viewerItems,
@@ -106,5 +118,8 @@ export const useChannelContent = () => {
     setViewerIndex,
     channelId,
     liveContentUrls,
+    shareSelectedItems,
+    moveSelectedItems,
+    isSelectionMode,
   } as const;
 };
