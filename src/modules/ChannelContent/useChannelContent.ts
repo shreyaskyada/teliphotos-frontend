@@ -5,6 +5,7 @@ import { getPhotoVideoThumbnailURL } from "@teliphotos/services/media";
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { RenderItem } from "./types";
+import { useLiveChannelContent } from "./useLiveChannelContent";
 
 export const useChannelContent = () => {
   const [selectedItems, setSelectedItems] = useState<Set<string | number>>(
@@ -16,6 +17,10 @@ export const useChannelContent = () => {
   const { channelId } = useParams();
 
   const { data: messages } = useGetChannelContent(channelId as string);
+
+  const liveContentUrls: { [key: number]: string } = useLiveChannelContent(
+    messages?.pagination?.batchId as string
+  );
 
   const items: RenderItem[] = useMemo(() => {
     return (messages?.media || [])
@@ -100,5 +105,6 @@ export const useChannelContent = () => {
     viewerIndex,
     setViewerIndex,
     channelId,
+    liveContentUrls,
   } as const;
 };

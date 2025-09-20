@@ -37,6 +37,12 @@ export interface GetChannelContentResponse {
   data: {
     channel: ChannelInfo;
     media: ChannelMessage[];
+    pagination: {
+      limit: string;
+      offset: string;
+      total: string;
+      batchId: string;
+    };
   };
 }
 
