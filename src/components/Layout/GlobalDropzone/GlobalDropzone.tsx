@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 
 interface UploadFile {
   file: File;
@@ -17,24 +18,21 @@ interface UploadFile {
   controller?: AbortController; // for cancel
 }
 
-export default function GlobalUploader() {
+export default function GlobalUploader({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [files, setFiles] = useState<UploadFile[]>([]);
-  const [dragging, setDragging] = useState(false);
   const { channelId } = useParams();
 
   const queryClient = useQueryClient();
 
   const STATIC_CHANNEL_ID = channelId as string;
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragging(false);
-
-    const droppedFiles = Array.from(e.dataTransfer.files).filter(
-      (file) => file.type.startsWith("image/") || file.type.startsWith("video/")
-    );
-
-    const mapped: UploadFile[] = droppedFiles.map((file) => ({
+  const handleDrop = async (acceptedFiles: File[]) => {
+    console.log("Files dropped:", acceptedFiles); // Log to verify drop
+    const mapped: UploadFile[] = acceptedFiles.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
       progress: 0,
@@ -97,19 +95,25 @@ export default function GlobalUploader() {
     f?.controller?.abort();
   };
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    noClick: true, // global, not bound to clicking
+    noKeyboard: true,
+    onDrop: handleDrop,
+    accept: {
+      "image/*": [],
+      "video/*": [],
+    },
+    onDragEnter: () => console.log("Drag enter detected"),
+    onDragLeave: () => console.log("Drag leave detected"),
+  });
+
   return (
-    <div
-      onDragOver={(e) => {
-        e.preventDefault();
-        setDragging(true);
-      }}
-      onDragLeave={() => setDragging(false)}
-      onDrop={handleDrop}
-      className="w-full h-full fixed"
-    >
+    <div {...getRootProps()} className="fixed inset-0 z-[9999] ">
       {/* Drag overlay */}
+      <input {...getInputProps()} />
+
       <AnimatePresence>
-        {dragging && (
+        {isDragActive && (
           <motion.div
             className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
@@ -208,6 +212,8 @@ export default function GlobalUploader() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {children}
     </div>
   );
 }

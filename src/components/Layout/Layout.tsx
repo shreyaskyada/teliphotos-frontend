@@ -17,21 +17,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div>
-        <Header
-          onToggleMenu={handleToggleSidebar}
-          isSidebarOpen={isSidebarOpen}
-        />
-        <section className="flex gap-1 ">
-          <section className="h-[calc(100vh-75px)]">
-            <Sidebar sidebarOpen={isSidebarOpen} />
+      <GlobalDropzone>
+        <div>
+          <Header
+            onToggleMenu={handleToggleSidebar}
+            isSidebarOpen={isSidebarOpen}
+          />
+          <section className="flex gap-1 ">
+            <section className="h-[calc(100vh-75px)]">
+              <Sidebar sidebarOpen={isSidebarOpen} />
+            </section>
+            <section className="w-full h-[calc(100vh-75px)] overflow-auto">
+              {children}
+            </section>
           </section>
-          <section className="w-full h-[calc(100vh-75px)] overflow-auto">
-            <GlobalDropzone />
-            {children}
-          </section>
-        </section>
-      </div>
+        </div>
+      </GlobalDropzone>
     </QueryClientProvider>
   );
 };
