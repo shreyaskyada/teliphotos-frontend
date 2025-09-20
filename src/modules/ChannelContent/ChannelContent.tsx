@@ -19,7 +19,6 @@ const ChannelContent = () => {
     liveContentUrls,
   } = useChannelContent();
 
-  console.log("🚀 ~ ChannelContent ~ liveContentUrls:", liveContentUrls);
   return (
     <div className="w-full h-full">
       {/* Selection bar */}

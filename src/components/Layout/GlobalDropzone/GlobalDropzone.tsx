@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import clientAxiosInstance from "@teliphotos/axios/clientAxiosInstance"; // adjust import path if needed
 import { isCancel } from "axios"; // Import isCancel from axios
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,6 +21,8 @@ export default function GlobalUploader() {
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [dragging, setDragging] = useState(false);
   const { channelId } = useParams();
+
+  const queryClient = useQueryClient();
 
   const STATIC_CHANNEL_ID = channelId as string;
 
@@ -73,6 +76,10 @@ export default function GlobalUploader() {
           p.file === f.file ? { ...p, stage: "done", progress: 100 } : p
         )
       );
+
+      queryClient.invalidateQueries({
+        queryKey: ["channelContent", STATIC_CHANNEL_ID],
+      });
     } catch (err) {
       if (isCancel(err)) {
         // Use isCancel directly
