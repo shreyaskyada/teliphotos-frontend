@@ -1,6 +1,8 @@
 "use client";
 
+import { Trash2, X } from "lucide-react";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 import { MediaContent } from "./MediaContent";
 import { useChannelContent } from "./useChannelContent";
 
@@ -9,57 +11,66 @@ const ChannelContent = () => {
     items,
     viewerItems,
     selectedItems,
-    clearSelection,
     viewerOpen,
     setViewerOpen,
     viewerIndex,
     setViewerIndex,
     channelId,
     liveContentUrls,
-    shareSelectedItems,
-    moveSelectedItems,
     toggleSelection,
     isSelectionMode,
+    channel,
+    deselectAll,
+    isDialogOpen,
+    handleDialogClose,
+    handleDialogConfirm,
+    handleTrashClick,
+    isDeleting,
   } = useChannelContent();
 
   return (
     <div className="w-full h-full">
       {/* Selection bar */}
-      {selectedItems.size > 0 && (
-        <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {selectedItems.size} selected
-            </span>
-            <div className="flex items-center gap-2">
-              <button className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400">
-                Download
-              </button>
-              <button className="text-sm text-red-600 hover:text-red-700 dark:text-red-400">
-                Delete
-              </button>
-              <button
-                onClick={() => shareSelectedItems()}
-                className="text-sm text-green-600 hover:text-green-700 dark:text-green-400"
-              >
-                Share
-              </button>
-              <button
-                onClick={() => moveSelectedItems()}
-                className="text-sm text-yellow-600 hover:text-yellow-700 dark:text-yellow-400"
-              >
-                Move
-              </button>
-              <button
-                onClick={() => clearSelection()}
-                className="text-sm text-gray-600 hover:text-gray-700 dark:text-gray-400"
-              >
-                Cancel
-              </button>
-            </div>
+      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+        <div className="flex items-center justify-between">
+          {/* Left side */}
+          <div className="flex items-center gap-3">
+            {selectedItems.size > 0 ? (
+              <>
+                {/* Close / deselect all button */}
+                <button
+                  onClick={deselectAll}
+                  className="flex items-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <X />
+                </button>
+                <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                  {selectedItems.size} selected
+                </span>
+              </>
+            ) : (
+              <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                {channel?.title}
+              </span>
+            )}
+          </div>
+
+          {/* Right side */}
+          <div className="flex items-center gap-4">
+            {selectedItems.size > 0 && (
+              <>
+                {/* Delete button */}
+                <button
+                  onClick={() => handleTrashClick()}
+                  className="flex items-center text-red-600 hover:text-red-700 dark:text-red-400 rounded-full"
+                >
+                  <Trash2 />
+                </button>
+              </>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
       {/* Empty state */}
       {items.length === 0 && (
@@ -192,6 +203,7 @@ const ChannelContent = () => {
           </div>
         </div>
       )}
+
       {viewerOpen && (
         <MediaViewer
           items={viewerItems}
@@ -201,6 +213,15 @@ const ChannelContent = () => {
           onClose={() => setViewerOpen(false)}
         />
       )}
+
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        onClose={handleDialogClose}
+        onConfirm={handleDialogConfirm}
+        title="Confirmation"
+        message="Are you sure you want to delete these items?"
+        isLoading={isDeleting}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetChannelContent } from "@teliphotos/services";
+import { useDeleteMedia, useGetChannelContent } from "@teliphotos/services";
 import { getPhotoVideoThumbnailURL } from "@teliphotos/services/media";
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -14,9 +14,16 @@ export const useChannelContent = () => {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [viewerIndex, setViewerIndex] = useState(0);
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const { channelId } = useParams();
 
-  const { data: messages } = useGetChannelContent(channelId as string);
+  const { mutate: deleteMediaMutation, isPending: isDeleting } =
+    useDeleteMedia();
+
+  const { data: messages, refetch: refetchMessages } = useGetChannelContent(
+    channelId as string
+  );
 
   const liveContentUrls: { [key: number]: string } = useLiveChannelContent(
     messages?.pagination?.batchId as string
@@ -92,34 +99,58 @@ export const useChannelContent = () => {
     });
   };
 
-  const clearSelection = () => setSelectedItems(new Set());
-
-  const shareSelectedItems = () => {
-    console.log("Sharing items:", Array.from(selectedItems));
-    // Implement sharing logic here
-  };
-
-  const moveSelectedItems = () => {
-    console.log("Moving items:", Array.from(selectedItems));
-    // Implement moving logic here
+  const deselectAll = () => {
+    setSelectedItems(new Set());
   };
 
   const isSelectionMode = selectedItems.size;
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    console.log("Dialog closed");
+  };
+
+  const handleDialogConfirm = () => {
+    deleteMediaMutation(
+      {
+        channelId: channelId as string,
+        messageIds: Array.from(selectedItems) as string[],
+      },
+      {
+        onSuccess: () => {
+          setIsDialogOpen(false);
+          refetchMessages();
+          deselectAll();
+        },
+        onError: (error: Error) => {
+          console.error("Failed to delete media:", error);
+        },
+      }
+    );
+  };
+
+  const handleTrashClick = () => {
+    setIsDialogOpen(true);
+  };
 
   return {
     items,
     viewerItems,
     selectedItems,
-    toggleSelection,
-    clearSelection,
     viewerOpen,
     setViewerOpen,
     viewerIndex,
     setViewerIndex,
     channelId,
     liveContentUrls,
-    shareSelectedItems,
-    moveSelectedItems,
+    toggleSelection,
+    deselectAll,
     isSelectionMode,
+    channel: messages?.channel,
+    isDialogOpen,
+    handleDialogClose,
+    handleDialogConfirm,
+    handleTrashClick,
+    isDeleting,
   } as const;
 };

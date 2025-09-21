@@ -25,6 +25,7 @@ export const buttonVariants = cva(
         time: "bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-gray-100 hover:to-gray-200 hover:text-gray-800 focus:ring-primary-500/50",
         gradient:
           "bg-gradient-to-r from-violet-600 to-cyan-600 text-white hover:from-violet-700 hover:to-cyan-700 focus:ring-violet-500/50",
+        delete: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500/50", // New delete variant
       },
       size: {
         sm: "px-3 py-2 text-sm",

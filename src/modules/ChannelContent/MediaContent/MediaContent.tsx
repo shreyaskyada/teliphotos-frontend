@@ -12,7 +12,7 @@ const MediaContent: React.FC<MediaContentProps> = ({
   const [error, setError] = useState(false);
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+    <div className="relative h-full w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
       <>
         {/* Skeleton shimmer while image loads */}
         {(!liveContentUrl || loading) && !error && (
