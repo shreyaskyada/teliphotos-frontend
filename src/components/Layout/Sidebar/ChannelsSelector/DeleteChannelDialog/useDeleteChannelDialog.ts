@@ -1,46 +1,33 @@
-import { useCallback, useEffect, useState } from "react";
+import { useDeleteChannel } from "@teliphotos/services/channels";
+import { useCallback, useEffect } from "react";
 import { UseDeleteChannelModalProps } from "./types";
 
 export const useDeleteChannelModal = ({
   onClose,
   channelId,
 }: UseDeleteChannelModalProps) => {
-  const [isDeletingChannel, setIsDeletingChannel] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const deleteChannelMutation = useDeleteChannel();
+
+  const isDeletingChannel = deleteChannelMutation.isPending;
 
   const handleClose = useCallback(() => {
-    if (!isDeletingChannel && !showSuccess) {
+    if (!isDeletingChannel) {
       onClose();
     }
-  }, [isDeletingChannel, showSuccess, onClose]);
+  }, [isDeletingChannel, onClose]);
 
   const handleDelete = useCallback(async () => {
     try {
-      setIsDeletingChannel(true);
+      await deleteChannelMutation.mutateAsync(channelId);
 
-      // TODO: Add actual delete channel API call here
-      // await deleteChannel(channelId);
-
-      // Simulate API call for now
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log(`Successfully deleted channel: ${channelId}`);
-
-      // Show success state briefly
-      setShowSuccess(true);
-
-      // Close after showing success
-      setTimeout(() => {
-        onClose();
-        setShowSuccess(false);
-      }, 800);
+      // Close the dialog after successful deletion
+      onClose();
     } catch (error) {
       console.error("Error deleting channel:", error);
-      // TODO: Add error toast notification here
-    } finally {
-      setIsDeletingChannel(false);
+      // The error will be handled by the mutation's onError callback
+      // You can add toast notification here if needed
     }
-  }, [channelId, onClose]);
+  }, [channelId, onClose, deleteChannelMutation]);
 
   // Keyboard shortcuts
   useEffect(() => {

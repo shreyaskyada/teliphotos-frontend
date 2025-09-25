@@ -17,12 +17,13 @@ export const useCreateChannelModal = ({ onClose }: UseCreateChannelModal) => {
     try {
       await createChannel({
         name: data.name.trim(),
-        description: data.description?.trim() || undefined,
+        description: data.description?.trim() || "",
       });
 
       // queryClient.invalidateQueries({ queryKey: ["privateChannels"] });
 
       form.reset();
+      onClose();
     } catch (error) {
       console.error("Failed to create channel:", error);
     }
