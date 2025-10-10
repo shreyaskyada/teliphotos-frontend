@@ -18,18 +18,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalDropzone>
-        <div>
+        <div className="h-screen flex flex-col">
           <Header
             onToggleMenu={handleToggleSidebar}
             isSidebarOpen={isSidebarOpen}
           />
-          <section className="flex">
-            <section className="h-[calc(100vh-75px)]">
+          <section className="flex flex-1 overflow-hidden">
+            <section className="h-full">
               <Sidebar sidebarOpen={isSidebarOpen} />
             </section>
-            <section className="w-full h-[calc(100vh-75px)] overflow-auto">
-              {children}
-            </section>
+            <section className="flex-1 overflow-auto">{children}</section>
           </section>
         </div>
       </GlobalDropzone>

@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 export const useContainerWidth = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(1200); // Default width
+  const [containerWidth, setContainerWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth - 300 : 1200
+  ); // Default width accounting for sidebar
 
   useEffect(() => {
     const updateWidth = () => {

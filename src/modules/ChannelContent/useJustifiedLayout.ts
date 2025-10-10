@@ -74,7 +74,7 @@ export const useJustifiedLayout = (
 
         let calculatedRowHeight = availableWidth / totalAspectRatio;
 
-        // Apply height constraints
+        // Apply height constraints with more flexibility for better space utilization
         calculatedRowHeight = Math.max(
           minRowHeight,
           Math.min(maxRowHeight, calculatedRowHeight)
@@ -101,9 +101,51 @@ export const useJustifiedLayout = (
           return sum + rowItem.displayWidth + (idx > 0 ? spacing : 0);
         }, 0);
 
+        // If the row doesn't fill the container width well, try to adjust height
+        const widthRatio = actualTotalWidth / containerWidth;
+        let finalRowHeight = calculatedRowHeight;
+
+        if (widthRatio < 0.95 && calculatedRowHeight < maxRowHeight) {
+          // If we're using less than 95% of the width, try to increase row height
+          const adjustedHeight = Math.min(
+            maxRowHeight,
+            calculatedRowHeight * (1 / widthRatio)
+          );
+          if (adjustedHeight > calculatedRowHeight) {
+            // Recalculate with the new height
+            const newRowItems = currentRow.map((rowItem) => {
+              const aspectRatio =
+                rowItem.width && rowItem.height
+                  ? rowItem.width / rowItem.height
+                  : 1;
+              const displayWidth = adjustedHeight * aspectRatio;
+              const displayHeight = adjustedHeight;
+
+              return {
+                ...rowItem,
+                displayWidth,
+                displayHeight,
+              };
+            });
+
+            const newActualTotalWidth = newRowItems.reduce(
+              (sum, rowItem, idx) => {
+                return sum + rowItem.displayWidth + (idx > 0 ? spacing : 0);
+              },
+              0
+            );
+
+            // Only use the adjusted height if it improves width utilization
+            if (newActualTotalWidth > actualTotalWidth) {
+              finalRowHeight = adjustedHeight;
+              rowItems.splice(0, rowItems.length, ...newRowItems);
+            }
+          }
+        }
+
         rows.push({
           items: rowItems,
-          rowHeight: calculatedRowHeight,
+          rowHeight: finalRowHeight,
           totalWidth: actualTotalWidth,
         });
 
@@ -137,11 +179,12 @@ export const useJustifiedLayout = (
 // Hook to get responsive target row height based on screen size
 export const useResponsiveRowHeight = (containerWidth: number) => {
   return useMemo(() => {
-    if (containerWidth >= 1536) return 220; // 2xl
-    if (containerWidth >= 1280) return 200; // xl
-    if (containerWidth >= 1024) return 180; // lg
-    if (containerWidth >= 768) return 160; // md
-    if (containerWidth >= 640) return 140; // sm
-    return 120; // xs
+    // Increase base heights for better space utilization
+    if (containerWidth >= 1536) return 250; // 2xl - larger screens can handle bigger rows
+    if (containerWidth >= 1280) return 220; // xl
+    if (containerWidth >= 1024) return 200; // lg
+    if (containerWidth >= 768) return 180; // md
+    if (containerWidth >= 640) return 160; // sm
+    return 140; // xs - increased from 120 for better coverage
   }, [containerWidth]);
 };

@@ -37,17 +37,17 @@ const ChannelContent = () => {
   const targetRowHeight = useResponsiveRowHeight(containerWidth);
 
   const { rows } = useJustifiedLayout(items, {
-    containerWidth: containerWidth - 48, // Account for px-6 padding (24px on each side)
+    containerWidth: containerWidth - (containerWidth > 640 ? 68 : 44), // Account for responsive padding + 20px right space
     targetRowHeight,
-    maxRowHeight: targetRowHeight * 1.5, // Allow 50% flexibility upward
-    minRowHeight: targetRowHeight * 0.7, // Allow 30% flexibility downward
-    spacing: 4, // 4px gap between images
+    maxRowHeight: targetRowHeight * 2.0, // Allow more flexibility upward for better space utilization
+    minRowHeight: targetRowHeight * 0.6, // Allow more flexibility downward
+    spacing: 2, // Reduced spacing for better space utilization
   });
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full flex flex-col">
       {/* Selection bar */}
-      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
           {/* Left side */}
           <div className="flex items-center gap-3">
@@ -90,7 +90,7 @@ const ChannelContent = () => {
 
       {/* Empty state */}
       {items.length === 0 && (
-        <div className="flex flex-col items-center justify-center h-full min-h-[60vh]">
+        <div className="flex flex-col items-center justify-center flex-1">
           <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
             <svg
               className="w-12 h-12 text-gray-400"
@@ -117,12 +117,15 @@ const ChannelContent = () => {
 
       {/* Media grid - Justified Layout */}
       {items.length > 0 && (
-        <div ref={containerRef} className="w-full px-6 py-4">
-          <div className="flex flex-col gap-1">
+        <div
+          ref={containerRef}
+          className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto"
+        >
+          <div className="flex flex-col gap-0.5">
             {rows.map((row, rowIndex) => (
               <div
                 key={rowIndex}
-                className="flex gap-1"
+                className="flex gap-0.5"
                 style={{ height: row.rowHeight }}
               >
                 {row.items.map((item) => {
