@@ -5,6 +5,11 @@ import MediaViewer from "../../components/MediaViewer/MediaViewer";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { MediaContent } from "./MediaContent";
 import { useChannelContent } from "./useChannelContent";
+import { useContainerWidth } from "./useContainerWidth";
+import {
+  useJustifiedLayout,
+  useResponsiveRowHeight,
+} from "./useJustifiedLayout";
 
 const ChannelContent = () => {
   const {
@@ -27,6 +32,17 @@ const ChannelContent = () => {
     handleTrashClick,
     isDeleting,
   } = useChannelContent();
+
+  const { containerRef, containerWidth } = useContainerWidth();
+  const targetRowHeight = useResponsiveRowHeight(containerWidth);
+
+  const { rows } = useJustifiedLayout(items, {
+    containerWidth: containerWidth - 48, // Account for px-6 padding (24px on each side)
+    targetRowHeight,
+    maxRowHeight: targetRowHeight * 1.5, // Allow 50% flexibility upward
+    minRowHeight: targetRowHeight * 0.7, // Allow 30% flexibility downward
+    spacing: 4, // 4px gap between images
+  });
 
   return (
     <div className="w-full h-full">
@@ -99,107 +115,121 @@ const ChannelContent = () => {
         </div>
       )}
 
-      {/* Media grid */}
+      {/* Media grid - Justified Layout */}
       {items.length > 0 && (
-        <div className="w-full px-6 py-4">
-          <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 2xl:columns-6 gap-1.5 [column-fill:_balance]">
-            {items.map((item, index) => {
-              const ratio =
-                item.height && item.width ? item.height / item.width : 3 / 4;
-              const isVid = item.kind === "video";
-              const isSelected = selectedItems.has(item.messageId);
+        <div ref={containerRef} className="w-full px-6 py-4">
+          <div className="flex flex-col gap-1">
+            {rows.map((row, rowIndex) => (
+              <div
+                key={rowIndex}
+                className="flex gap-1"
+                style={{ height: row.rowHeight }}
+              >
+                {row.items.map((item) => {
+                  const isVid = item.kind === "video";
+                  const isSelected = selectedItems.has(item.messageId);
 
-              return (
-                <div
-                  key={`${item.id}-${index}`}
-                  className="group mb-1.5 break-inside-avoid overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg"
-                  style={{ aspectRatio: `${1 / ratio}` }}
-                >
-                  <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800">
-                    {/* Selection overlay */}
-                    {isSelected && (
-                      <div className="absolute inset-0 bg-blue-500/20 z-10" />
-                    )}
-
-                    {/* Selection checkbox */}
+                  return (
                     <div
-                      className={`absolute top-2 left-2 z-20 transition-opacity duration-200 group-hover:opacity-100 ${
-                        isSelected ? "opacity-100" : "opacity-0"
-                      }`}
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent click from propagating to the image
-                        toggleSelection(item.messageId);
+                      key={`${item.id}-${item.originalIndex}`}
+                      className="group overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg rounded-sm"
+                      style={{
+                        width: item.displayWidth,
+                        height: item.displayHeight,
+                        flexShrink: 0,
                       }}
                     >
-                      <div
-                        className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                          isSelected
-                            ? "bg-blue-500 border-blue-500"
-                            : "bg-white/90 border-white/90"
-                        }`}
-                      >
+                      <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800 rounded-sm overflow-hidden">
+                        {/* Selection overlay */}
                         {isSelected && (
-                          <svg
-                            className="w-3 h-3 text-white"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
+                          <div className="absolute inset-0 bg-blue-500/20 z-10" />
+                        )}
+
+                        {/* Selection checkbox */}
+                        <div
+                          className={`absolute top-2 left-2 z-20 transition-opacity duration-200 group-hover:opacity-100 ${
+                            isSelected ? "opacity-100" : "opacity-0"
+                          }`}
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent click from propagating to the image
+                            toggleSelection(item.messageId);
+                          }}
+                        >
+                          <div
+                            className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                              isSelected
+                                ? "bg-blue-500 border-blue-500"
+                                : "bg-white/90 border-white/90"
+                            }`}
                           >
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
+                            {isSelected && (
+                              <svg
+                                className="w-3 h-3 text-white"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Media content */}
+                        <div
+                          className="h-full"
+                          onClick={() => {
+                            if (!isSelectionMode) {
+                              const idx = item.originalIndex;
+                              setViewerIndex(idx);
+                              setViewerOpen(true);
+                            }
+                          }}
+                        >
+                          <MediaContent
+                            item={item}
+                            liveContentUrl={
+                              liveContentUrls[item.messageId as any]
+                            }
+                            isVid={isVid}
+                          />
+                        </div>
+
+                        {/* Video duration badge */}
+                        {isVid && item.durationSec && (
+                          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+                            {Math.floor(item.durationSec / 60)}:
+                            {(item.durationSec % 60)
+                              .toString()
+                              .padStart(2, "0")}
+                          </div>
+                        )}
+
+                        {/* Play button for videos */}
+                        {isVid && (
+                          <div
+                            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 opacity-0 group-hover:opacity-100`}
+                          >
+                            <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
+                              <svg
+                                className="w-6 h-6 text-white ml-1"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
-
-                    {/* Media content */}
-                    <div
-                      className="h-full"
-                      onClick={() => {
-                        if (!isSelectionMode) {
-                          const idx = index;
-                          setViewerIndex(idx);
-                          setViewerOpen(true);
-                        }
-                      }}
-                    >
-                      <MediaContent
-                        item={item}
-                        liveContentUrl={liveContentUrls[item.messageId as any]}
-                        isVid={isVid}
-                      />
-                    </div>
-
-                    {/* Video duration badge */}
-                    {isVid && item.durationSec && (
-                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
-                        {Math.floor(item.durationSec / 60)}:
-                        {(item.durationSec % 60).toString().padStart(2, "0")}
-                      </div>
-                    )}
-
-                    {/* Play button for videos */}
-                    {isVid && (
-                      <div
-                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 opacity-0 group-hover:opacity-100`}
-                      >
-                        <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
-                          <svg
-                            className="w-6 h-6 text-white ml-1"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
       )}
