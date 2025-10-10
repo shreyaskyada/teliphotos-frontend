@@ -74,6 +74,8 @@ export const useChannelContent = () => {
       .filter(Boolean) as RenderItem[];
   }, [messages, channelId]);
 
+  console.log("🚀 ~ constitems:RenderItem[]=useMemo ~ items:", messages);
+
   const viewerItems = useMemo(
     () =>
       items.map((it) => ({

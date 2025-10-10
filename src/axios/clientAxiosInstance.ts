@@ -28,7 +28,6 @@ clientAxiosInstance.interceptors.request.use(
       // In client context `cookies()` will throw,
       // so we just ignore and move on
     }
-    console.log("API CALLING URL --->", config.baseURL, config.url);
     return config;
   },
   (error) => Promise.reject(error)

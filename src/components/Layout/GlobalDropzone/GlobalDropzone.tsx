@@ -38,11 +38,18 @@ export default function GlobalUploader({
     }
     socket.emit("join", channelId);
 
-    socket.on("upload-status", (job: any) => {
+    socket.on("upload-status", (jobResponse: any) => {
+      const job = JSON.parse(jobResponse);
+
       setFiles((prev) =>
         prev.map((p) =>
           job.filename === p.file.name
-            ? { ...p, stage: "done", progress: 100 }
+            ? {
+                ...p,
+                // stage: job.is_telegram_uploaded ? "done" : "telegram",
+                stage: "done",
+                progress: 100,
+              }
             : p
         )
       );

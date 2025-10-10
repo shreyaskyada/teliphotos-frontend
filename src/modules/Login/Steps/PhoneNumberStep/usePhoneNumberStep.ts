@@ -24,7 +24,6 @@ export const usePhoneNumberStep = ({
     formattedValue: string;
     value: string;
   }) => {
-    console.log("Phone data:", data);
     setFormData({
       formattedValue: data.formattedValue,
       countryCode: (data?.data as CountryData)?.countryCode || "",

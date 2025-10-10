@@ -37,8 +37,6 @@ const useDeleteChannel = (): UseMutationResult<
         queryKey: ["channelContent"],
         refetchType: "active",
       });
-
-      console.log("Channel deleted successfully, channel list refetched!");
     },
     onError: (error) => {
       console.error("Delete channel error:", error);

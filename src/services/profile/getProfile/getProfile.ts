@@ -10,8 +10,6 @@ export interface GetProfileResponse {
 }
 
 export const getProfile = async (): Promise<GetProfileResponse> => {
-  console.log("getProfile API call");
-
   // Get access token from cookies
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;

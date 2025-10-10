@@ -76,8 +76,6 @@ export const useOTPVerificationStep = () => {
         response.data.refreshToken
       }; path=/; max-age=${40 * 24 * 60 * 60}; samesite=lax`;
 
-      console.log("Cookies set:", document.cookie);
-
       router.push("dashboard");
     } catch {
       setError("Please enter valid OTP.");

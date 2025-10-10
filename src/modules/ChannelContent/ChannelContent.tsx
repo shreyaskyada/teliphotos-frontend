@@ -27,7 +27,6 @@ const ChannelContent = () => {
     handleTrashClick,
     isDeleting,
   } = useChannelContent();
-  console.log("🚀 ~ ChannelContent ~ items:", items.length);
 
   return (
     <div className="w-full h-full">
