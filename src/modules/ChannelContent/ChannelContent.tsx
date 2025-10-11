@@ -135,39 +135,48 @@ const ChannelContent = () => {
                   return (
                     <div
                       key={`${item.id}-${item.originalIndex}`}
-                      className="group overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-lg rounded-sm"
+                      className="group overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl rounded-0"
                       style={{
                         width: item.displayWidth,
                         height: item.displayHeight,
                         flexShrink: 0,
                       }}
                     >
-                      <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800 rounded-sm overflow-hidden">
+                      <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800 rounded-0 overflow-hidden">
                         {/* Selection overlay */}
                         {isSelected && (
-                          <div className="absolute inset-0 bg-blue-500/20 z-10" />
+                          <div className="absolute inset-0 bg-blue-500/20 z-10 pointer-events-none" />
                         )}
+
+                        {/* Hover shadow effect */}
+                        <div
+                          className="absolute -inset-2 opacity-0 group-hover:opacity-100 transition-all duration-200 z-5 pointer-events-none"
+                          style={{
+                            boxShadow:
+                              "0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05)",
+                          }}
+                        />
 
                         {/* Selection checkbox */}
                         <div
-                          className={`absolute top-2 left-2 z-20 transition-opacity duration-200 group-hover:opacity-100 ${
+                          className={`absolute top-2 left-2 z-20 transition-all duration-200 group-hover:opacity-100 ${
                             isSelected ? "opacity-100" : "opacity-0"
                           }`}
                           onClick={(e) => {
-                            e.stopPropagation(); // Prevent click from propagating to the image
+                            e.stopPropagation(); // Prevent click from propagating to the media content
                             toggleSelection(item.messageId);
                           }}
                         >
                           <div
-                            className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shadow-lg transition-all duration-200 ${
                               isSelected
                                 ? "bg-blue-500 border-blue-500"
-                                : "bg-white/90 border-white/90"
+                                : "bg-white/95 border-white/95 group-hover:bg-white group-hover:border-white"
                             }`}
                           >
                             {isSelected && (
                               <svg
-                                className="w-3 h-3 text-white"
+                                className="w-4 h-4 text-white"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                               >
@@ -183,9 +192,13 @@ const ChannelContent = () => {
 
                         {/* Media content */}
                         <div
-                          className="h-full"
+                          className="h-full cursor-pointer"
                           onClick={() => {
-                            if (!isSelectionMode) {
+                            if (isSelectionMode) {
+                              // In selection mode, always toggle selection (select/deselect)
+                              toggleSelection(item.messageId);
+                            } else {
+                              // Normal mode, open preview
                               const idx = item.originalIndex;
                               setViewerIndex(idx);
                               setViewerOpen(true);
