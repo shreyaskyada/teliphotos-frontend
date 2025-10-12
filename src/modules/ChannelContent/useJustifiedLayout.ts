@@ -49,6 +49,18 @@ export const useJustifiedLayout = (
         item.width && item.height ? item.width / item.height : 1;
       const scaledWidth = targetRowHeight * aspectRatio;
 
+      // Debug logging for videos
+      if (item.kind === "video") {
+        console.log("Video in layout:", {
+          index,
+          width: item.width,
+          height: item.height,
+          aspectRatio,
+          scaledWidth,
+          messageId: item.messageId,
+        });
+      }
+
       // Add item to current row
       currentRow.push({ ...item, originalIndex: index });
       currentRowWidth += scaledWidth + (currentRow.length > 1 ? spacing : 0);

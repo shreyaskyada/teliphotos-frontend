@@ -34,47 +34,99 @@ export const useChannelContent = () => {
       .map((msg: any) => {
         const mid = msg?.id ?? Math.random();
         const media = msg?.media;
-        if (!media || media.className !== "MessageMediaPhoto") return undefined;
 
-        const photo = media.photo;
-        if (!photo) return undefined;
+        // Handle both photos and videos
+        const isPhoto = media && media.className === "MessageMediaPhoto";
+        const isVideo =
+          media &&
+          media.className === "MessageMediaDocument" &&
+          media.document?.mimeType?.startsWith("video/");
+
+        if (!isPhoto && !isVideo) return undefined;
 
         const imageURL = getPhotoVideoThumbnailURL(channelId as string, msg.id);
 
-        const sizes = (photo.sizes || []).filter(
-          (s: any) =>
-            s.className === "PhotoSize" ||
-            s.className === "PhotoSizeProgressive"
-        );
+        if (isPhoto) {
+          const photo = media.photo;
+          if (!photo) return undefined;
 
-        if (sizes.length === 0) {
-          console.warn("No usable sizes for photo:", photo.id);
-          return undefined;
+          const sizes = (photo.sizes || []).filter(
+            (s: any) =>
+              s.className === "PhotoSize" ||
+              s.className === "PhotoSizeProgressive"
+          );
+
+          if (sizes.length === 0) {
+            console.warn("No usable sizes for photo:", photo.id);
+            return undefined;
+          }
+
+          // Pick the largest by area (fallback safe)
+          const largestSize = sizes.reduce((prev: any, curr: any) => {
+            const prevArea = (prev.w ?? 0) * (prev.h ?? 0);
+            const currArea = (curr.w ?? 0) * (curr.h ?? 0);
+            return currArea > prevArea ? curr : prev;
+          });
+
+          const width = largestSize?.w ?? 800;
+          const height = largestSize?.h ?? 600;
+
+          return {
+            id: photo.id ?? mid,
+            kind: "photo" as const,
+            width,
+            height,
+            messageId: msg?.id,
+            imageURL,
+          };
+        } else if (isVideo) {
+          // Handle video media from MessageMediaDocument
+          const document = media.document;
+          if (!document) return undefined;
+
+          // Get video dimensions from DocumentAttributeVideo
+          const videoAttr = document.attributes?.find(
+            (attr: any) => attr.className === "DocumentAttributeVideo"
+          );
+
+          let width = videoAttr?.w ?? 800;
+          let height = videoAttr?.h ?? 600;
+          const durationSec = videoAttr?.duration;
+
+          // Ensure video dimensions are reasonable for layout
+          if (width && height) {
+            const aspectRatio = width / height;
+            // Limit extreme aspect ratios that could break layout
+            if (aspectRatio > 4) {
+              width = height * 4; // Max 4:1 ratio
+            } else if (aspectRatio < 0.25) {
+              height = width * 4; // Min 1:4 ratio
+            }
+          }
+
+          // Get filename from DocumentAttributeFilename
+          const filenameAttr = document.attributes?.find(
+            (attr: any) => attr.className === "DocumentAttributeFilename"
+          );
+          const fileName = filenameAttr?.fileName;
+
+          return {
+            id: document.id ?? mid,
+            kind: "video" as const,
+            width,
+            height,
+            durationSec,
+            messageId: msg?.id,
+            imageURL,
+            fileName,
+            sizeBytes: document.size,
+          };
         }
 
-        // Pick the largest by area (fallback safe)
-        const largestSize = sizes.reduce((prev: any, curr: any) => {
-          const prevArea = (prev.w ?? 0) * (prev.h ?? 0);
-          const currArea = (curr.w ?? 0) * (curr.h ?? 0);
-          return currArea > prevArea ? curr : prev;
-        });
-
-        const width = largestSize?.w ?? 800;
-        const height = largestSize?.h ?? 600;
-
-        return {
-          id: photo.id ?? mid,
-          kind: "photo" as const,
-          width,
-          height,
-          messageId: msg?.id,
-          imageURL,
-        };
+        return undefined;
       })
       .filter(Boolean) as RenderItem[];
   }, [messages, channelId]);
-
-  console.log("🚀 ~ constitems:RenderItem[]=useMemo ~ items:", messages);
 
   const viewerItems = useMemo(
     () =>
@@ -109,7 +161,6 @@ export const useChannelContent = () => {
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-    console.log("Dialog closed");
   };
 
   const handleDialogConfirm = () => {

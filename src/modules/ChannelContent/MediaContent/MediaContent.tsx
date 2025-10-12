@@ -1,4 +1,3 @@
-import { Play } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { MediaContentProps } from "./types";
@@ -42,13 +41,6 @@ const MediaContent: React.FC<MediaContentProps> = ({
               setError(true);
             }}
           />
-        )}
-
-        {/* Play icon overlay for videos */}
-        {isVid && !loading && !error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <Play className="w-12 h-12 text-white drop-shadow-lg" />
-          </div>
         )}
       </>
     </div>
