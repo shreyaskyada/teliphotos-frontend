@@ -40,17 +40,6 @@ const CreateChannelDialog: React.FC<CreateChannelDialogProps> = ({
               disabled={isCreatingChannel}
               maxLength={50}
               helperText={`${form.watch("name")?.length || 0}/50 characters`}
-              rules={{
-                required: "Channel name is required",
-                minLength: {
-                  value: 3,
-                  message: "At least 3 characters",
-                },
-                maxLength: {
-                  value: 50,
-                  message: "Less than 50 characters",
-                },
-              }}
             />
 
             {/* Description */}
@@ -63,12 +52,6 @@ const CreateChannelDialog: React.FC<CreateChannelDialogProps> = ({
               helperText={`${
                 form.watch("description")?.length || 0
               }/200 characters`}
-              rules={{
-                maxLength: {
-                  value: 200,
-                  message: "Less than 200 characters",
-                },
-              }}
             />
 
             <DialogFooter className="flex justify-end gap-3">

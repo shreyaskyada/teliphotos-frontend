@@ -19,13 +19,12 @@ import {
   Timer,
   Users,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-interface LandingPageProps {
-  onGetStarted: () => void;
-}
-
-const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
+const LandingPage = () => {
+  const handleGetStarted = () => {
+    window.location.href = "/login";
+  };
   const [activeFeature, setActiveFeature] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -194,7 +193,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
-                  onClick={onGetStarted}
+                  onClick={handleGetStarted}
                   className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 group"
                 >
                   <span>Start Free Today</span>
@@ -616,7 +615,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
                 </div>
 
                 <button
-                  onClick={onGetStarted}
+                  onClick={handleGetStarted}
                   className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 mx-auto group"
                 >
                   <span>Start Using Free Now</span>
@@ -682,7 +681,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={onGetStarted}
+              onClick={handleGetStarted}
               className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 group"
             >
               <span>Get Started Free</span>

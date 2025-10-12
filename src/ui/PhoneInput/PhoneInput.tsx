@@ -168,7 +168,7 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
         formattedValue,
       });
     },
-    [onChangeFormData, selectedCountry.code]
+    [onChangeFormData]
   );
 
   const handleFocus = useCallback(() => {

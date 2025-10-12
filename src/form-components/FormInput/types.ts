@@ -1,7 +1,8 @@
-import { InputProps } from '@lib/ui-lib/src/components/Input/Input';
-import { FieldValues, Path } from 'react-hook-form';
+import { InputProps } from "@teliphotos/ui";
+import { FieldValues, Path } from "react-hook-form";
 
-export interface FormInputProps<T extends FieldValues> extends Omit<InputProps, 'name'> {
+export interface FormInputProps<T extends FieldValues>
+  extends Omit<InputProps, "name"> {
   /**
    * The field name in your form.
    * It must be a valid path in the form's schema.
