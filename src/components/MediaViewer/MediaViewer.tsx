@@ -26,6 +26,18 @@ import { useEffect, useRef, useState } from "react";
 import type { MediaViewerProps } from "./types";
 import { useMediaViewer } from "./useMediaViewer";
 
+// Helper function to get access token from cookies
+const getToken = (): string => {
+  if (typeof document === "undefined") return "";
+
+  const accessToken = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("accessToken="))
+    ?.split("=")[1];
+
+  return accessToken || "";
+};
+
 const MediaViewer = ({
   items,
   startIndex,
@@ -284,10 +296,11 @@ const MediaViewer = ({
           {current?.kind === "photo" ? (
             <Image
               ref={mediaRef as unknown as React.RefObject<HTMLImageElement>}
-              src={getPhotoVideoThumbnailURL(
-                channelId as string,
+              src={`${
+                process.env.NEXT_PUBLIC_BASE_BACKEND_URL
+              }/channels/stream/photos/${channelId}/${
                 current.messageId
-              )}
+              }?token=${getToken()}`}
               alt="Photo"
               width={current.width || 1600}
               height={current.height || 1200}
