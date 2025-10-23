@@ -294,25 +294,53 @@ const MediaViewer = ({
           onTouchEnd={handleTouchEnd}
         >
           {current?.kind === "photo" ? (
-            <Image
-              ref={mediaRef as unknown as React.RefObject<HTMLImageElement>}
-              src={`${
-                process.env.NEXT_PUBLIC_BASE_BACKEND_URL
-              }/channels/stream/photos/${channelId}/${
-                current.messageId
-              }?token=${getToken()}`}
-              alt="Photo"
-              width={current.width || 1600}
-              height={current.height || 1200}
-              className="max-h-[100vh] max-w-[100vw] object-contain select-none"
-              style={{
-                ...mediaTransform,
-                transition: isLoaded ? "transform 0.2s ease-out" : undefined,
-                willChange: "transform",
-              }}
-              priority
-              onLoad={() => setIsLoaded(true)}
-            />
+            <div className="relative">
+              {/* Blurred thumbnail preview */}
+              {!isLoaded && (
+                <Image
+                  src={getPhotoVideoThumbnailURL(
+                    channelId as string,
+                    current.messageId
+                  )}
+                  alt="Photo preview"
+                  width={current.width || 1600}
+                  height={current.height || 1200}
+                  className="max-h-[100vh] max-w-[100vw] object-contain select-none absolute inset-0"
+                  style={{
+                    ...mediaTransform,
+                    // filter: "blur(20px)",
+                    transition: isLoaded
+                      ? "transform 0.2s ease-out"
+                      : undefined,
+                    willChange: "transform",
+                    opacity: isLoaded ? 1 : 0,
+                  }}
+                  priority
+                />
+              )}
+
+              {/* Main high-quality image */}
+              <Image
+                ref={mediaRef as unknown as React.RefObject<HTMLImageElement>}
+                src={`${
+                  process.env.NEXT_PUBLIC_BASE_BACKEND_URL
+                }/channels/stream/photos/${channelId}/${
+                  current.messageId
+                }?token=${getToken()}`}
+                alt="Photo"
+                width={current.width || 1600}
+                height={current.height || 1200}
+                className="max-h-[100vh] max-w-[100vw] object-contain select-none"
+                style={{
+                  ...mediaTransform,
+                  transition: isLoaded ? "transform 0.2s ease-out" : undefined,
+                  willChange: "transform",
+                  opacity: isLoaded ? 1 : 0,
+                }}
+                priority
+                onLoad={() => setIsLoaded(true)}
+              />
+            </div>
           ) : current?.kind === "video" ? (
             <div className="relative w-full h-full flex items-center justify-center">
               <video
