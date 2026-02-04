@@ -7,8 +7,8 @@ import { MediaContent } from "./MediaContent";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-  useJustifiedLayout,
-  useResponsiveRowHeight,
+    useJustifiedLayout,
+    useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const ChannelContent = () => {
@@ -119,7 +119,7 @@ const ChannelContent = () => {
       {items.length > 0 && (
         <div
           ref={containerRef}
-          className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto"
+          className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0"
         >
           <div className="flex flex-col gap-0.5">
             {rows.map((row, rowIndex) => (

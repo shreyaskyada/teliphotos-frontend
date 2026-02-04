@@ -10,11 +10,13 @@ const MediaContent: React.FC<MediaContentProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const contentUrl = liveContentUrl || item.imageURL;
+
   return (
     <div className="relative h-full w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
       <>
         {/* Skeleton shimmer while image loads */}
-        {(!liveContentUrl || loading) && !error && (
+        {(!contentUrl || loading) && !error && (
           <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700" />
         )}
 
@@ -26,9 +28,9 @@ const MediaContent: React.FC<MediaContentProps> = ({
         )}
 
         {/* Main Image */}
-        {liveContentUrl && !error && (
+        {contentUrl && !error && (
           <Image
-            src={liveContentUrl}
+            src={contentUrl}
             alt={item.fileName || (isVid ? "Video" : "Photo")}
             width={item.width}
             height={item.height}

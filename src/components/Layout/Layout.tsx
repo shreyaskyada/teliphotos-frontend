@@ -27,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <section className="h-full">
               <Sidebar sidebarOpen={isSidebarOpen} />
             </section>
-            <section className="flex-1 overflow-auto">{children}</section>
+            <section className="flex-1 overflow-auto min-h-0">{children}</section>
           </section>
         </div>
       </GlobalDropzone>
