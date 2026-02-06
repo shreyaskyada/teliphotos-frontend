@@ -5,7 +5,8 @@ import clientAxiosInstance from "@teliphotos/axios/clientAxiosInstance";
 import { CONFIG } from "@teliphotos/utils/config";
 import { isCancel } from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, Upload, X } from "lucide-react";
+import heic2any from "heic2any";
+import { CheckCircle2, Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -58,14 +59,55 @@ export default function GlobalUploader({
       });
     });
 
-    const mapped: UploadFile[] = acceptedFiles.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-      progress: 0,
-      stage: "uploading",
-      controller: new AbortController(),
-    }));
+    const mapped: UploadFile[] = acceptedFiles.map((file) => {
+      const isHeic =
+        file.name.toLowerCase().endsWith(".heic") ||
+        file.name.toLowerCase().endsWith(".heif");
+
+      return {
+        file,
+        preview: isHeic ? "" : URL.createObjectURL(file), // Empty preview for HEIC initially
+        progress: 0,
+        stage: "uploading",
+        controller: new AbortController(),
+      };
+    });
+
     setFiles((prev) => [...prev, ...mapped]);
+
+    // Process HEIC previews in background
+    mapped.forEach(async (item) => {
+      const isHeic =
+        item.file.name.toLowerCase().endsWith(".heic") ||
+        item.file.name.toLowerCase().endsWith(".heif");
+
+      if (isHeic) {
+        try {
+          const result = await heic2any({
+            blob: item.file,
+            toType: "image/jpeg",
+            quality: 0.8,
+          });
+          const blob = Array.isArray(result) ? result[0] : result;
+          const url = URL.createObjectURL(blob);
+
+          setFiles((prev) =>
+            prev.map((p) =>
+              p.file === item.file ? { ...p, preview: url } : p
+            )
+          );
+        } catch (error) {
+          console.error("HEIC conversion failed:", error);
+          // Fallback to original file or generic icon could go here
+          // For now, let's keep it empty or try raw URL (which might not render)
+          setFiles((prev) =>
+             prev.map((p) =>
+               p.file === item.file ? { ...p, preview: URL.createObjectURL(item.file) } : p
+             )
+           );
+        }
+      }
+    });
 
     mapped.forEach((f) => uploadFile(f));
   };
@@ -115,7 +157,12 @@ export default function GlobalUploader({
     noClick: true,
     noKeyboard: true,
     onDrop: handleDrop,
-    accept: { "image/*": [], "video/*": [] },
+    accept: {
+      "image/*": [],
+      "video/*": [],
+      "image/heic": [],
+      "image/heif": [],
+    },
   });
 
   return (
@@ -172,7 +219,7 @@ export default function GlobalUploader({
                       loop
                       autoPlay
                     />
-                  ) : (
+                  ) : f.preview ? (
                     <Image
                       src={f.preview}
                       alt={f.file.name}
@@ -180,6 +227,10 @@ export default function GlobalUploader({
                       height={64}
                       className="w-16 h-16 object-cover rounded-md"
                     />
+                  ) : (
+                    <div className="w-16 h-16 bg-neutral-700 rounded-md flex items-center justify-center">
+                      <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
+                    </div>
                   )}
 
                   <div className="flex-1 min-w-0">

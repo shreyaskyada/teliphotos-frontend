@@ -26,7 +26,8 @@ export const useChannelContent = () => {
   );
 
   const liveContentUrls: { [key: number]: string } = useLiveChannelContent(
-    messages?.pagination?.batchId as string
+    messages?.pagination?.batchId as string,
+    channelId as string
   );
 
   const items: RenderItem[] = useMemo(() => {

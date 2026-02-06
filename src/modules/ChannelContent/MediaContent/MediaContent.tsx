@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MediaContentProps } from "./types";
 
 const MediaContent: React.FC<MediaContentProps> = ({
@@ -11,6 +11,10 @@ const MediaContent: React.FC<MediaContentProps> = ({
   const [error, setError] = useState(false);
 
   const contentUrl = liveContentUrl || item.imageURL;
+
+  useEffect(() => {
+    setError(false);
+  }, [contentUrl]);
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
