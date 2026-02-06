@@ -7,34 +7,37 @@ import { cn } from "@teliphotos/utils/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "w-full font-semibold transition-all duration-300 rounded-2xl inline-flex items-center justify-center relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg",
+  "w-full font-semibold transition-all duration-300 rounded-full inline-flex items-center justify-center relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed shadow-sm",
   {
     variants: {
       variant: {
+        default:
+          "bg-primary text-primary-foreground hover:bg-primary/90",
         primary:
-          "bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 focus:ring-primary-500/50",
+          "bg-primary text-primary-foreground hover:bg-primary/90",
         secondary:
-          "bg-gradient-to-r from-primary-100 to-primary-200 text-primary-700 hover:from-primary-200 hover:to-primary-300 focus:ring-primary-300/50",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         outline:
-          "border-2 border-primary-500 text-primary-600 bg-white dark:bg-gray-900 hover:bg-primary-50 dark:hover:bg-gray-800 focus:ring-primary-500/50",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         ghost:
-          "text-gray-600 dark:text-gray-300 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring-gray-300/50",
-        linkText:
-          "text-primary-600 underline underline-offset-4 hover:text-primary-700 !p-0 !h-auto bg-transparent border-none shadow-none focus:ring-0",
-        link: "text-primary-600 bg-transparent hover:text-primary-700 border-none shadow-none focus:ring-0",
-        time: "bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-gray-100 hover:to-gray-200 hover:text-gray-800 focus:ring-primary-500/50",
+          "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        linkText: "text-primary underline-offset-4 hover:underline",
+        time: "bg-primary text-primary-foreground hover:bg-primary/90", 
         gradient:
-          "bg-gradient-to-r from-violet-600 to-cyan-600 text-white hover:from-violet-700 hover:to-cyan-700 focus:ring-violet-500/50",
-        delete: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500/50", // New delete variant
+          "bg-primary text-primary-foreground hover:bg-primary/90", // Fallback to primary to remove gradients
+        delete: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
       },
       size: {
         sm: "px-3 py-2 text-sm",
-        md: "px-4 py-2.5 text-base",
-        lg: "px-6 py-3 text-lg",
+        md: "px-4 py-2 text-sm",
+        lg: "px-6 py-3 text-base",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
-      variant: "primary",
+      variant: "default",
       size: "md",
     },
   }

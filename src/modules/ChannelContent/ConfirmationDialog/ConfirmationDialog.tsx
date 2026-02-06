@@ -25,33 +25,35 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       <DialogTitle></DialogTitle>
       <DialogContent
         aria-label="Confirmation Dialog"
-        className="max-w-md rounded-xl p-6 shadow-lg"
+        className="sm:max-w-[425px] bg-card border-border p-6"
       >
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-full bg-red-100 dark:bg-red-900/30">
-            <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
+        <div className="flex flex-col items-center gap-4 py-2">
+          <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+            <AlertTriangle className="w-6 h-6 text-destructive" />
           </div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {title}
-          </h2>
+          
+          <div className="space-y-2 text-center">
+            <h2 className="text-xl font-semibold text-foreground">
+              {title}
+            </h2>
+            <p className="text-sm text-muted-foreground text-center">
+              {message}
+            </p>
+          </div>
         </div>
 
-        <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-          {message}
-        </p>
-
-        <div className="flex justify-end gap-3">
+        <div className="grid grid-cols-2 gap-3 mt-4">
           <Button
             onClick={onClose}
-            variant="outline"
-            className="rounded-md px-4"
+            variant="ghost"
+            className="w-full text-muted-foreground hover:text-foreground hover:bg-muted"
           >
             Cancel
           </Button>
           <Button
             onClick={onConfirm}
             variant="delete"
-            className="rounded-md px-4 bg-red-600 hover:bg-red-700 text-white"
+            className="w-full bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full"
             loading={isLoading}
           >
             {isLoading ? "Deleting..." : "Delete All"}

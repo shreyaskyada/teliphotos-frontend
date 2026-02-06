@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Lock, Plus, Trash2 } from "lucide-react";
+import { Lock, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CreateChannelDialog } from "./CreateChannelDialog";
 import { DeleteChannelDialog } from "./DeleteChannelDialog";
@@ -54,65 +54,54 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 min-h-0">
-      <div className="space-y-2">
+    <div className="flex-1 overflow-y-auto px-4 py-2 min-h-0 custom-scrollbar">
+      <div className="space-y-1">
         {/* Error State */}
-        {error && <div className="text-red-400 text-sm p-3">{error}</div>}
+        {error && <div className="text-destructive text-sm p-3">{error}</div>}
         {/* Loading State (Skeletons) */}
         {isLoading &&
           Array.from({ length: 4 }).map((_, idx) => (
             <div
               key={idx}
-              className="w-full flex items-center space-x-3 p-3 rounded-xl animate-pulse"
+              className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full animate-pulse"
             >
-              <div className="w-10 h-10 bg-slate-700 rounded-xl" />
-              <div className="flex-1 space-y-2">
-                <div className="h-3 w-24 bg-slate-700 rounded" />
-                <div className="h-2 w-16 bg-slate-800 rounded" />
-              </div>
+              <div className="w-5 h-5 bg-muted rounded-full" />
+              <div className="h-4 w-24 bg-muted rounded" />
             </div>
           ))}
         {/* Channel list */}
         {!isLoading &&
           !error &&
           channels.map((channel) => {
+            const isActive = selectedChannels.includes(channel.channelId);
             return (
               <div
                 key={channel._id}
-                className={`w-full flex items-center space-x-3 p-3 rounded-xl transition-all duration-200 group ${
-                  selectedChannels.includes(channel.channelId)
-                    ? "bg-gradient-to-r from-violet-500/20 to-cyan-500/20 border border-violet-500/30"
-                    : "hover:bg-white/5"
+                className={`w-full flex items-center space-x-3 px-4 py-2 rounded-full transition-all duration-200 group cursor-pointer ${
+                  isActive
+                    ? "bg-primary/15 text-primary font-medium"
+                    : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                 }`}
+                onClick={() => toggleChannel(channel.channelId)}
               >
-                <button
-                  onClick={() => toggleChannel(channel.channelId)}
-                  className="flex items-center space-x-3 flex-1"
-                >
-                  <div
-                    className={`w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-700 rounded-xl flex items-center justify-center`}
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  <Lock className={`w-4 h-4 ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
+                  <span className="truncate text-sm">{channel.title}</span>
+                </div>
+                
+                {/* Actions */}
+                <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                   <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openDeleteModal(channel.channelId, channel.title);
+                    }}
+                    className="p-1.5 hover:bg-destructive/10 rounded-full hover:text-destructive transition-colors"
+                    title="Delete Channel"
                   >
-                    <Lock className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <div className="font-medium">{channel.title}</div>
-                  </div>
-                  {selectedChannels.includes(channel._id) && (
-                    <Check className="w-4 h-4 text-violet-400" />
-                  )}
-                </button>
-
-                {/* Delete Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openDeleteModal(channel.channelId, channel.title);
-                  }}
-                  className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-2 hover:bg-red-500/20 rounded-lg hover:scale-110 active:scale-95 transform"
-                  title="Delete Channel"
-                >
-                  <Trash2 className="w-4 h-4 text-red-400 hover:text-red-300 transition-colors duration-200" />
-                </button>
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             );
           })}
@@ -120,10 +109,10 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
 
       <button
         onClick={openCreateModal}
-        className="w-full mt-4 flex items-center justify-center space-x-2 p-3 border-2 border-dashed border-white/20 rounded-xl text-slate-400 hover:text-white hover:border-white/40 transition-all duration-200 group"
+        className="w-full mt-4 flex items-center space-x-3 px-4 py-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all duration-200"
       >
-        <Plus className="w-4 h-4" />
-        <span className="text-sm font-medium">Add Channel</span>
+        <Plus className="w-5 h-5" />
+        <span className="text-sm font-medium">New Channel</span>
       </button>
 
       {/* Create Channel Dialog */}

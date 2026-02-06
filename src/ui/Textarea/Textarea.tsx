@@ -17,7 +17,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           // Border + shadow
           "border border-slate-700 shadow-sm",
           // Focus styles
-          "focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50",
+          "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50",
           // Disabled
           "disabled:cursor-not-allowed disabled:opacity-50",
           className

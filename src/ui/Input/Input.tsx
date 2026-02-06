@@ -18,13 +18,13 @@ const inputVariants = cva(
           // Border + shadow
           "border border-slate-700 shadow-sm",
           // Focus styles
-          "focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50",
+          "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50",
           // Disabled
           "disabled:cursor-not-allowed disabled:opacity-50"
         ),
         outline: cn(
           "border-b border-slate-700 bg-transparent text-white rounded-none",
-          "placeholder:text-slate-400 focus:ring-0 focus:border-violet-500"
+          "placeholder:text-slate-400 focus:ring-0 focus:border-primary"
         ),
         danger: cn(
           "border border-red-500 text-red-100 placeholder:text-red-400",
