@@ -5,11 +5,11 @@ import clientAxiosInstance from "@teliphotos/axios/clientAxiosInstance";
 import { CONFIG } from "@teliphotos/utils/config";
 import { isCancel } from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import heic2any from "heic2any";
+
 import { CheckCircle2, Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { io } from "socket.io-client";
 
@@ -17,7 +17,7 @@ interface UploadFile {
   file: File;
   preview: string;
   progress: number;
-  stage: "uploading" | "telegram" | "done" | "error";
+  stage: "uploading" | "telegram" | "done" | "error" | "converting" | "processing" | string;
   controller?: AbortController;
 }
 
@@ -32,14 +32,18 @@ export default function GlobalUploader({
   const { channelId } = useParams();
   const queryClient = useQueryClient();
   const STATIC_CHANNEL_ID = channelId as string;
+  const invalidateTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleDrop = async (acceptedFiles: File[]) => {
+  useEffect(() => {
     if (!socket) {
       socket = io(CONFIG.BASE_BACKEND_URL, { transports: ["websocket"] });
     }
-    socket.emit("join", channelId);
 
-    socket.on("upload-status", (jobResponse: any) => {
+    if (STATIC_CHANNEL_ID) {
+      socket.emit("join", STATIC_CHANNEL_ID);
+    }
+
+    const handleUploadStatus = (jobResponse: any) => {
       const job = JSON.parse(jobResponse);
 
       setFiles((prev) =>
@@ -47,17 +51,38 @@ export default function GlobalUploader({
           job.filename === p.file.name
             ? {
                 ...p,
-                // stage: job.is_telegram_uploaded ? "done" : "telegram",
-                stage: "done",
+                stage: job.stage,
                 progress: 100,
               }
             : p
         )
       );
-      queryClient.invalidateQueries({
-        queryKey: ["channelContent", STATIC_CHANNEL_ID],
-      });
-    });
+
+      // Only invalidate when an item is actually done, and debounce it
+      if (job.stage === "done") {
+        if (invalidateTimerRef.current) {
+          clearTimeout(invalidateTimerRef.current);
+        }
+        invalidateTimerRef.current = setTimeout(() => {
+          queryClient.invalidateQueries({
+            queryKey: ["channelContent", STATIC_CHANNEL_ID],
+          });
+        }, 500);
+      }
+    };
+
+    socket.on("upload-status", handleUploadStatus);
+
+    return () => {
+      socket.off("upload-status", handleUploadStatus);
+      if (invalidateTimerRef.current) {
+        clearTimeout(invalidateTimerRef.current);
+      }
+    };
+  }, [STATIC_CHANNEL_ID, queryClient]);
+
+  const handleDrop = async (acceptedFiles: File[]) => {
+    // Socket initialization is now handled in useEffect
 
     const mapped: UploadFile[] = acceptedFiles.map((file) => {
       const isHeic =
@@ -83,6 +108,7 @@ export default function GlobalUploader({
 
       if (isHeic) {
         try {
+          const heic2any = (await import("heic2any")).default;
           const result = await heic2any({
             blob: item.file,
             toType: "image/jpeg",
@@ -135,9 +161,13 @@ export default function GlobalUploader({
       );
 
       setFiles((prev) =>
-        prev.map((p) =>
-          p.file === f.file ? { ...p, stage: "telegram", progress: 100 } : p
-        )
+        prev.map((p) => {
+          if (p.file !== f.file) return p;
+          // If already done or error, don't overwrite with generic done
+          if (p.stage === "done" || p.stage === "error") return p;
+          // Backend now waits for Telegram upload, so 200 OK means done
+          return { ...p, stage: "done", progress: 100 };
+        })
       );
     } catch (err) {
       if (isCancel(err)) console.log("Upload cancelled:", f.file.name);
@@ -164,6 +194,8 @@ export default function GlobalUploader({
       "image/heif": [],
     },
   });
+
+
 
   return (
     <div {...getRootProps()} className="fixed inset-0 z-[9999]">
@@ -238,6 +270,8 @@ export default function GlobalUploader({
                       {f.file.name}
                     </p>
 
+
+
                     {/* Progress or status */}
                     <div className="mt-2">
                       {f.stage === "uploading" && (
@@ -254,7 +288,9 @@ export default function GlobalUploader({
                         </div>
                       )}
 
-                      {f.stage === "telegram" && (
+                      {(f.stage === "telegram" ||
+                        f.stage === "processing" ||
+                        f.stage === "converting") && (
                         <div className="flex items-center gap-2 text-yellow-400 text-xs">
                           <motion.div
                             className="w-3 h-3 rounded-full bg-yellow-400"
@@ -284,7 +320,7 @@ export default function GlobalUploader({
                         </div>
                       )}
                     </div>
-                  </div>
+                </div>
 
                   {/* Cancel button (only if active) */}
                   {f.stage === "uploading" || f.stage === "telegram" ? (

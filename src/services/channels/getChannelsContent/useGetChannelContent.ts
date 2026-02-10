@@ -2,8 +2,8 @@
 
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import {
-  getChannelContent,
-  GetChannelContentResponse,
+    getChannelContent,
+    GetChannelContentResponse,
 } from "./getChannelsContent";
 
 // ------------------
@@ -30,6 +30,7 @@ const useGetChannelContent = (
     queryFn: () => fetchChannelContent(channelId),
     select: (data) => data.data,
     enabled: !!channelId, // only run if channelId exists
+    refetchOnWindowFocus: false, // Prevents unnecessary calls when switching tabs
   });
 };
 

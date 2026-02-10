@@ -1,14 +1,15 @@
 "use client";
 
 import { Trash2, X } from "lucide-react";
+import { useMemo } from "react";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { MediaContent } from "./MediaContent";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-    useJustifiedLayout,
-    useResponsiveRowHeight,
+  useJustifiedLayout,
+  useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const ChannelContent = () => {
@@ -43,6 +44,27 @@ const ChannelContent = () => {
     minRowHeight: targetRowHeight * 0.6, // Allow more flexibility downward
     spacing: 2, // Reduced spacing for better space utilization
   });
+
+  const { positionedItems, totalHeight } = useMemo(() => {
+    const spacing = 2;
+    let currentTop = 0;
+    const itemsWithPos: any[] = [];
+
+    rows.forEach((row) => {
+      let currentLeft = 0;
+      row.items.forEach((item) => {
+        itemsWithPos.push({
+          ...item,
+          top: currentTop,
+          left: currentLeft,
+        });
+        currentLeft += item.displayWidth + spacing;
+      });
+      currentTop += row.rowHeight + spacing;
+    });
+
+    return { positionedItems: itemsWithPos, totalHeight: currentTop };
+  }, [rows]);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -115,121 +137,116 @@ const ChannelContent = () => {
         </div>
       )}
 
-      {/* Media grid - Justified Layout */}
+      {/* Media grid - Justified Layout (Flattened for performance/flicker-free updates) */}
       {items.length > 0 && (
         <div
           ref={containerRef}
           className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0"
         >
-          <div className="flex flex-col gap-0.5">
-            {rows.map((row, rowIndex) => (
-              <div
-                key={rowIndex}
-                className="flex gap-0.5"
-                style={{ height: row.rowHeight }}
-              >
-                {row.items.map((item) => {
-                  const isVid = item.kind === "video";
-                  const isSelected = selectedItems.has(item.messageId);
+          <div 
+            className="relative w-full" 
+            style={{ height: totalHeight }}
+          >
+            {positionedItems.map((item) => {
+              const isVid = item.kind === "video";
+              const isSelected = selectedItems.has(item.messageId);
 
-                  return (
+              return (
+                <div
+                  key={item.messageId}
+                  className="absolute group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl rounded-0"
+                  style={{
+                    width: item.displayWidth,
+                    height: item.displayHeight,
+                    top: item.top,
+                    left: item.left,
+                  }}
+                >
+                  <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800 rounded-0 overflow-hidden">
+                    {/* Selection overlay */}
+                    {isSelected && (
+                      <div className="absolute inset-0 bg-blue-500/20 z-10 pointer-events-none" />
+                    )}
+
+                    {/* Hover shadow effect */}
                     <div
-                      key={`${item.id}-${item.originalIndex}`}
-                      className="group overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl rounded-0"
+                      className="absolute -inset-2 opacity-0 group-hover:opacity-100 transition-all duration-200 z-5 pointer-events-none"
                       style={{
-                        width: item.displayWidth,
-                        height: item.displayHeight,
-                        flexShrink: 0,
+                        boxShadow:
+                          "0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05)",
+                      }}
+                    />
+
+                    {/* Selection checkbox */}
+                    <div
+                      className={`absolute top-2 left-2 z-20 transition-all duration-200 group-hover:opacity-100 ${
+                        isSelected ? "opacity-100" : "opacity-0"
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent click from propagating to the media content
+                        toggleSelection(item.messageId);
                       }}
                     >
-                      <div className="relative h-full w-full bg-gray-200 dark:bg-gray-800 rounded-0 overflow-hidden">
-                        {/* Selection overlay */}
+                      <div
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shadow-lg transition-all duration-200 ${
+                          isSelected
+                            ? "bg-blue-500 border-blue-500"
+                            : "bg-white/95 border-white/95 group-hover:bg-white group-hover:border-white"
+                        }`}
+                      >
                         {isSelected && (
-                          <div className="absolute inset-0 bg-blue-500/20 z-10 pointer-events-none" />
-                        )}
-
-                        {/* Hover shadow effect */}
-                        <div
-                          className="absolute -inset-2 opacity-0 group-hover:opacity-100 transition-all duration-200 z-5 pointer-events-none"
-                          style={{
-                            boxShadow:
-                              "0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05)",
-                          }}
-                        />
-
-                        {/* Selection checkbox */}
-                        <div
-                          className={`absolute top-2 left-2 z-20 transition-all duration-200 group-hover:opacity-100 ${
-                            isSelected ? "opacity-100" : "opacity-0"
-                          }`}
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevent click from propagating to the media content
-                            toggleSelection(item.messageId);
-                          }}
-                        >
-                          <div
-                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shadow-lg transition-all duration-200 ${
-                              isSelected
-                                ? "bg-blue-500 border-blue-500"
-                                : "bg-white/95 border-white/95 group-hover:bg-white group-hover:border-white"
-                            }`}
+                          <svg
+                            className="w-4 h-4 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
                           >
-                            {isSelected && (
-                              <svg
-                                className="w-4 h-4 text-white"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Media content */}
-                        <div
-                          className="h-full cursor-pointer"
-                          onClick={() => {
-                            console.log("Clicked", isSelectionMode);
-                            if (isSelectionMode) {
-                              // In selection mode, always toggle selection (select/deselect)
-                              toggleSelection(item.messageId);
-                            } else {
-                              // Normal mode, open preview
-                              const idx = item.originalIndex;
-                              setViewerIndex(idx);
-                              setViewerOpen(true);
-                            }
-                          }}
-                        >
-                          <MediaContent
-                            item={item}
-                            liveContentUrl={
-                              liveContentUrls[item.messageId as any]
-                            }
-                            isVid={isVid}
-                          />
-                        </div>
-
-                        {/* Video duration badge */}
-                        {isVid && item.durationSec && (
-                          <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
-                            {Math.floor(item.durationSec / 60)}:
-                            {(item.durationSec % 60)
-                              .toString()
-                              .padStart(2, "0")}
-                          </div>
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
                         )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            ))}
+
+                    {/* Media content */}
+                    <div
+                      className="h-full cursor-pointer"
+                      onClick={() => {
+                        if (isSelectionMode) {
+                          // In selection mode, always toggle selection (select/deselect)
+                          toggleSelection(item.messageId);
+                        } else {
+                          // Normal mode, open preview
+                          const idx = item.originalIndex;
+                          setViewerIndex(idx);
+                          setViewerOpen(true);
+                        }
+                      }}
+                    >
+                      <MediaContent
+                        item={item}
+                        liveContentUrl={
+                          liveContentUrls[item.messageId as any]
+                        }
+                        isVid={isVid}
+                      />
+                    </div>
+
+                    {/* Video duration badge */}
+                    {isVid && item.durationSec && (
+                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+                        {Math.floor(item.durationSec / 60)}:
+                        {(item.durationSec % 60)
+                          .toString()
+                          .padStart(2, "0")}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
