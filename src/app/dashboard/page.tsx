@@ -1,5 +1,7 @@
-const page = () => {
-  return <div>Fetch channels</div>;
+import { Dashboard } from "@teliphotos/modules/Dashboard/Dashboard";
+
+const DashboardPage = () => {
+  return <Dashboard />;
 };
 
-export default page;
+export default DashboardPage;

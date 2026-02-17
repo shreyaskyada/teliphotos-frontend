@@ -2,6 +2,7 @@
 
 import { Button } from "@teliphotos/ui";
 import { ImageIcon, Menu, Search, Upload, X } from "lucide-react";
+import Link from "next/link";
 import { AvatarProfile } from "./UserProfile";
 
 type HeaderProps = {
@@ -26,14 +27,14 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
             )}
           </button>
 
-          <div className="flex items-center space-x-3">
+          <Link href="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
               <ImageIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
               <h1 className="text-lg font-semibold tracking-tight">Teliphotos</h1>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Right side - Search, Upload, Profile */}
