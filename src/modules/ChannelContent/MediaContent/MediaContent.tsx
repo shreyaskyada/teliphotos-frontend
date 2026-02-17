@@ -5,7 +5,6 @@ import { MediaContentProps } from "./types";
 const MediaContent: React.FC<MediaContentProps> = ({
   item,
   liveContentUrl,
-  isVid,
 }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -45,7 +44,7 @@ const MediaContent: React.FC<MediaContentProps> = ({
           <Image
             key={`${contentUrl}-${retryCount}`}
             src={contentUrl}
-            alt={item.fileName || (isVid ? "Video" : "Photo")}
+            alt="Photo"
             width={item.width}
             height={item.height}
             className={`h-full w-full object-cover transition-opacity duration-500 ${

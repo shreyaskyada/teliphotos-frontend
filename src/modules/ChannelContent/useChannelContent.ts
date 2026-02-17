@@ -36,14 +36,10 @@ export const useChannelContent = () => {
         const mid = msg?.id ?? Math.random();
         const media = msg?.media;
 
-        // Handle both photos and videos
+        // Handle only photos
         const isPhoto = media && media.className === "MessageMediaPhoto";
-        const isVideo =
-          media &&
-          media.className === "MessageMediaDocument" &&
-          media.document?.mimeType?.startsWith("video/");
 
-        if (!isPhoto && !isVideo) return undefined;
+        if (!isPhoto) return undefined;
 
         const imageURL = getPhotoVideoThumbnailURL(channelId as string, msg.id);
 
@@ -79,48 +75,6 @@ export const useChannelContent = () => {
             height,
             messageId: msg?.id,
             imageURL,
-          };
-        } else if (isVideo) {
-          // Handle video media from MessageMediaDocument
-          const document = media.document;
-          if (!document) return undefined;
-
-          // Get video dimensions from DocumentAttributeVideo
-          const videoAttr = document.attributes?.find(
-            (attr: any) => attr.className === "DocumentAttributeVideo"
-          );
-
-          let width = videoAttr?.w ?? 800;
-          let height = videoAttr?.h ?? 600;
-          const durationSec = videoAttr?.duration;
-
-          // Ensure video dimensions are reasonable for layout
-          if (width && height) {
-            const aspectRatio = width / height;
-            // Limit extreme aspect ratios that could break layout
-            if (aspectRatio > 4) {
-              width = height * 4; // Max 4:1 ratio
-            } else if (aspectRatio < 0.25) {
-              height = width * 4; // Min 1:4 ratio
-            }
-          }
-
-          // Get filename from DocumentAttributeFilename
-          const filenameAttr = document.attributes?.find(
-            (attr: any) => attr.className === "DocumentAttributeFilename"
-          );
-          const fileName = filenameAttr?.fileName;
-
-          return {
-            id: document.id ?? mid,
-            kind: "video" as const,
-            width,
-            height,
-            durationSec,
-            messageId: msg?.id,
-            imageURL,
-            fileName,
-            sizeBytes: document.size,
           };
         }
 

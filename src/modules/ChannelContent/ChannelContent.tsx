@@ -8,8 +8,8 @@ import { MediaContent } from "./MediaContent";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-  useJustifiedLayout,
-  useResponsiveRowHeight,
+    useJustifiedLayout,
+    useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const ChannelContent = () => {
@@ -132,7 +132,7 @@ const ChannelContent = () => {
             No media found
           </h3>
           <p className="text-gray-500 dark:text-gray-400">
-            This channel doesn't have any photos or videos yet.
+            This channel doesn't have any photos yet.
           </p>
         </div>
       )}
@@ -148,7 +148,6 @@ const ChannelContent = () => {
             style={{ height: totalHeight }}
           >
             {positionedItems.map((item) => {
-              const isVid = item.kind === "video";
               const isSelected = selectedItems.has(item.messageId);
 
               return (
@@ -230,19 +229,8 @@ const ChannelContent = () => {
                         liveContentUrl={
                           liveContentUrls[item.messageId as any]
                         }
-                        isVid={isVid}
                       />
                     </div>
-
-                    {/* Video duration badge */}
-                    {isVid && item.durationSec && (
-                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
-                        {Math.floor(item.durationSec / 60)}:
-                        {(item.durationSec % 60)
-                          .toString()
-                          .padStart(2, "0")}
-                      </div>
-                    )}
                   </div>
                 </div>
               );

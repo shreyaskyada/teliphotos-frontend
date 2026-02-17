@@ -14,7 +14,7 @@ export type Channel = {
   color: string;
 };
 
-export type SidebarFilterType = "all" | "photos" | "videos";
+export type SidebarFilterType = "all" | "photos";
 
 export interface SidebarProps {
   sidebarOpen: boolean;
@@ -24,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
   const router = useRouter();
   const { channelId } = useParams();
 
-  const [filterType, setFilterType] = useState<"all" | "photos" | "videos">(
+  const [filterType, setFilterType] = useState<"all" | "photos">(
     "all"
   );
   const [selectedChannels, setSelectedChannels] = useState<string[]>(["all"]);
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
         {/* Filters */}
         <div className="px-4 pb-2 shrink-0">
             <div className="flex flex-wrap gap-2">
-              {["all", "photos", "videos"].map((type) => (
+              {["all", "photos"].map((type) => (
                 <button
                   key={type}
                   onClick={() => setFilterType(type as SidebarFilterType)}

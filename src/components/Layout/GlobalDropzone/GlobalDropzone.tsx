@@ -6,7 +6,7 @@ import { CONFIG } from "@teliphotos/utils/config";
 import { isCancel } from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { CheckCircle2, Loader2, Upload, X } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -17,8 +17,9 @@ interface UploadFile {
   file: File;
   preview: string;
   progress: number;
-  stage: "uploading" | "telegram" | "done" | "error" | "converting" | "processing" | string;
+  stage: "uploading" | "telegram" | "done" | "error" | "converting" | "processing" | "rejected" | string;
   controller?: AbortController;
+  error?: string;
 }
 
 let socket: any;
@@ -81,8 +82,14 @@ export default function GlobalUploader({
     };
   }, [STATIC_CHANNEL_ID, queryClient]);
 
-  const handleDrop = async (acceptedFiles: File[]) => {
-    // Socket initialization is now handled in useEffect
+  const handleDrop = async (acceptedFiles: File[], fileRejections: any[]) => {
+    const rejectedMapped: UploadFile[] = fileRejections.map(({ file, errors }) => ({
+      file,
+      preview: "",
+      progress: 0,
+      stage: "rejected",
+      error: errors[0]?.message || "File type not supported",
+    }));
 
     const mapped: UploadFile[] = acceptedFiles.map((file) => {
       const isHeic =
@@ -98,7 +105,7 @@ export default function GlobalUploader({
       };
     });
 
-    setFiles((prev) => [...prev, ...mapped]);
+    setFiles((prev) => [...prev, ...mapped, ...rejectedMapped]);
 
     // Process HEIC previews in background
     mapped.forEach(async (item) => {
@@ -189,7 +196,6 @@ export default function GlobalUploader({
     onDrop: handleDrop,
     accept: {
       "image/*": [],
-      "video/*": [],
       "image/heic": [],
       "image/heif": [],
     },
@@ -212,7 +218,7 @@ export default function GlobalUploader({
           >
             <div className="text-white text-2xl font-semibold flex items-center gap-2">
               <Upload className="w-6 h-6" />
-              Drop photos & videos to upload
+              Drop photos to upload
             </div>
           </motion.div>
         )}
@@ -243,15 +249,7 @@ export default function GlobalUploader({
                   className="flex items-center gap-3 bg-neutral-800 rounded-lg p-3 relative"
                 >
                   {/* Preview */}
-                  {f.file.type.startsWith("video/") ? (
-                    <video
-                      src={f.preview}
-                      className="w-16 h-16 object-cover rounded-md"
-                      muted
-                      loop
-                      autoPlay
-                    />
-                  ) : f.preview ? (
+                  {f.preview ? (
                     <Image
                       src={f.preview}
                       alt={f.file.name}
@@ -259,6 +257,10 @@ export default function GlobalUploader({
                       height={64}
                       className="w-16 h-16 object-cover rounded-md"
                     />
+                  ) : f.stage === "rejected" ? (
+                    <div className="w-16 h-16 bg-red-500/10 rounded-md flex items-center justify-center">
+                      <AlertCircle className="w-6 h-6 text-red-500" />
+                    </div>
                   ) : (
                     <div className="w-16 h-16 bg-neutral-700 rounded-md flex items-center justify-center">
                       <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
@@ -308,6 +310,19 @@ export default function GlobalUploader({
                         </div>
                       )}
 
+                      {f.stage === "rejected" && (
+                        <div className="flex flex-col gap-0.5">
+                          <div className="text-red-400 text-xs font-medium">
+                            Not Supported
+                          </div>
+                          {f.error && (
+                            <div className="text-neutral-500 text-[10px] leading-tight">
+                              {f.error}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {f.stage === "error" && (
                         <div className="flex items-center gap-2 text-red-400 text-xs">
                           ❌ Failed
@@ -322,13 +337,11 @@ export default function GlobalUploader({
                     </div>
                 </div>
 
-                  {/* Cancel button (only if active) */}
-                  {f.stage === "uploading" || f.stage === "telegram" ? (
-                    <X
-                      className="text-gray-400 w-5 h-5 cursor-pointer hover:text-white"
-                      onClick={() => handleCancel(f.file)}
-                    />
-                  ) : null}
+                  {/* Dismiss button */}
+                  <X
+                    className="text-gray-400 w-5 h-5 cursor-pointer hover:text-white"
+                    onClick={() => handleCancel(f.file)}
+                  />
                 </motion.div>
               ))}
             </div>

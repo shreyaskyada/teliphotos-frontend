@@ -1,23 +1,23 @@
 "use client";
 import {
-  ArrowRight,
-  Camera,
-  Check,
-  Cloud,
-  Download,
-  Eye,
-  Folder,
-  Heart,
-  Infinity,
-  Lock,
-  MessageSquare,
-  Play,
-  Shield,
-  Smartphone,
-  Sparkles,
-  Star,
-  Timer,
-  Users,
+    ArrowRight,
+    Camera,
+    Check,
+    Cloud,
+    Download,
+    Eye,
+    Folder,
+    Heart,
+    Infinity,
+    Lock,
+    MessageSquare,
+    Play,
+    Shield,
+    Smartphone,
+    Sparkles,
+    Star,
+    Timer,
+    Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -573,7 +573,7 @@ const LandingPage = () => {
                       </h4>
                     </div>
                     <p className="text-slate-400 text-sm">
-                      Store as many photos and videos as you want
+                      Store as many photos as you want
                     </p>
                   </div>
 
@@ -677,7 +677,7 @@ const LandingPage = () => {
           </h2>
           <p className="text-xl text-slate-300 mb-8 leading-relaxed">
             Join thousands of users who trust Teliphotos with their precious
-            photos and videos - completely free.
+            photos - completely free.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button

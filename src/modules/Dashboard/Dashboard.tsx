@@ -1,17 +1,14 @@
 "use client";
 import { useGetMediaStats } from "@teliphotos/services/stats/useGetMediaStats";
-import { Image as ImageIcon, Video as VideoIcon } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 import {
     Bar,
     BarChart,
     CartesianGrid,
-    Cell,
-    Pie,
-    PieChart,
     ResponsiveContainer,
     Tooltip,
     XAxis,
-    YAxis,
+    YAxis
 } from "recharts";
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
@@ -37,7 +34,6 @@ export const Dashboard = () => {
 
   const pieData = [
     { name: "Photos", value: stats.breakdown.photos },
-    { name: "Videos", value: stats.breakdown.videos },
   ];
 
   return (
@@ -57,20 +53,12 @@ export const Dashboard = () => {
             <p className="text-2xl font-bold text-foreground">{stats.breakdown.photos}</p>
           </div>
         </div>
-        <div className="bg-card p-6 rounded-2xl border border-border shadow-sm flex items-center space-x-4">
-          <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-              <VideoIcon className="w-6 h-6 text-emerald-500" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Total Videos</p>
-            <p className="text-2xl font-bold text-foreground">{stats.breakdown.videos}</p>
-          </div>
-        </div>
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Bar Chart: Last 7 Days Activity */}
-        <div className="lg:col-span-2 bg-card p-8 rounded-2xl border border-border shadow-sm">
+        <div className="lg:col-span-3 bg-card p-8 rounded-2xl border border-border shadow-sm">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-lg font-bold text-foreground">Upload Activity</h3>
             <span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">Last 7 Days</span>
@@ -111,48 +99,7 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        {/* Pie Chart: Distribution */}
-        <div className="bg-card p-8 rounded-2xl border border-border shadow-sm">
-          <h3 className="text-lg font-bold text-foreground mb-8">Media Distribution</h3>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="42%"
-                  innerRadius={70}
-                  outerRadius={100}
-                  paddingAngle={8}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                    contentStyle={{ 
-                        borderRadius: '12px', 
-                        border: '1px solid #e2e8f0', 
-                        boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'
-                    }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="space-y-4 mt-2">
-              {pieData.map((entry, index) => (
-                  <div key={entry.name} className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                        <span className="text-sm font-bold text-foreground">{entry.name}</span>
-                      </div>
-                      <span className="text-sm font-medium text-muted-foreground">{entry.value}</span>
-                  </div>
-              ))}
-          </div>
-        </div>
+
       </div>
     </div>
   );
