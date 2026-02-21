@@ -8,8 +8,8 @@ import { MediaContent } from "./MediaContent";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-    useJustifiedLayout,
-    useResponsiveRowHeight,
+  useJustifiedLayout,
+  useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const ChannelContent = () => {
@@ -32,10 +32,22 @@ const ChannelContent = () => {
     handleDialogConfirm,
     handleTrashClick,
     isDeleting,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useChannelContent();
 
   const { containerRef, containerWidth } = useContainerWidth();
   const targetRowHeight = useResponsiveRowHeight(containerWidth);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop <= clientHeight + 300) {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    }
+  };
 
   const { rows } = useJustifiedLayout(items, {
     containerWidth: containerWidth - (containerWidth > 640 ? 68 : 44), // Account for responsive padding + 20px right space
@@ -141,11 +153,12 @@ const ChannelContent = () => {
       {items.length > 0 && (
         <div
           ref={containerRef}
+          onScroll={handleScroll}
           className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0"
         >
           <div 
             className="relative w-full" 
-            style={{ height: totalHeight }}
+            style={{ height: totalHeight + (isFetchingNextPage ? 80 : 0) }}
           >
             {positionedItems.map((item) => {
               const isSelected = selectedItems.has(item.messageId);
@@ -235,6 +248,19 @@ const ChannelContent = () => {
                 </div>
               );
             })}
+
+            {/* Loading more indicator */}
+            {isFetchingNextPage && (
+              <div 
+                className="absolute w-full flex justify-center items-center py-8"
+                style={{ top: totalHeight }}
+              >
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                  <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm font-medium italic">Loading more moments...</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

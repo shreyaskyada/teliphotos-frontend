@@ -1,36 +1,36 @@
 "use client";
 
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
-    getChannelContent,
-    GetChannelContentResponse,
+  getChannelContent,
+  GetChannelContentResponse,
 } from "./getChannelsContent";
 
 // ------------------
-// API Caller Wrapper
-// ------------------
-const fetchChannelContent = async (
-  channelId: string
-): Promise<GetChannelContentResponse> => {
-  return getChannelContent(channelId);
-};
-
-// ------------------
-// React Query Hook
+// React Query Hook (Infinite)
 // ------------------
 const useGetChannelContent = (
   channelId: string
-): UseQueryResult<GetChannelContentResponse["data"], Error> => {
-  return useQuery<
+) => {
+  return useInfiniteQuery<
     GetChannelContentResponse,
     Error,
     GetChannelContentResponse["data"]
   >({
     queryKey: ["channelContent", channelId],
-    queryFn: () => fetchChannelContent(channelId),
-    select: (data) => data.data,
-    enabled: !!channelId, // only run if channelId exists
-    refetchOnWindowFocus: false, // Prevents unnecessary calls when switching tabs
+    queryFn: ({ pageParam = 0 }) => getChannelContent(channelId, pageParam as number),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const { offset, limit, total } = lastPage.data.pagination;
+      const nextOffset = Number(offset) + Number(limit);
+      return nextOffset < Number(total) ? nextOffset : undefined;
+    },
+    select: (data) => ({
+      ...data.pages[0].data,
+      media: data.pages.flatMap((page) => page.data.media),
+    }),
+    enabled: !!channelId,
+    refetchOnWindowFocus: false,
   });
 };
 

@@ -47,7 +47,8 @@ export interface GetChannelContentResponse {
 }
 
 export const getChannelContent = async (
-  channelId: string
+  channelId: string,
+  offset: number = 0
 ): Promise<GetChannelContentResponse> => {
   const baseURL = process.env.NEXT_PUBLIC_BASE_BACKEND_URL;
 
@@ -56,7 +57,7 @@ export const getChannelContent = async (
   }
 
   const response = await serverAxiosInstance.get<GetChannelContentResponse>(
-    `${baseURL}/channels/${channelId}/content`
+    `${baseURL}/channels/${channelId}/content?offset=${offset}`
   );
 
   return response.data;

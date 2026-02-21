@@ -3,7 +3,7 @@
 import { useDeleteMedia, useGetChannelContent } from "@teliphotos/services";
 import { getPhotoVideoThumbnailURL } from "@teliphotos/services/media";
 import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { RenderItem } from "./types";
 import { useLiveChannelContent } from "./useLiveChannelContent";
 
@@ -21,66 +21,105 @@ export const useChannelContent = () => {
   const { mutate: deleteMediaMutation, isPending: isDeleting } =
     useDeleteMedia();
 
-  const { data: messages, refetch: refetchMessages } = useGetChannelContent(
+  const { 
+    data: messages, 
+    refetch: refetchMessages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useGetChannelContent(
     channelId as string
   );
+
+  const refetchTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const liveContentUrls: { [key: number]: string } = useLiveChannelContent(
     messages?.pagination?.batchId as string,
-    channelId as string
+    channelId as string,
+    useMemo(() => (mediaId: number) => {
+      // Check if we already have this message (using Number for safe comparison)
+      const existingMedia = messages?.media || [];
+      const exists = existingMedia.some(m => Number(m.id) === mediaId);
+      
+      if (!exists) {
+        console.log(`[useChannelContent] New media discovery (${mediaId}). Batching refetch...`);
+        
+        if (refetchTimerRef.current) clearTimeout(refetchTimerRef.current);
+        
+        refetchTimerRef.current = setTimeout(() => {
+          console.log(`[useChannelContent] Flickering prevention: Executing batched refetch.`);
+          refetchMessages();
+          refetchTimerRef.current = null;
+        }, 1500); 
+      }
+    }, [messages?.media, refetchMessages])
   );
 
   const items: RenderItem[] = useMemo(() => {
-    return (messages?.media || [])
-      .map((msg: any) => {
-        const mid = msg?.id ?? Math.random();
-        const media = msg?.media;
+    const rawMedia = messages?.media || [];
+    const result: RenderItem[] = [];
 
-        // Handle only photos
-        const isPhoto = media && media.className === "MessageMediaPhoto";
+    for (const msg of rawMedia) {
+      const media = msg?.media as any;
+      if (!media) continue;
 
-        if (!isPhoto) return undefined;
+      // Robust check for photo media across different possible backend response formats
+      const isPhoto = !!(
+        media.className === "MessageMediaPhoto" || 
+        media.photo || 
+        media._ === "messageMediaPhoto" ||
+        media.mimeType?.startsWith("image/") ||
+        (media.thumbs && media.thumbs.length > 0)
+      );
 
-        const imageURL = getPhotoVideoThumbnailURL(channelId as string, msg.id);
+      if (!isPhoto) continue;
 
-        if (isPhoto) {
-          const photo = media.photo;
-          if (!photo) return undefined;
+      // Extract photo object or default to media itself if flattened
+      const photo = media.photo || media;
+      
+      // Extract sizes/thumbs
+      const sizes = (photo.sizes || photo.thumbs || []).filter(
+        (s: any) =>
+          s.className === "PhotoSize" ||
+          s.className === "PhotoSizeProgressive" ||
+          s.type === "m" || s.type === "x" || s.type === "y" || s.type === "w"
+      );
 
-          const sizes = (photo.sizes || []).filter(
-            (s: any) =>
-              s.className === "PhotoSize" ||
-              s.className === "PhotoSizeProgressive"
-          );
+      // Pick the largest available dimension for layout
+      let width = 800;
+      let height = 600;
 
-          if (sizes.length === 0) {
-            console.warn("No usable sizes for photo:", photo.id);
-            return undefined;
-          }
+      if (sizes.length > 0) {
+        const largestSize = sizes.reduce((prev: any, curr: any) => {
+          const prevArea = (prev.w ?? prev.width ?? 0) * (prev.h ?? prev.height ?? 0);
+          const currArea = (curr.w ?? curr.width ?? 0) * (curr.h ?? curr.height ?? 0);
+          return currArea > prevArea ? curr : prev;
+        });
+        width = largestSize.w ?? largestSize.width ?? 800;
+        height = largestSize.h ?? largestSize.height ?? 600;
+      } else if (media.width && media.height) {
+        width = media.width;
+        height = media.height;
+      }
 
-          // Pick the largest by area (fallback safe)
-          const largestSize = sizes.reduce((prev: any, curr: any) => {
-            const prevArea = (prev.w ?? 0) * (prev.h ?? 0);
-            const currArea = (curr.w ?? 0) * (curr.h ?? 0);
-            return currArea > prevArea ? curr : prev;
-          });
+      result.push({
+        id: String(photo.id || media.id || msg.id),
+        kind: "photo",
+        width: width,
+        height: height,
+        messageId: String(msg.id),
+        imageURL: (msg as any).imageURL || getPhotoVideoThumbnailURL(channelId as string, String(msg.id)),
+        date: (msg as any).date ?? 0, // Unix timestamp from Telegram, used for sorting
+      } as RenderItem & { date: number });
+    }
 
-          const width = largestSize?.w ?? 800;
-          const height = largestSize?.h ?? 600;
+    // Sort newest-first by Telegram message send time (Unix timestamp).
+    // This is the authoritative ordering — more reliable than messageId (string)
+    // or any insertion order from the DB.
+    result.sort((a, b) => ((b as any).date ?? 0) - ((a as any).date ?? 0));
 
-          return {
-            id: photo.id ?? mid,
-            kind: "photo" as const,
-            width,
-            height,
-            messageId: msg?.id,
-            imageURL,
-          };
-        }
-
-        return undefined;
-      })
-      .filter(Boolean) as RenderItem[];
+    console.log(`[useChannelContent] Rendered ${result.length} items from ${rawMedia.length} raw messages`);
+    return result;
   }, [messages, channelId]);
 
   const viewerItems = useMemo(
@@ -160,5 +199,8 @@ export const useChannelContent = () => {
     handleDialogConfirm,
     handleTrashClick,
     isDeleting,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } as const;
 };

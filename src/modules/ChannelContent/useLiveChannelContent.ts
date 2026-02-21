@@ -15,7 +15,8 @@ let socket: any;
 
 export const useLiveChannelContent = (
   batchId: string,
-  channelId?: string
+  channelId?: string,
+  onNewMedia?: (mediaId: number) => void
 ): Record<number, string> => {
   const [urls, setUrls] = useState<Record<number, string>>({});
   const urlsRef = useRef<Record<number, string>>({});
@@ -30,26 +31,39 @@ export const useLiveChannelContent = (
       });
     }
 
+    // Join rooms
     if (batchId) socket.emit("join", batchId);
     if (channelId) socket.emit("join", channelId);
 
-    socket.on("job-status", (job: LiveMediaUpdate) => {
-      // update ref in-place
-      urlsRef.current[job.mediaId] = job.url;
+    const handleJobStatus = (job: LiveMediaUpdate) => {
+      console.log(`[useLiveChannelContent] Received job-status:`, job);
+      
+      const mId = Number(job.mediaId);
+      if (!mId || !job.url) return;
 
-      // batch sync to React state with throttling (one update per frame)
+      // Update ref in-place
+      urlsRef.current[mId] = job.url;
+
+      // Notify parent if this is a new media item we might need to fetch metadata for
+      if (onNewMedia) {
+        onNewMedia(mId);
+      }
+
+      // Batch sync to React state with throttling (one update per frame)
       if (rafRef.current === null) {
         rafRef.current = requestAnimationFrame(() => {
           setUrls({ ...urlsRef.current });
           rafRef.current = null;
         });
       }
-    });
+    };
+
+    socket.on("job-status", handleJobStatus);
 
     return () => {
-      socket?.off("job-status");
+      socket.off("job-status", handleJobStatus);
     };
-  }, [batchId, channelId]);
+  }, [batchId, channelId, onNewMedia]);
 
-  return urls; // { [mediaId]: url }
+  return urls; 
 };

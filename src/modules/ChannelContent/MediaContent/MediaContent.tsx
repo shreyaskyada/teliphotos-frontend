@@ -12,11 +12,20 @@ const MediaContent: React.FC<MediaContentProps> = ({
 
   const contentUrl = liveContentUrl || item.imageURL;
 
+  // Track if we've successfully loaded THIS specific URL to avoid re-shimmering
+  const [loadedUrl, setLoadedUrl] = useState<string | null>(null);
+
   useEffect(() => {
-    setError(false);
-    setLoading(true);
-    setRetryCount(0);
-  }, [contentUrl]);
+    // Only reset loading/error if the URL actually changes and it's not just a minor ref update
+    if (contentUrl !== loadedUrl) {
+      setError(false);
+      // If we already have a loaded image, don't show shimmer again while the higher-res or live version loads
+      if (!loadedUrl) {
+        setLoading(true);
+      }
+      setRetryCount(0);
+    }
+  }, [contentUrl, loadedUrl]);
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
@@ -53,6 +62,7 @@ const MediaContent: React.FC<MediaContentProps> = ({
             onLoad={() => {
               setLoading(false);
               setError(false);
+              setLoadedUrl(contentUrl);
             }}
             onError={() => {
               if (!liveContentUrl && retryCount < 30) {

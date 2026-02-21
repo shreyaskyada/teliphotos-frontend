@@ -6,14 +6,14 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { LayoutProps } from "./types";
 
+const queryClient = new QueryClient();
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleToggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
-
-  const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
