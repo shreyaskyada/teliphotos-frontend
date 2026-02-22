@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@teliphotos/ui/Button";
+import { Button } from "@telephotos/ui/Button";
 import {
     Dialog,
     DialogContent,
     DialogFooter,
     DialogTitle,
-} from "@teliphotos/ui/Dialog";
+} from "@telephotos/ui/Dialog";
 import { AlertTriangle } from "lucide-react";
 import { DeleteChannelDialogProps } from "./types";
 import { useDeleteChannelModal } from "./useDeleteChannelDialog";

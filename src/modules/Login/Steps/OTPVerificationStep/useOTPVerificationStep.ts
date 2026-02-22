@@ -1,8 +1,8 @@
-import { verifyOtp } from "@teliphotos/services";
+import { verifyOtp } from "@telephotos/services";
 import {
   LOGIN_OTP_SESSION_ID_KEY,
   LOGIN_PHONE_NUMBER_KEY,
-} from "@teliphotos/utils/constants";
+} from "@telephotos/utils/constants";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 

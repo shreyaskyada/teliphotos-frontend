@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
-import { cn } from "@teliphotos/utils/utils";
+import { cn } from "@telephotos/utils/utils";
 
 const labelVariants = cva(
   "text-sm font-medium leading-none text-slate-200 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

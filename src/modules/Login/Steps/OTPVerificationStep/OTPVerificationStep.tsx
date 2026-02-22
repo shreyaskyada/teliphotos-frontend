@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@teliphotos/ui";
+import { Button } from "@telephotos/ui";
 import { MessageSquare, RefreshCw } from "lucide-react";
 import React from "react";
 import { useOTPVerificationStep } from "./useOTPVerificationStep";

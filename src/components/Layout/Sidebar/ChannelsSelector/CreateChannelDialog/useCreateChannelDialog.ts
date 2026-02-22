@@ -1,4 +1,4 @@
-import { useCreateChannel } from "@teliphotos/services";
+import { useCreateChannel } from "@telephotos/services";
 import { useForm } from "react-hook-form";
 import { CreateChannelData, UseCreateChannelModal } from "./types";
 

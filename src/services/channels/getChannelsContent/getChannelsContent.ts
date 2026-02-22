@@ -1,6 +1,6 @@
 "use server";
 
-import serverAxiosInstance from "@teliphotos/axios/serverAxiosInstance";
+import serverAxiosInstance from "@telephotos/axios/serverAxiosInstance";
 
 export interface ChannelMessage {
   id: number;

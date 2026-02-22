@@ -1,7 +1,7 @@
 "use client";
 
-import { useDeleteMedia, useGetChannelContent } from "@teliphotos/services";
-import { getPhotoVideoThumbnailURL } from "@teliphotos/services/media";
+import { useDeleteMedia, useGetChannelContent } from "@telephotos/services";
+import { getPhotoVideoThumbnailURL } from "@telephotos/services/media";
 import { useParams } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import type { RenderItem } from "./types";

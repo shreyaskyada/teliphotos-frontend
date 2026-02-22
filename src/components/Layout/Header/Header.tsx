@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@teliphotos/ui";
+import { Button } from "@telephotos/ui";
 import { ImageIcon, Menu, Search, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { AvatarProfile } from "./UserProfile";
@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
               <ImageIcon className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold tracking-tight">Teliphotos</h1>
+              <h1 className="text-lg font-semibold tracking-tight">Telephotos</h1>
             </div>
           </Link>
         </div>

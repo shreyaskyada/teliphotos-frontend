@@ -1,4 +1,4 @@
-import { useDeleteChannel } from "@teliphotos/services/channels";
+import { useDeleteChannel } from "@telephotos/services/channels";
 import { useCallback, useEffect } from "react";
 import { UseDeleteChannelModalProps } from "./types";
 

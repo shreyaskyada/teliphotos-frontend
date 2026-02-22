@@ -1,5 +1,5 @@
 "use server";
-import serverAxiosInstance from "@teliphotos/axios/serverAxiosInstance";
+import serverAxiosInstance from "@telephotos/axios/serverAxiosInstance";
 import { cookies } from "next/headers";
 import { GET_PROFILE } from "../profileAPIRoutes";
 import { UserProfile } from "./types.ts";

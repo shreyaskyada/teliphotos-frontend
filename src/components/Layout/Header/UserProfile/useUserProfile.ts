@@ -1,4 +1,4 @@
-import { useGetProfile } from "@teliphotos/services";
+import { useGetProfile } from "@telephotos/services";
 
 const useUserProfile = () => {
   const { data, isLoading } = useGetProfile();

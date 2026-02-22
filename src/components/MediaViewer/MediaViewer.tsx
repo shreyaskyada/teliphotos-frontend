@@ -1,7 +1,7 @@
 "use client";
 
-import { getPhotoVideoThumbnailURL } from "@teliphotos/services/media";
-import { Button } from "@teliphotos/ui";
+import { getPhotoVideoThumbnailURL } from "@telephotos/services/media";
+import { Button } from "@telephotos/ui";
 import {
     ArrowLeft,
     ArrowRight,

@@ -2,7 +2,7 @@ import * as React from "react";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 
-import { cn } from "@teliphotos/utils/utils";
+import { cn } from "@telephotos/utils/utils";
 
 const Popover = PopoverPrimitive.Root;
 

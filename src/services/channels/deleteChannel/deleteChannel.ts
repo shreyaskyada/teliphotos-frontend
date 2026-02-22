@@ -1,6 +1,6 @@
 "use client";
 
-import clientAxiosInstance from "@teliphotos/axios/clientAxiosInstance";
+import clientAxiosInstance from "@telephotos/axios/clientAxiosInstance";
 
 export interface DeleteChannelRequest {
   channelId: string;

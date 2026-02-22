@@ -1,4 +1,4 @@
-import { Button, PhoneInputField } from "@teliphotos/ui";
+import { Button, PhoneInputField } from "@telephotos/ui";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { PhoneNumberStepProps } from "./types";
 import { usePhoneNumberStep } from "./usePhoneNumberStep";

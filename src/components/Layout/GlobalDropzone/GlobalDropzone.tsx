@@ -1,8 +1,8 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import clientAxiosInstance from "@teliphotos/axios/clientAxiosInstance";
-import { CONFIG } from "@teliphotos/utils/config";
+import clientAxiosInstance from "@telephotos/axios/clientAxiosInstance";
+import { CONFIG } from "@telephotos/utils/config";
 import { isCancel } from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 

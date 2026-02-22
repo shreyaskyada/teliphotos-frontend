@@ -1,5 +1,5 @@
 "use client";
-import { useGetMediaStats } from "@teliphotos/services/stats/useGetMediaStats";
+import { useGetMediaStats } from "@telephotos/services/stats/useGetMediaStats";
 import { Image as ImageIcon } from "lucide-react";
 import {
     Bar,

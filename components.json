@@ -11,11 +11,11 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "@teliphotos/components",
-    "utils": "@teliphotos/utils/utils",
-    "ui": "@teliphotos/ui",
-    "lib": "@teliphotos/lib",
-    "hooks": "@teliphotos/hooks"
+    "components": "@telephotos/components",
+    "utils": "@telephotos/utils/utils",
+    "ui": "@telephotos/ui",
+    "lib": "@telephotos/lib",
+    "hooks": "@telephotos/hooks"
   },
   "iconLibrary": "lucide"
 }

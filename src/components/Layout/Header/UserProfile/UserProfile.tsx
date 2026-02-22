@@ -6,8 +6,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@teliphotos/ui";
-import { Skeleton } from "@teliphotos/ui/Skeleton";
+} from "@telephotos/ui";
+import { Skeleton } from "@telephotos/ui/Skeleton";
 import { ChevronLeftIcon, LogOut } from "lucide-react";
 import useUserProfile from "./useUserProfile";
 

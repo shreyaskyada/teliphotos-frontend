@@ -112,7 +112,7 @@ const LandingPage = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent">
-                Teliphotos
+                Telephotos
               </h1>
               <p className="text-xs text-slate-400">Secure Photo Vault</p>
             </div>
@@ -255,7 +255,7 @@ const LandingPage = () => {
                         </div>
                         <div>
                           <h3 className="font-semibold text-white text-sm">
-                            Teliphotos
+                            Telephotos
                           </h3>
                           <p className="text-xs text-slate-400">1,247 photos</p>
                         </div>
@@ -310,7 +310,7 @@ const LandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                Why Choose Teliphotos?
+                Why Choose Telephotos?
               </span>
             </h2>
             <p className="text-xl text-slate-400 max-w-3xl mx-auto">
@@ -559,7 +559,7 @@ const LandingPage = () => {
                 </h3>
                 <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
                   We believe privacy and security should be accessible to
-                  everyone. That's why Teliphotos is completely free with no
+                  everyone. That's why Telephotos is completely free with no
                   hidden costs.
                 </p>
 
@@ -627,7 +627,7 @@ const LandingPage = () => {
             {/* Why Free Section */}
             <div className="mt-16 text-center">
               <h3 className="text-2xl font-bold text-white mb-6">
-                Why is Teliphotos Free?
+                Why is Telephotos Free?
               </h3>
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="space-y-3">
@@ -676,7 +676,7 @@ const LandingPage = () => {
             </span>
           </h2>
           <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-            Join thousands of users who trust Teliphotos with their precious
+            Join thousands of users who trust Telephotos with their precious
             photos - completely free.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -708,7 +708,7 @@ const LandingPage = () => {
                   <Camera className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">Teliphotos</h3>
+                  <h3 className="font-bold text-white">Telephotos</h3>
                   <p className="text-xs text-slate-400">Secure Photo Vault</p>
                 </div>
               </div>
@@ -799,7 +799,7 @@ const LandingPage = () => {
 
           <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between">
             <p className="text-slate-400 text-sm">
-              © 2024 Teliphotos. All rights reserved.
+              © 2024 Telephotos. All rights reserved.
             </p>
             <div className="flex items-center space-x-6 mt-4 md:mt-0">
               <div className="flex items-center space-x-2 text-sm text-slate-400">

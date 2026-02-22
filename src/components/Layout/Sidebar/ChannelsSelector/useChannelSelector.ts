@@ -1,7 +1,7 @@
 import {
   useCreateChannel,
   useGetPrivateChannels,
-} from "@teliphotos/services/channels";
+} from "@telephotos/services/channels";
 import { useState } from "react";
 
 interface UseChannelSelectorProps {

@@ -43,7 +43,7 @@ const Login = () => {
               <Camera className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent mb-3">
-              Teliphotos
+              Telephotos
             </h1>
             <p className="text-slate-400 text-lg leading-relaxed max-w-md mx-auto">
               Your private telegram gallery

@@ -1,4 +1,4 @@
-import clientAxiosInstance from "@teliphotos/axios/clientAxiosInstance";
+import clientAxiosInstance from "@telephotos/axios/clientAxiosInstance";
 
 export const deleteMedia = async (channelId: string, messageIds: string[]) => {
   try {

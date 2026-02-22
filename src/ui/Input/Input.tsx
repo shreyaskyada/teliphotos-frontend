@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cva, type VariantProps } from "class-variance-authority";
 
-import { cn } from "@teliphotos/utils/utils";
+import { cn } from "@telephotos/utils/utils";
 
 import useInput from "./useInput";
 

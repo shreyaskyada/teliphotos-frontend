@@ -1,4 +1,4 @@
-import { cn } from "@teliphotos/utils/utils";
+import { cn } from "@telephotos/utils/utils";
 import React from "react";
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {

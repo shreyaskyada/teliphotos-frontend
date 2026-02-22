@@ -1,8 +1,8 @@
-import { sendOTPToPhoneNumber } from "@teliphotos/services";
+import { sendOTPToPhoneNumber } from "@telephotos/services";
 import {
   LOGIN_OTP_SESSION_ID_KEY,
   LOGIN_PHONE_NUMBER_KEY,
-} from "@teliphotos/utils/constants";
+} from "@telephotos/utils/constants";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { useState } from "react";
 import { CountryData } from "react-phone-input-2";

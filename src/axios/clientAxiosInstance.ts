@@ -1,4 +1,4 @@
-import { CONFIG } from "@teliphotos/utils/config";
+import { CONFIG } from "@telephotos/utils/config";
 import axios from "axios";
 
 // Create an axios instance

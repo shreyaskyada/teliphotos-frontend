@@ -1,5 +1,5 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import { cn } from "@teliphotos/utils/utils";
+import { cn } from "@telephotos/utils/utils";
 import * as React from "react";
 import { getInitials } from "./utils";
 

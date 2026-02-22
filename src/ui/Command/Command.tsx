@@ -1,6 +1,6 @@
 "use client";
 import { type DialogProps } from "@radix-ui/react-dialog";
-import { cn } from "@teliphotos/utils/utils";
+import { cn } from "@telephotos/utils/utils";
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";
 import * as React from "react";

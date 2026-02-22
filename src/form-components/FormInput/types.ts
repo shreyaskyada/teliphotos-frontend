@@ -1,4 +1,4 @@
-import { InputProps } from "@teliphotos/ui";
+import { InputProps } from "@telephotos/ui";
 import { FieldValues, Path } from "react-hook-form";
 
 export interface FormInputProps<T extends FieldValues>

@@ -10,7 +10,7 @@ import {
   FormMessage,
   Input,
   Skeleton,
-} from "@teliphotos/ui";
+} from "@telephotos/ui";
 
 import { FormInputProps } from "./types";
 

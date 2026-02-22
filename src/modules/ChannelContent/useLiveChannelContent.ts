@@ -1,6 +1,6 @@
 "use client";
 
-import { CONFIG } from "@teliphotos/utils/config";
+import { CONFIG } from "@telephotos/utils/config";
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 

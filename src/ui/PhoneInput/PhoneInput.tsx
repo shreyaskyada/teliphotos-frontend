@@ -9,7 +9,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@teliphotos/ui";
+} from "@telephotos/ui";
 import allCountriesModuleImport from "country-telephone-data";
 import { ChevronDown } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";

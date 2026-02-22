@@ -1,5 +1,5 @@
-import { Button } from "@teliphotos/ui";
-import { Dialog, DialogContent, DialogTitle } from "@teliphotos/ui/Dialog";
+import { Button } from "@telephotos/ui";
+import { Dialog, DialogContent, DialogTitle } from "@telephotos/ui/Dialog";
 import { AlertTriangle } from "lucide-react";
 import React from "react";
 

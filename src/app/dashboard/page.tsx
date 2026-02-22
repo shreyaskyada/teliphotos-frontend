@@ -1,4 +1,4 @@
-import { Dashboard } from "@teliphotos/modules/Dashboard/Dashboard";
+import { Dashboard } from "@telephotos/modules/Dashboard/Dashboard";
 
 const DashboardPage = () => {
   return <Dashboard />;

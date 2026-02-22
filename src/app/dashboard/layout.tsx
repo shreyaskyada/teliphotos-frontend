@@ -1,4 +1,4 @@
-import { Layout } from "@teliphotos/components";
+import { Layout } from "@telephotos/components";
 import React from "react";
 
 export default async function LayoutPage({

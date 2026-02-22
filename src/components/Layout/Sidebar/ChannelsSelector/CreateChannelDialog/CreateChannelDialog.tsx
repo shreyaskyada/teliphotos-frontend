@@ -1,14 +1,14 @@
 "use client";
 
-import { FormInput } from "@teliphotos/form-components";
-import { Button } from "@teliphotos/ui/Button";
+import { FormInput } from "@telephotos/form-components";
+import { Button } from "@telephotos/ui/Button";
 import {
     Dialog,
     DialogContent,
     DialogFooter,
     DialogTitle,
-} from "@teliphotos/ui/Dialog";
-import { Form } from "@teliphotos/ui/Form";
+} from "@telephotos/ui/Dialog";
+import { Form } from "@telephotos/ui/Form";
 import { CreateChannelData, CreateChannelDialogProps } from "./types";
 import { useCreateChannelModal } from "./useCreateChannelDialog";
 

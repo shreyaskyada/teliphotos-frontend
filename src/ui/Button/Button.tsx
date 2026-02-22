@@ -3,7 +3,7 @@ import * as React from "react";
 import { useCallback, useState } from "react";
 
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@teliphotos/utils/utils";
+import { cn } from "@telephotos/utils/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
 export const buttonVariants = cva(
