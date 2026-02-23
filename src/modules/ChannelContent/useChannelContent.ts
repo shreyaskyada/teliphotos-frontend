@@ -26,10 +26,12 @@ export const useChannelContent = () => {
     refetch: refetchMessages,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    isLoading
   } = useGetChannelContent(
     channelId as string
   );
+
 
   const refetchTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -202,5 +204,7 @@ export const useChannelContent = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } as const;
+
 };

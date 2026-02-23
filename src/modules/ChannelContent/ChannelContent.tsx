@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@telephotos/ui";
 import { Trash2, X } from "lucide-react";
 import { useMemo } from "react";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
@@ -8,8 +9,8 @@ import { MediaContent } from "./MediaContent";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-  useJustifiedLayout,
-  useResponsiveRowHeight,
+    useJustifiedLayout,
+    useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const ChannelContent = () => {
@@ -35,6 +36,7 @@ const ChannelContent = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useChannelContent();
 
   const { containerRef, containerWidth } = useContainerWidth();
@@ -80,12 +82,14 @@ const ChannelContent = () => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      {/* Selection bar */}
+      {/* Selection / Header bar */}
       <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between h-7">
           {/* Left side */}
           <div className="flex items-center gap-3">
-            {selectedItems.size > 0 ? (
+            {isLoading ? (
+              <Skeleton className="h-6 w-48" />
+            ) : selectedItems.size > 0 ? (
               <>
                 {/* Close / deselect all button */}
                 <button
@@ -122,8 +126,23 @@ const ChannelContent = () => {
         </div>
       </div>
 
+      {/* Loading state - Skeleton Grid */}
+      {isLoading && (
+        <div className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <Skeleton 
+                key={i} 
+                className="aspect-square w-full rounded-sm" 
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Empty state */}
-      {items.length === 0 && (
+      {!isLoading && items.length === 0 && (
+
         <div className="flex flex-col items-center justify-center flex-1">
           <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
             <svg
@@ -150,7 +169,8 @@ const ChannelContent = () => {
       )}
 
       {/* Media grid - Justified Layout (Flattened for performance/flicker-free updates) */}
-      {items.length > 0 && (
+      {!isLoading && items.length > 0 && (
+
         <div
           ref={containerRef}
           onScroll={handleScroll}
