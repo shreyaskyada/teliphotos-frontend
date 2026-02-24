@@ -1,9 +1,9 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import {
-  getChannelContent,
-  GetChannelContentResponse,
+    getChannelContent,
+    GetChannelContentResponse,
 } from "./getChannelsContent";
 
 // ------------------
@@ -31,6 +31,7 @@ const useGetChannelContent = (
     }),
     enabled: !!channelId,
     refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
   });
 };
 

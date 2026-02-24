@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { io } from "socket.io-client";
+import { UploadProvider, useUpload } from "./UploadContext";
 
 interface UploadFile {
   id: string;
@@ -25,7 +26,7 @@ interface UploadFile {
 
 let socket: any;
 
-export default function GlobalUploader({
+function GlobalUploaderInner({
   children,
 }: {
   children: React.ReactNode;
@@ -35,6 +36,7 @@ export default function GlobalUploader({
   const { channelId } = useParams();
   const queryClient = useQueryClient();
   const STATIC_CHANNEL_ID = channelId as string;
+  const { registerInputRef } = useUpload();
   const invalidateTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const updateChannelCache = (newMessages: any[]) => {
@@ -284,11 +286,15 @@ export default function GlobalUploader({
     },
   });
 
-
+  // Register the file input with the upload context so the Header button can trigger it
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    registerInputRef(fileInputRef.current);
+  }, [registerInputRef]);
 
   return (
     <div {...getRootProps()} className="relative min-h-screen">
-      <input {...getInputProps()} />
+      <input {...getInputProps()} ref={fileInputRef} />
 
       {/* Drag overlay */}
       <AnimatePresence>
@@ -488,5 +494,13 @@ export default function GlobalUploader({
         {children}
       </div>
     </div>
+  );
+}
+
+export default function GlobalUploader({ children }: { children: React.ReactNode }) {
+  return (
+    <UploadProvider>
+      <GlobalUploaderInner>{children}</GlobalUploaderInner>
+    </UploadProvider>
   );
 }

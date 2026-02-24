@@ -6,11 +6,12 @@ import { useMemo } from "react";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { MediaContent } from "./MediaContent";
+import type { RenderItem } from "./types";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-    useJustifiedLayout,
-    useResponsiveRowHeight,
+  useJustifiedLayout,
+  useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const ChannelContent = () => {
@@ -80,6 +81,15 @@ const ChannelContent = () => {
     return { positionedItems: itemsWithPos, totalHeight: currentTop };
   }, [rows]);
 
+  // O(1) lookup map for stable item references (avoids .find in render loop)
+  const stableItemsMap = useMemo(() => {
+    const map = new Map<string, RenderItem>();
+    for (const item of items) {
+      map.set(item.messageId, item);
+    }
+    return map;
+  }, [items]);
+
   return (
     <div className="w-full h-full flex flex-col">
       {/* Selection / Header bar */}
@@ -129,13 +139,37 @@ const ChannelContent = () => {
       {/* Loading state - Skeleton Grid */}
       {isLoading && (
         <div className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-            {Array.from({ length: 15 }).map((_, i) => (
-              <Skeleton 
-                key={i} 
-                className="aspect-square w-full rounded-sm" 
-              />
-            ))}
+          {/* Row 1 - 3 landscape items */}
+          <div className="flex gap-0.5 mb-0.5">
+            <Skeleton className="h-[180px] sm:h-[220px] flex-[1.4] rounded-none" />
+            <Skeleton className="h-[180px] sm:h-[220px] flex-[1.2] rounded-none" style={{ animationDelay: '0.15s' }} />
+            <Skeleton className="h-[180px] sm:h-[220px] flex-[1.6] rounded-none" style={{ animationDelay: '0.3s' }} />
+          </div>
+          {/* Row 2 - 4 mixed items */}
+          <div className="flex gap-0.5 mb-0.5">
+            <Skeleton className="h-[160px] sm:h-[200px] flex-[1] rounded-none" style={{ animationDelay: '0.1s' }} />
+            <Skeleton className="h-[160px] sm:h-[200px] flex-[1.5] rounded-none" style={{ animationDelay: '0.25s' }} />
+            <Skeleton className="h-[160px] sm:h-[200px] flex-[0.8] rounded-none" style={{ animationDelay: '0.35s' }} />
+            <Skeleton className="h-[160px] sm:h-[200px] flex-[1.3] rounded-none" style={{ animationDelay: '0.45s' }} />
+          </div>
+          {/* Row 3 - 3 items */}
+          <div className="flex gap-0.5 mb-0.5">
+            <Skeleton className="h-[190px] sm:h-[240px] flex-[1.6] rounded-none" style={{ animationDelay: '0.2s' }} />
+            <Skeleton className="h-[190px] sm:h-[240px] flex-[1] rounded-none" style={{ animationDelay: '0.35s' }} />
+            <Skeleton className="h-[190px] sm:h-[240px] flex-[1.3] rounded-none" style={{ animationDelay: '0.5s' }} />
+          </div>
+          {/* Row 4 - 4 items */}
+          <div className="flex gap-0.5 mb-0.5">
+            <Skeleton className="h-[150px] sm:h-[180px] flex-[1.2] rounded-none" style={{ animationDelay: '0.15s' }} />
+            <Skeleton className="h-[150px] sm:h-[180px] flex-[1.4] rounded-none" style={{ animationDelay: '0.3s' }} />
+            <Skeleton className="h-[150px] sm:h-[180px] flex-[1] rounded-none" style={{ animationDelay: '0.4s' }} />
+            <Skeleton className="h-[150px] sm:h-[180px] flex-[1.5] rounded-none" style={{ animationDelay: '0.55s' }} />
+          </div>
+          {/* Row 5 - 3 items (partially visible) */}
+          <div className="flex gap-0.5">
+            <Skeleton className="h-[170px] sm:h-[210px] flex-[1.3] rounded-none" style={{ animationDelay: '0.25s' }} />
+            <Skeleton className="h-[170px] sm:h-[210px] flex-[1.5] rounded-none" style={{ animationDelay: '0.4s' }} />
+            <Skeleton className="h-[170px] sm:h-[210px] flex-[1.1] rounded-none" style={{ animationDelay: '0.55s' }} />
           </div>
         </div>
       )}
@@ -182,11 +216,13 @@ const ChannelContent = () => {
           >
             {positionedItems.map((item) => {
               const isSelected = selectedItems.has(item.messageId);
+              // Look up the original stable item reference for MediaContent
+              const stableItem = stableItemsMap.get(item.messageId) || item;
 
               return (
                 <div
                   key={item.messageId}
-                  className="absolute group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl rounded-0"
+                  className="absolute group overflow-hidden cursor-pointer transition-shadow duration-300 hover:shadow-xl rounded-0"
                   style={{
                     width: item.displayWidth,
                     height: item.displayHeight,
@@ -202,7 +238,7 @@ const ChannelContent = () => {
 
                     {/* Hover shadow effect */}
                     <div
-                      className="absolute -inset-2 opacity-0 group-hover:opacity-100 transition-all duration-200 z-5 pointer-events-none"
+                      className="absolute -inset-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-5 pointer-events-none"
                       style={{
                         boxShadow:
                           "0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05)",
@@ -211,16 +247,16 @@ const ChannelContent = () => {
 
                     {/* Selection checkbox */}
                     <div
-                      className={`absolute top-2 left-2 z-20 transition-all duration-200 group-hover:opacity-100 ${
+                      className={`absolute top-2 left-2 z-20 transition-opacity duration-200 group-hover:opacity-100 ${
                         isSelected ? "opacity-100" : "opacity-0"
                       }`}
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent click from propagating to the media content
+                        e.stopPropagation();
                         toggleSelection(item.messageId);
                       }}
                     >
                       <div
-                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shadow-lg transition-all duration-200 ${
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shadow-lg transition-colors duration-200 ${
                           isSelected
                             ? "bg-blue-500 border-blue-500"
                             : "bg-white/95 border-white/95 group-hover:bg-white group-hover:border-white"
@@ -247,10 +283,8 @@ const ChannelContent = () => {
                       className="h-full cursor-pointer"
                       onClick={() => {
                         if (isSelectionMode) {
-                          // In selection mode, always toggle selection (select/deselect)
                           toggleSelection(item.messageId);
                         } else {
-                          // Normal mode, open preview
                           const idx = item.originalIndex;
                           setViewerIndex(idx);
                           setViewerOpen(true);
@@ -258,7 +292,7 @@ const ChannelContent = () => {
                       }}
                     >
                       <MediaContent
-                        item={item}
+                        item={stableItem}
                         liveContentUrl={
                           liveContentUrls[item.messageId as any]
                         }

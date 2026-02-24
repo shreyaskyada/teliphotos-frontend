@@ -1,24 +1,24 @@
 "use client";
 import {
-    ArrowRight,
-    Camera,
-    Check,
-    Cloud,
-    Download,
-    Eye,
-    Folder,
-    Heart,
-    Infinity,
-    Lock,
-    MessageSquare,
-    Play,
-    Shield,
-    Smartphone,
-    Sparkles,
-    Star,
-    Timer,
-    Users,
+  ArrowRight,
+  Camera,
+  Check,
+  Cloud,
+  Download,
+  Eye,
+  Folder,
+  Heart,
+  ImagePlus,
+  LayoutGrid,
+  MessageSquare,
+  Play,
+  Shield,
+  Smartphone,
+  Sparkles,
+  Upload,
+  Users,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const LandingPage = () => {
@@ -38,57 +38,51 @@ const LandingPage = () => {
 
   const features = [
     {
-      icon: Shield,
-      title: "End-to-End Encryption",
-      description: "Your photos are encrypted before leaving your device",
+      icon: LayoutGrid,
+      title: "Beautiful Gallery View",
+      description: "Browse your photos in a clean, visual gallery instead of scrolling through Telegram chats",
       color: "from-violet-500 to-purple-600",
     },
     {
       icon: MessageSquare,
-      title: "Telegram Integration",
-      description: "Seamlessly sync with your Telegram channels",
+      title: "Telegram Powered",
+      description: "Log in with your Telegram account and your photos are stored directly in your own Telegram channel",
       color: "from-blue-500 to-cyan-600",
     },
     {
-      icon: Users,
-      title: "Private Channels",
-      description: "Organize photos in custom private channels",
+      icon: Upload,
+      title: "Easy Photo Upload",
+      description: "Upload photos through our interface and they're saved to your personal Telegram channel automatically",
       color: "from-green-500 to-emerald-600",
     },
   ];
 
-  const testimonials = [
+  const useCases = [
     {
-      name: "Sarah Johnson",
-      role: "Photography Enthusiast",
-      content:
-        "Finally, a secure way to store and organize my photos. The Telegram integration is brilliant!",
-      rating: 5,
-      avatar: "SJ",
+      icon: Camera,
+      title: "Personal Photo Gallery",
+      description:
+        "Keep your photos organized in dedicated Telegram channels and browse them in a beautiful gallery view.",
     },
     {
-      name: "Mike Chen",
-      role: "Content Creator",
-      content:
-        "Love how I can create different channels for different projects. Super organized and secure.",
-      rating: 5,
-      avatar: "MC",
+      icon: Users,
+      title: "Multiple Channels",
+      description:
+        "Create separate channels for different albums — vacations, family, events — and switch between them easily.",
     },
     {
-      name: "Emma Davis",
-      role: "Family Organizer",
-      content:
-        "Perfect for sharing family photos privately. The encryption gives me peace of mind.",
-      rating: 5,
-      avatar: "ED",
+      icon: Folder,
+      title: "Always Accessible",
+      description:
+        "Your photos live in your Telegram account, so you can access them from any device, anytime.",
     },
   ];
 
-  const stats = [
-    { number: "50K+", label: "Active Users" },
-    { number: "2M+", label: "Photos Stored" },
-    { number: "99.9%", label: "Uptime" },
-    { number: "256-bit", label: "Encryption" },
+  const highlights = [
+    { icon: LayoutGrid, label: "Gallery View" },
+    { icon: Upload, label: "Easy Upload" },
+    { icon: Shield, label: "Your Telegram Account" },
+    { icon: Smartphone, label: "Mobile Friendly" },
   ];
 
   return (
@@ -107,14 +101,14 @@ const LandingPage = () => {
       <header className="relative z-10 px-6 py-6">
         <nav className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/25">
-              <Camera className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/25 overflow-hidden">
+              <Image src="/logo.png" alt="Telephotos" width={48} height={48} className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent">
                 Telephotos
               </h1>
-              <p className="text-xs text-slate-400">Secure Photo Vault</p>
+              <p className="text-xs text-slate-400">Photo Gallery for Telegram</p>
             </div>
           </div>
 
@@ -126,16 +120,10 @@ const LandingPage = () => {
               Features
             </a>
             <a
-              href="#security"
+              href="#how-it-works"
               className="text-slate-300 hover:text-white transition-colors duration-300"
             >
-              Security
-            </a>
-            <a
-              href="#pricing"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
-              Pricing
+              How It Works
             </a>
             <a
               href="#support"
@@ -171,7 +159,7 @@ const LandingPage = () => {
                 <div className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-sm text-slate-300">
-                    Trusted by 50,000+ users worldwide
+                    Personal Photo Gallery for Telegram
                   </span>
                 </div>
 
@@ -181,14 +169,14 @@ const LandingPage = () => {
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
-                    Perfectly Secure
+                    Beautifully Organized
                   </span>
                 </h1>
 
                 <p className="text-xl text-slate-300 leading-relaxed max-w-2xl">
-                  Store, organize, and share your precious memories with
-                  military-grade encryption. Seamlessly integrated with Telegram
-                  for the ultimate privacy experience.
+                  Upload and browse your photos in a beautiful gallery.
+                  Your photos are stored in your own Telegram channel —
+                  private, accessible, and always yours.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -196,7 +184,7 @@ const LandingPage = () => {
                   onClick={handleGetStarted}
                   className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 group"
                 >
-                  <span>Start Free Today</span>
+                  <span>Get Started</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
 
@@ -207,18 +195,9 @@ const LandingPage = () => {
               </div>
               <div className="flex items-center space-x-8 pt-4">
                 <div className="flex items-center space-x-2">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-full border-2 border-slate-950 flex items-center justify-center text-xs font-bold"
-                      >
-                        {String.fromCharCode(65 + i)}
-                      </div>
-                    ))}
-                  </div>
+                  <MessageSquare className="w-5 h-5 text-blue-400" />
                   <span className="text-sm text-slate-400">
-                    Join thousands of happy users
+                    Photos stored in your own Telegram channel
                   </span>
                 </div>
               </div>
@@ -250,8 +229,8 @@ const LandingPage = () => {
                     {/* App Content */}
                     <div className="px-4 py-2">
                       <div className="flex items-center space-x-3 mb-6">
-                        <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                          <Camera className="w-4 h-4 text-white" />
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden">
+                          <Image src="/logo.png" alt="Telephotos" width={32} height={32} className="w-full h-full object-cover" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-white text-sm">
@@ -288,16 +267,16 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Highlights Section */}
       <section className="relative z-10 px-6 py-16 border-y border-white/10">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center group">
-                <div className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
-                  {stat.number}
+            {highlights.map((item, index) => (
+              <div key={index} className="text-center group flex flex-col items-center">
+                <div className="w-14 h-14 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <item.icon className="w-7 h-7 text-violet-400" />
                 </div>
-                <div className="text-slate-400 font-medium">{stat.label}</div>
+                <div className="text-slate-300 font-medium">{item.label}</div>
               </div>
             ))}
           </div>
@@ -314,8 +293,8 @@ const LandingPage = () => {
               </span>
             </h2>
             <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-              Experience the perfect blend of security, convenience, and
-              powerful organization tools
+              A beautiful gallery for your photos, powered by
+              Telegram
             </p>
           </div>
 
@@ -350,23 +329,23 @@ const LandingPage = () => {
             {[
               {
                 icon: Cloud,
-                title: "Cloud Sync",
-                desc: "Access from anywhere",
+                title: "Access Anywhere",
+                desc: "Your photos are in Telegram — view from any device",
               },
               {
                 icon: Smartphone,
-                title: "Mobile First",
-                desc: "Optimized for mobile",
+                title: "Mobile Friendly",
+                desc: "Optimized for mobile browsing",
               },
               {
                 icon: Eye,
-                title: "Privacy Controls",
-                desc: "You control who sees what",
+                title: "Channel Overview",
+                desc: "See all your photo channels at a glance",
               },
               {
                 icon: Download,
-                title: "Easy Export",
-                desc: "Download anytime",
+                title: "Quick Download",
+                desc: "Save media to your device anytime",
               },
               {
                 icon: Heart,
@@ -375,8 +354,8 @@ const LandingPage = () => {
               },
               {
                 icon: Folder,
-                title: "Smart Organization",
-                desc: "AI-powered sorting",
+                title: "Channel-Based Albums",
+                desc: "Organize by creating separate channels",
               },
             ].map((item, index) => (
               <div
@@ -396,40 +375,41 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Security Section */}
+      {/* How It Works Section */}
       <section
-        id="security"
+        id="how-it-works"
         className="relative z-10 px-6 py-20 bg-white/5 backdrop-blur-sm"
       >
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <div className="inline-flex items-center space-x-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-2 mb-6">
-                <Shield className="w-4 h-4 text-green-400" />
-                <span className="text-sm text-green-300 font-medium">
-                  Bank-Level Security
+              <div className="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6">
+                <Sparkles className="w-4 h-4 text-blue-400" />
+                <span className="text-sm text-blue-300 font-medium">
+                  Simple 3-Step Process
                 </span>
               </div>
 
               <h2 className="text-4xl lg:text-5xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                  Your Privacy is Our Priority
+                  How Telephotos Works
                 </span>
               </h2>
 
               <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-                We use the same encryption standards as banks and government
-                agencies. Your photos are encrypted before they leave your
-                device.
+                Log in with your Telegram account, create a channel for
+                your photos, and start uploading. We store your photos
+                directly in your Telegram channel and show them in a
+                beautiful gallery.
               </p>
 
               <div className="space-y-4">
                 {[
-                  "256-bit AES encryption",
-                  "Zero-knowledge architecture",
-                  "End-to-end encryption",
-                  "GDPR compliant",
-                  "Regular security audits",
+                  "Log in securely with your Telegram account",
+                  "Create a channel to organize your photos",
+                  "Upload photos — they go straight to your Telegram channel",
+                  "Browse your photos in a beautiful gallery view",
+                  "Download or view your photos anytime",
                 ].map((item, index) => (
                   <div key={index} className="flex items-center space-x-3">
                     <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -444,28 +424,28 @@ const LandingPage = () => {
             <div className="relative">
               <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-white/10">
                 <div className="text-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Lock className="w-10 h-10 text-white" />
+                  <div className="w-20 h-20 bg-gradient-to-br from-violet-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <LayoutGrid className="w-10 h-10 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">
-                    Encrypted Storage
+                    Your Photo Gallery
                   </h3>
                   <p className="text-slate-400">
-                    Your data is protected at every level
+                    Photos from your Telegram channel, beautifully displayed
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
-                    <span className="text-slate-300">Device Encryption</span>
+                    <span className="text-slate-300">Telegram Login</span>
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
-                    <span className="text-slate-300">Transport Security</span>
+                    <span className="text-slate-300">Channel Created</span>
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-200"></div>
                   </div>
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
-                    <span className="text-slate-300">Server Protection</span>
+                    <span className="text-slate-300">Photos Uploaded</span>
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-400"></div>
                   </div>
                 </div>
@@ -475,57 +455,42 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Use Cases */}
       <section className="relative z-10 px-6 py-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                Loved by Users Worldwide
+                Perfect For
               </span>
             </h2>
             <p className="text-xl text-slate-400">
-              See what our community has to say
+              Whether it's personal memories or creative projects
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
+            {useCases.map((useCase, index) => (
               <div
                 key={index}
                 className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300"
               >
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-5 h-5 text-yellow-400 fill-current"
-                    />
-                  ))}
+                <div className="w-14 h-14 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mb-6">
+                  <useCase.icon className="w-7 h-7 text-violet-400" />
                 </div>
-                <p className="text-slate-300 mb-6 leading-relaxed">
-                  "{testimonial.content}"
+                <h3 className="text-xl font-bold text-white mb-3">
+                  {useCase.title}
+                </h3>
+                <p className="text-slate-300 leading-relaxed">
+                  {useCase.description}
                 </p>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-full flex items-center justify-center font-bold text-white">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-white">
-                      {testimonial.name}
-                    </div>
-                    <div className="text-sm text-slate-400">
-                      {testimonial.role}
-                    </div>
-                  </div>
-                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Free Service Highlight */}
+      {/* Free to Use Section */}
       <section
         id="free-service"
         className="relative z-10 px-6 py-20 bg-white/5 backdrop-blur-sm"
@@ -534,16 +499,16 @@ const LandingPage = () => {
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                Completely Free Forever
+                Everything You Need
               </span>
             </h2>
             <p className="text-xl text-slate-400">
-              No hidden fees, no subscriptions, no limits
+              A better way to manage your Telegram photos
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            {/* Main Free Service Card */}
+            {/* Main Card */}
             <div className="bg-gradient-to-br from-violet-500/10 to-cyan-500/10 border-2 border-violet-500/30 rounded-3xl p-12 text-center relative overflow-hidden">
               {/* Background decoration */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-500/20 to-transparent rounded-full blur-2xl"></div>
@@ -555,25 +520,25 @@ const LandingPage = () => {
                 </div>
 
                 <h3 className="text-5xl font-bold text-white mb-4">
-                  100% Free
+                  Photo Gallery
                 </h3>
                 <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                  We believe privacy and security should be accessible to
-                  everyone. That's why Telephotos is completely free with no
-                  hidden costs.
+                  Upload photos to your personal Telegram channel and
+                  browse them in a beautiful gallery. Simple, private,
+                  and always accessible.
                 </p>
 
                 {/* Feature Grid */}
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                   <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                     <div className="flex items-center space-x-3 mb-3">
-                      <Infinity className="w-6 h-6 text-violet-400" />
+                      <ImagePlus className="w-6 h-6 text-violet-400" />
                       <h4 className="font-semibold text-white">
-                        Unlimited Storage
+                        Upload & Browse
                       </h4>
                     </div>
                     <p className="text-slate-400 text-sm">
-                      Store as many photos as you want
+                      Upload photos and view them in a gallery layout
                     </p>
                   </div>
 
@@ -581,11 +546,11 @@ const LandingPage = () => {
                     <div className="flex items-center space-x-3 mb-3">
                       <Users className="w-6 h-6 text-cyan-400" />
                       <h4 className="font-semibold text-white">
-                        Unlimited Channels
+                        Multi-Channel Support
                       </h4>
                     </div>
                     <p className="text-slate-400 text-sm">
-                      Create as many private channels as you need
+                      Create and manage multiple photo channels
                     </p>
                   </div>
 
@@ -593,23 +558,23 @@ const LandingPage = () => {
                     <div className="flex items-center space-x-3 mb-3">
                       <Shield className="w-6 h-6 text-green-400" />
                       <h4 className="font-semibold text-white">
-                        Full Encryption
+                        Your Account, Your Data
                       </h4>
                     </div>
                     <p className="text-slate-400 text-sm">
-                      Bank-level security for all your memories
+                      Photos stored in your own Telegram channel
                     </p>
                   </div>
 
                   <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
                     <div className="flex items-center space-x-3 mb-3">
-                      <Timer className="w-6 h-6 text-pink-400" />
+                      <Download className="w-6 h-6 text-pink-400" />
                       <h4 className="font-semibold text-white">
-                        No Time Limits
+                        Download Anytime
                       </h4>
                     </div>
                     <p className="text-slate-400 text-sm">
-                      Keep your photos safe forever, no expiration
+                      Download your photos whenever you need them
                     </p>
                   </div>
                 </div>
@@ -618,16 +583,16 @@ const LandingPage = () => {
                   onClick={handleGetStarted}
                   className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 mx-auto group"
                 >
-                  <span>Start Using Free Now</span>
+                  <span>Try Telephotos Now</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
               </div>
             </div>
 
-            {/* Why Free Section */}
+            {/* Why Telephotos Section */}
             <div className="mt-16 text-center">
               <h3 className="text-2xl font-bold text-white mb-6">
-                Why is Telephotos Free?
+                Why Telephotos?
               </h3>
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="space-y-3">
@@ -635,20 +600,20 @@ const LandingPage = () => {
                     <Heart className="w-6 h-6 text-blue-400" />
                   </div>
                   <h4 className="font-semibold text-white">
-                    Privacy is a Right
+                    Telegram-Native
                   </h4>
                   <p className="text-slate-400 text-sm">
-                    We believe everyone deserves secure photo storage
+                    Built specifically for Telegram users
                   </p>
                 </div>
 
                 <div className="space-y-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center mx-auto">
-                    <Users className="w-6 h-6 text-green-400" />
+                    <Eye className="w-6 h-6 text-green-400" />
                   </div>
-                  <h4 className="font-semibold text-white">Community Driven</h4>
+                  <h4 className="font-semibold text-white">Beautiful Interface</h4>
                   <p className="text-slate-400 text-sm">
-                    Built by the community, for the community
+                    A premium gallery experience for your media
                   </p>
                 </div>
 
@@ -656,9 +621,9 @@ const LandingPage = () => {
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl flex items-center justify-center mx-auto">
                     <Sparkles className="w-6 h-6 text-purple-400" />
                   </div>
-                  <h4 className="font-semibold text-white">Open Source</h4>
+                  <h4 className="font-semibold text-white">Simple & Fast</h4>
                   <p className="text-slate-400 text-sm">
-                    Transparent, secure, and always improving
+                    Upload, browse, and download with ease
                   </p>
                 </div>
               </div>
@@ -672,19 +637,19 @@ const LandingPage = () => {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl lg:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent">
-              Start Securing Your Memories Today
+              Start Building Your Photo Gallery
             </span>
           </h2>
           <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-            Join thousands of users who trust Telephotos with their precious
-            photos - completely free.
+            Create your personal photo gallery powered by Telegram.
+            Upload, browse, and organize your photos.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={handleGetStarted}
               className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 group"
             >
-              <span>Get Started Free</span>
+              <span>Get Started</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
             <button className="flex items-center justify-center space-x-3 px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all duration-300">
@@ -704,17 +669,17 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-2xl flex items-center justify-center">
-                  <Camera className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center overflow-hidden">
+                  <Image src="/logo.png" alt="Telephotos" width={40} height={40} className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Telephotos</h3>
-                  <p className="text-xs text-slate-400">Secure Photo Vault</p>
+                  <p className="text-xs text-slate-400">Photo Gallery for Telegram</p>
                 </div>
               </div>
               <p className="text-slate-400 text-sm leading-relaxed">
-                The most secure way to store and organize your photos with
-                seamless Telegram integration - completely free.
+                A personal photo gallery for your Telegram channel
+                media. Upload, browse, and organize with ease.
               </p>
             </div>
 
@@ -722,23 +687,18 @@ const LandingPage = () => {
               <h4 className="font-semibold text-white mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-slate-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#features" className="hover:text-white transition-colors">
                     Features
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Security
+                  <a href="#how-it-works" className="hover:text-white transition-colors">
+                    How It Works
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Why Free
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    API
+                  <a href="#free-service" className="hover:text-white transition-colors">
+                    Overview
                   </a>
                 </li>
               </ul>
@@ -748,23 +708,8 @@ const LandingPage = () => {
               <h4 className="font-semibold text-white mb-4">Support</h4>
               <ul className="space-y-2 text-sm text-slate-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Help Center
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:support@telephotos.com" className="hover:text-white transition-colors">
+                  <a href="mailto:telephotos.app@gmail.com" className="hover:text-white transition-colors">
                     Contact Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Status
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Community
                   </a>
                 </li>
               </ul>
@@ -781,16 +726,6 @@ const LandingPage = () => {
                 <li>
                   <a href="/terms" className="hover:text-white transition-colors">
                     Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a href="/privacy" className="hover:text-white transition-colors">
-                    Cookie Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="/privacy" className="hover:text-white transition-colors">
-                    GDPR
                   </a>
                 </li>
               </ul>

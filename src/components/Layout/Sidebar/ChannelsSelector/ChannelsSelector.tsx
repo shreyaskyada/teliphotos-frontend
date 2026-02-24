@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@telephotos/ui";
 import { Lock, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { CreateChannelDialog } from "./CreateChannelDialog";
@@ -60,13 +61,13 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
         {error && <div className="text-destructive text-sm p-3">{error}</div>}
         {/* Loading State (Skeletons) */}
         {isLoading &&
-          Array.from({ length: 4 }).map((_, idx) => (
+          Array.from({ length: 5 }).map((_, idx) => (
             <div
               key={idx}
-              className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full animate-pulse"
+              className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full"
             >
-              <div className="w-5 h-5 bg-muted rounded-full" />
-              <div className="h-4 w-24 bg-muted rounded" />
+              <Skeleton className="w-5 h-5 rounded-full !bg-slate-700/60" style={{ animationDelay: `${idx * 0.1}s` }} />
+              <Skeleton className={`h-4 rounded ${idx % 2 === 0 ? 'w-28' : 'w-20'}`} style={{ animationDelay: `${idx * 0.1}s` }} />
             </div>
           ))}
         {/* Channel list */}

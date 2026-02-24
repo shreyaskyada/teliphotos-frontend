@@ -57,6 +57,8 @@ export const useChannelContent = () => {
     }, [messages?.media, refetchMessages])
   );
 
+  const itemCacheRef = useRef<Map<string, RenderItem>>(new Map());
+
   const items: RenderItem[] = useMemo(() => {
     const rawMedia = messages?.media || [];
     const result: RenderItem[] = [];
@@ -104,20 +106,34 @@ export const useChannelContent = () => {
         height = media.height;
       }
 
-      result.push({
-        id: String(photo.id || media.id || msg.id),
-        kind: "photo",
-        width: width,
-        height: height,
-        messageId: String(msg.id),
-        imageURL: (msg as any).imageURL || getPhotoVideoThumbnailURL(channelId as string, String(msg.id)),
-        date: (msg as any).date ?? 0, // Unix timestamp from Telegram, used for sorting
-      } as RenderItem & { date: number });
+      const messageId = String(msg.id);
+      const imageURL = (msg as any).imageURL || getPhotoVideoThumbnailURL(channelId as string, messageId);
+
+      // Re-use cached item if nothing changed (stable reference prevents re-renders)
+      const cached = itemCacheRef.current.get(messageId);
+      if (
+        cached &&
+        cached.width === width &&
+        cached.height === height &&
+        cached.imageURL === imageURL
+      ) {
+        result.push(cached);
+      } else {
+        const newItem: RenderItem = {
+          id: String(photo.id || media.id || msg.id),
+          kind: "photo",
+          width,
+          height,
+          messageId,
+          imageURL,
+          date: (msg as any).date ?? 0,
+        } as RenderItem & { date: number };
+        itemCacheRef.current.set(messageId, newItem);
+        result.push(newItem);
+      }
     }
 
     // Sort newest-first by Telegram message send time (Unix timestamp).
-    // This is the authoritative ordering — more reliable than messageId (string)
-    // or any insertion order from the DB.
     result.sort((a, b) => ((b as any).date ?? 0) - ((a as any).date ?? 0));
 
     console.log(`[useChannelContent] Rendered ${result.length} items from ${rawMedia.length} raw messages`);

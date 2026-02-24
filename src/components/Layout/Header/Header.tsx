@@ -3,6 +3,7 @@
 import { Button } from "@telephotos/ui";
 import { ImageIcon, Menu, Search, Upload, X } from "lucide-react";
 import Link from "next/link";
+import { useUpload } from "../GlobalDropzone/UploadContext";
 import { AvatarProfile } from "./UserProfile";
 
 type HeaderProps = {
@@ -11,6 +12,8 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
+  const { openFilePicker } = useUpload();
+
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-6 py-3">
@@ -50,7 +53,10 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
           </div>
 
           {/* Upload Button */}
-          <Button className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 h-10 shadow-sm">
+          <Button
+            onClick={openFilePicker}
+            className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 h-10 shadow-sm"
+          >
             <Upload className="w-4 h-4" />
             <span className="hidden sm:inline text-sm font-medium">Upload</span>
           </Button>
@@ -64,3 +70,4 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
 };
 
 export default Header;
+
