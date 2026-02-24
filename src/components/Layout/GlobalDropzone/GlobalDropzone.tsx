@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle2, ChevronDown, Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { io } from "socket.io-client";
 import { UploadProvider, useUpload } from "./UploadContext";
@@ -39,7 +39,7 @@ function GlobalUploaderInner({
   const { registerInputRef } = useUpload();
   const invalidateTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const updateChannelCache = (newMessages: any[]) => {
+  const updateChannelCache = useCallback((newMessages: any[]) => {
     if (!newMessages || newMessages.length === 0) return;
 
     queryClient.setQueryData(
@@ -82,7 +82,7 @@ function GlobalUploaderInner({
         };
       }
     );
-  };
+  }, [STATIC_CHANNEL_ID, queryClient]);
 
   useEffect(() => {
     if (!socket) {
@@ -94,43 +94,50 @@ function GlobalUploaderInner({
     }
 
     const handleUploadStatus = (jobResponse: any) => {
-      console.log("[GlobalDropzone] Received upload-status:", jobResponse);
       let job: any;
       try {
-        job = typeof jobResponse === "string" ? JSON.parse(jobResponse) : jobResponse;
+         job = typeof jobResponse === "string" ? JSON.parse(jobResponse) : jobResponse;
       } catch (e) {
         console.error("Failed to parse upload status:", e);
         return;
       }
 
+      console.log(`[GlobalDropzone] Upload status update raw string:`, jobResponse);
+
       setFiles((prev) => {
-        // Find the first candidate that matches the filename and isn't finished
-        const candidateIndex = prev.findIndex(
-          (p) => 
-            p.file.name === job.filename && 
-            p.stage !== "done" && 
-            p.stage !== "error" &&
-            p.stage !== "rejected"
-        );
+        const idx = prev.findIndex((f) => f.file.name === job.filename);
+        if (idx === -1) return prev;
+        const newFiles = [...prev];
+        const currentFile = newFiles[idx];
+        const newStage = job.stage || currentFile.stage;
 
-        if (candidateIndex === -1) return prev;
-
-        const nextFiles = [...prev];
-        nextFiles[candidateIndex] = {
-          ...nextFiles[candidateIndex],
-          stage: job.stage,
-          progress: 100,
+        newFiles[idx] = { 
+          ...currentFile, 
+          // Default to 100% processing when e2e success or status=telegram_uploaded
+          progress: job.status === "telegram_uploaded" ? 100 : (job.progress ?? currentFile.progress), 
+          stage: newStage,
+          error: job.error || currentFile.error 
         };
-        return nextFiles;
+        return newFiles;
       });
 
-      // Proactively update the cache when an item is done
-      if (job.stage === "done" && job.messageInfo) {
-        const sentResults = job.messageInfo;
-        if (Array.isArray(sentResults)) {
-          const newMessages = sentResults
-            .map((u: any) => u?.result)
-            .filter(Boolean);
+      // E2E success handling — only add to cache if it's the final success event
+      if (job.status === "telegram_uploaded" && job.is_telegram_uploaded && job.messageInfo) {
+        const results = Array.isArray(job.messageInfo) ? job.messageInfo : [job.messageInfo];
+        if (results.length > 0) {
+          const newMessages = results
+            .filter((res: any) => res.messageId)
+            .map((res: any) => ({
+              _id: res.mediaId || Math.random().toString(),
+              channelId: STATIC_CHANNEL_ID,
+              messageId: String(res.messageId),
+              type: "photo",
+              contentType: res.mimeType || "image/jpeg",
+              thumbnailUrl: null, // Proactive update doesn't have URLs yet
+              originalUrl: null,
+              createdAt: new Date().toISOString(),
+              lastProcessedAt: new Date().toISOString(),
+            }));
           
           if (newMessages.length > 0) {
             console.log(`[GlobalDropzone] Received end-to-end success for ${job.filename}. Adding to cache.`);
@@ -142,13 +149,14 @@ function GlobalUploaderInner({
 
     socket.on("upload-status", handleUploadStatus);
 
+    const currentTimer = invalidateTimerRef.current;
     return () => {
       socket.off("upload-status", handleUploadStatus);
-      if (invalidateTimerRef.current) {
-        clearTimeout(invalidateTimerRef.current);
+      if (currentTimer) {
+        clearTimeout(currentTimer);
       }
     };
-  }, [STATIC_CHANNEL_ID, queryClient]);
+  }, [STATIC_CHANNEL_ID, updateChannelCache]);
 
   const handleDrop = async (acceptedFiles: File[], fileRejections: any[]) => {
     const rejectedMapped: UploadFile[] = fileRejections.map(({ file, errors }) => ({

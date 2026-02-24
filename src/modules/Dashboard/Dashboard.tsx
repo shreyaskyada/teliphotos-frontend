@@ -11,8 +11,6 @@ import {
     YAxis
 } from "recharts";
 
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
-
 export const Dashboard = () => {
   const { data: stats, isLoading, error } = useGetMediaStats();
 
@@ -31,10 +29,6 @@ export const Dashboard = () => {
       </div>
     );
   }
-
-  const pieData = [
-    { name: "Photos", value: stats.breakdown.photos },
-  ];
 
   return (
     <div className="p-6 space-y-8 max-w-7xl mx-auto">

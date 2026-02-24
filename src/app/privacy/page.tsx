@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export const metadata = {
   title: "Privacy Policy | Telephotos",
@@ -138,9 +139,9 @@ export default function PrivacyPolicy() {
         </section>
         
         <div className="pt-8 flex justify-center mt-12">
-            <a href="/" className="text-violet-400 hover:text-cyan-400 transition-colors">
+            <Link href="/" className="text-violet-400 hover:text-cyan-400 transition-colors">
               &larr; Back to Home
-            </a>
+            </Link>
         </div>
       </div>
     </div>

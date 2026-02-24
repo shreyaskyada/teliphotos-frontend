@@ -23,10 +23,6 @@ export interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
   const router = useRouter();
   const { channelId } = useParams();
-
-  const [filterType, setFilterType] = useState<"all" | "photos">(
-    "all"
-  );
   const [selectedChannels, setSelectedChannels] = useState<string[]>(["all"]);
 
   useEffect(() => {
