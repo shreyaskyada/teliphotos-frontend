@@ -6,7 +6,7 @@ export interface ChannelContentProps {
 
 export type RenderItem = {
   id: string | number;
-  kind: "photo";
+  kind: "photo" | "video";
   width: number;
   height: number;
   messageId: string;

@@ -1,5 +1,5 @@
 "use client";
-import { BookOpen, Hash, Settings, Star, Tag } from "lucide-react";
+import { Settings, Star, Tag } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { ChannelsSelector } from "./ChannelsSelector";
@@ -50,40 +50,6 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
       }`}
     >
       <div className="flex flex-col h-full py-4">
-        {/* Header Toggle */}
-        <div className="px-4 pb-4 shrink-0">
-          <div className="flex p-1.5 bg-muted/40 rounded-full border border-white/5">
-            <button className="flex-1 flex items-center justify-center space-x-2 py-2 px-3 bg-zinc-800 text-white shadow-md rounded-full text-sm font-medium transition-all duration-200 border border-white/5">
-              <Hash className="w-4 h-4" />
-              <span>Channels</span>
-            </button>
-            <button className="flex-1 flex items-center justify-center space-x-2 py-2 px-3 text-muted-foreground hover:text-foreground rounded-full text-sm font-medium transition-all duration-200">
-              <BookOpen className="w-4 h-4" />
-              <span>Albums</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="px-4 pb-2 shrink-0">
-            <div className="flex flex-wrap gap-2">
-              {["all", "photos"].map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setFilterType(type as SidebarFilterType)}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 border ${
-                    filterType === (type as SidebarFilterType)
-                      ? "bg-secondary text-foreground border-transparent"
-                      : "bg-transparent text-muted-foreground border-border/40 hover:border-muted-foreground"
-                  }`}
-                >
-                  {type === "all"
-                    ? "All"
-                    : type.charAt(0).toUpperCase() + type.slice(1)}
-                </button>
-              ))}
-            </div>
-        </div>
 
         {/* Channels - scrollable */}
         <ChannelsSelector

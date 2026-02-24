@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@telephotos/ui";
-import { ImageIcon, Menu, Search, Upload, X } from "lucide-react";
+import { Menu, Search, Upload, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useUpload } from "../GlobalDropzone/UploadContext";
 import { AvatarProfile } from "./UserProfile";
@@ -31,8 +32,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
           </button>
 
           <Link href="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
-              <ImageIcon className="w-5 h-5 text-primary" />
+            <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
+              <Image src="/logo.png" alt="Telephotos" width={36} height={36} className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="text-lg font-semibold tracking-tight">Telephotos</h1>
