@@ -1,5 +1,5 @@
 "use client";
-import { Camera } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { ProgressIndicator } from "./ProgressIndicator";
 import { PhoneNumberStep } from "./Steps";
@@ -33,14 +33,12 @@ const Login = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-lg">
           {/* Logo Section */}
-          <div className="text-center mb-12">
-            <div
-              className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-3xl mb-6 shadow-2xl shadow-violet-500/25 transition-all duration-700 ${"hover:scale-105"}`}
-            >
-              <Camera className="w-10 h-10 text-white" />
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="mx-auto w-20 h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-6 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
+              <Image src="/logo.png" alt="Telephotos Logo" width={80} height={80} className="w-full h-full object-cover" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent mb-3">
               Telephotos
@@ -51,12 +49,12 @@ const Login = () => {
           </div>
 
           {/* Main Content Card */}
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
             {/* Progress Indicator */}
             <ProgressIndicator loginStep={loginStep} />
 
             {/* Content Area */}
-            <div className="px-8 pb-8">
+            <div className="px-5 sm:px-8 pb-6 sm:pb-8">
               <div
                 className={`transition-all duration-700 ${
                   loginStep === "phone"
