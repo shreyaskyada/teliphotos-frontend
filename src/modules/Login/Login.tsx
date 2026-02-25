@@ -33,8 +33,8 @@ const Login = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="relative z-10 min-h-[100dvh] flex flex-col justify-center items-center p-4 sm:p-6 py-12">
-        <div className="w-full max-w-[28rem] mx-auto flex-shrink-0">
+      <div className="relative z-10 min-h-[100dvh] flex flex-col justify-center items-center p-4 sm:p-8">
+        <div className="w-full max-w-lg mx-auto flex-shrink-0 pt-8 pb-12">
           {/* Logo Section */}
           <div className="text-center mb-8 sm:mb-12">
             <div className="mx-auto w-20 h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-6 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
@@ -54,7 +54,7 @@ const Login = () => {
             <ProgressIndicator loginStep={loginStep} />
 
             {/* Content Area */}
-            <div className="p-5 sm:p-8 pt-0 relative overflow-hidden">
+            <div className="px-6 pb-8 sm:px-10 sm:pb-12 pt-0 relative overflow-hidden">
               <div
                 className={`transition-all duration-500 ${
                   loginStep === "phone"

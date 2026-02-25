@@ -285,8 +285,8 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
               onBlur: handleBlur,
             }}
             containerClass="!w-full"
-            inputClass={`!w-full !pl-4 !pr-4 !py-3 !bg-transparent !text-white !placeholder-slate-400
-              !text-sm !border-none !outline-none !rounded-none !m-0
+            inputClass={`!w-full !pl-4 !pr-4 !py-3.5 !bg-transparent !text-white !placeholder-slate-400
+              !text-base !border-none !outline-none !rounded-none !m-0
               focus:!ring-0 focus:!border-none focus:!outline-none
             `}
             buttonClass="!hidden"

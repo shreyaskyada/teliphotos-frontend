@@ -3,7 +3,7 @@ import { ProgressIndicatorProps } from "./types";
 
 const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ loginStep }) => {
   return (
-    <div className="px-5 sm:px-8 pt-6 pb-2">
+    <div className="px-6 sm:px-10 pt-8 pb-2">
       <div className="flex items-center justify-between mb-6">
         <div className="flex space-x-3">
           <div
