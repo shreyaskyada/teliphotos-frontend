@@ -55,12 +55,12 @@ const Login = () => {
             <ProgressIndicator loginStep={loginStep} />
 
             {/* Content Area */}
-            <div className="px-6 pb-8 sm:px-10 sm:pb-10 pt-0 grid relative overflow-hidden">
+            <div className="px-6 pb-8 sm:px-10 sm:pb-10 pt-0 relative overflow-hidden">
               <div
-                className={`col-start-1 row-start-1 transition-all duration-500 ease-in-out ${
+                className={`transition-all duration-500 ease-in-out w-full ${
                   loginStep === "phone"
-                    ? "opacity-100 translate-x-0 z-10 pointer-events-auto"
-                    : "opacity-0 -translate-x-8 z-0 pointer-events-none"
+                    ? "opacity-100 translate-x-0 relative z-10 pointer-events-auto"
+                    : "opacity-0 -translate-x-8 absolute top-0 left-0 px-6 sm:px-10 pointer-events-none"
                 }`}
               >
                 {/* Phone Number Step */}
@@ -68,10 +68,10 @@ const Login = () => {
               </div>
 
               <div
-                className={`col-start-1 row-start-1 transition-all duration-500 ease-in-out ${
+                className={`transition-all duration-500 ease-in-out w-full ${
                   loginStep === "otp"
-                    ? "opacity-100 translate-x-0 z-10 pointer-events-auto"
-                    : "opacity-0 translate-x-8 z-0 pointer-events-none"
+                    ? "opacity-100 translate-x-0 relative z-10 pointer-events-auto"
+                    : "opacity-0 translate-x-8 absolute top-0 left-0 px-6 sm:px-10 pointer-events-none"
                 }`}
               >
                 <OTPVerificationStep />
