@@ -62,7 +62,7 @@ export default function LandingPage() {
   }, []);
 
   const handleGetStarted = () => {
-    router.push("/login");
+    router.push("/dashboard");
   };
 
   return (
