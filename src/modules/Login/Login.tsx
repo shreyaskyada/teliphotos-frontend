@@ -34,7 +34,8 @@ const Login = () => {
       </div>
 
       <div className="relative z-10 min-h-[100dvh] flex flex-col p-4 sm:p-8">
-        <div className="w-full max-w-md mx-auto my-auto flex-shrink-0 pt-8 pb-12">
+        <div className="flex-1 w-full min-h-[2rem]"></div>
+        <div className="w-full max-w-[26rem] mx-auto flex-shrink-0">
           {/* Logo Section */}
           <div className="text-center mb-8 sm:mb-12">
             <div className="mx-auto w-20 h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-6 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
@@ -54,12 +55,12 @@ const Login = () => {
             <ProgressIndicator loginStep={loginStep} />
 
             {/* Content Area */}
-            <div className="px-6 pb-8 sm:px-10 sm:pb-12 pt-0 relative overflow-hidden">
+            <div className="px-6 pb-8 sm:px-10 sm:pb-10 pt-0 grid relative overflow-hidden">
               <div
-                className={`transition-all duration-500 ${
+                className={`col-start-1 row-start-1 transition-all duration-500 ease-in-out ${
                   loginStep === "phone"
-                    ? "opacity-100 translate-x-0 relative z-10 block"
-                    : "opacity-0 -translate-x-8 absolute inset-0 pointer-events-none hidden"
+                    ? "opacity-100 translate-x-0 z-10 pointer-events-auto"
+                    : "opacity-0 -translate-x-8 z-0 pointer-events-none"
                 }`}
               >
                 {/* Phone Number Step */}
@@ -67,10 +68,10 @@ const Login = () => {
               </div>
 
               <div
-                className={`transition-all duration-500 ${
+                className={`col-start-1 row-start-1 transition-all duration-500 ease-in-out ${
                   loginStep === "otp"
-                    ? "opacity-100 translate-x-0 relative z-10 block"
-                    : "opacity-0 translate-x-8 absolute inset-0 pointer-events-none hidden"
+                    ? "opacity-100 translate-x-0 z-10 pointer-events-auto"
+                    : "opacity-0 translate-x-8 z-0 pointer-events-none"
                 }`}
               >
                 <OTPVerificationStep />
@@ -78,6 +79,7 @@ const Login = () => {
             </div>
           </div>
         </div>
+        <div className="flex-1 w-full min-h-[2rem]"></div>
       </div>
     </div>
   );
