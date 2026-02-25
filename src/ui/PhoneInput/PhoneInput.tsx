@@ -1,14 +1,14 @@
 "use client";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from "@telephotos/ui";
 import allCountriesModuleImport from "country-telephone-data";
 import { ChevronDown } from "lucide-react";
@@ -181,19 +181,18 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
 
   return (
     <div className="space-y-2 w-full">
-      <label htmlFor={id} className="block text-sm font-medium text-slate-200">
+      <label htmlFor={id} className="block text-sm font-semibold text-slate-300 ml-1">
         Phone Number
       </label>
 
       {/* Single merged container */}
       <div
-        className={`relative flex items-center w-full rounded-lg border transition-all duration-200 bg-white/5 group
+        className={`relative flex items-center w-full rounded-2xl border transition-all duration-300 bg-slate-900/40 backdrop-blur-md group shadow-inner
           ${
             error
-              ? "border-red-400/50 focus-within:border-red-500/50 focus-within:ring-2 focus-within:ring-red-500/50"
-              : "border-slate-700 focus-within:border-violet-500/50 focus-within:ring-2 focus-within:ring-violet-500/50"
+              ? "border-red-400/50 focus-within:border-red-500/50 focus-within:ring-2 focus-within:ring-red-500/20"
+              : "border-white/10 hover:border-white/20 focus-within:border-violet-500/50 focus-within:ring-4 focus-within:ring-violet-500/10 focus-within:bg-slate-900/80"
           }
-          ${isFocused ? "ring-2" : ""}
         `}
       >
         {/* Country Selector - Seamlessly integrated */}
@@ -201,7 +200,7 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
           <PopoverTrigger asChild>
             <button
               type="button"
-              className={`flex items-center gap-2 px-3 py-3 border-r border-slate-600/50 hover:bg-white/5 transition-all duration-200 flex-shrink-0 rounded-l-lg
+              className={`flex items-center gap-2 px-4 py-4 border-r border-white/5 hover:bg-white/5 transition-all duration-200 flex-shrink-0 rounded-l-2xl
                 ${open ? "bg-white/10" : ""}
               `}
               aria-label={`Selected country: ${selectedCountry.name}`}
@@ -223,7 +222,7 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
             </button>
           </PopoverTrigger>
 
-          <PopoverContent className="w-72 p-0 bg-slate-900/95 backdrop-blur-sm text-white border border-slate-700 rounded-lg shadow-xl z-50">
+          <PopoverContent className="w-72 p-0 bg-slate-900/95 backdrop-blur-xl text-white border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden">
             <Command className="bg-transparent">
               <CommandInput
                 placeholder="Search country..."
@@ -285,8 +284,8 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
               onBlur: handleBlur,
             }}
             containerClass="!w-full"
-            inputClass={`!w-full !pl-4 !pr-4 !py-3 !bg-transparent !text-white !placeholder-slate-400
-              !text-sm !border-none !outline-none !rounded-none !m-0
+            inputClass={`!w-full !pl-4 !pr-4 !py-4 !bg-transparent !text-white !placeholder-slate-500
+              !text-lg !font-medium !border-none !outline-none !rounded-none !m-0
               focus:!ring-0 focus:!border-none focus:!outline-none
             `}
             buttonClass="!hidden"

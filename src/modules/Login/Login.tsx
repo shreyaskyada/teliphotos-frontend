@@ -49,7 +49,8 @@ const Login = () => {
           </div>
 
           {/* Main Content Card */}
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
+          <div className="bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl sm:rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden ring-1 ring-white/5 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
             {/* Progress Indicator */}
             <ProgressIndicator loginStep={loginStep} />
 
