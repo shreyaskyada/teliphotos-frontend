@@ -10,8 +10,8 @@ const publicRoutes = ["/", "/login"];
 const REFRESH_THRESHOLD = 120;
 
 export async function middleware(req: NextRequest) {
-  const accessToken = req.cookies.get("accessToken")?.value;
-  const refreshToken = req.cookies.get("refreshToken")?.value;
+  const accessToken = req.cookies.get("telephotos_access_token")?.value;
+  const refreshToken = req.cookies.get("telephotos_refresh_token")?.value;
   const isLoginPage = req.nextUrl.pathname === "/login";
 
   // If user is on /login and has a valid token, redirect to /dashboard
@@ -49,7 +49,7 @@ export async function middleware(req: NextRequest) {
 
         if (newAccessToken) {
           const response = NextResponse.redirect(new URL("/dashboard", req.url));
-          response.cookies.set("accessToken", newAccessToken, {
+          response.cookies.set("telephotos_access_token", newAccessToken, {
             sameSite: "lax",
             path: "/",
           });
@@ -133,7 +133,7 @@ export async function middleware(req: NextRequest) {
       // Save the new token in cookies
       const response = NextResponse.next();
 
-      response.cookies.set("accessToken", newAccessToken, {
+          response.cookies.set("telephotos_access_token", newAccessToken, {
         sameSite: "lax",
         path: "/",
       });

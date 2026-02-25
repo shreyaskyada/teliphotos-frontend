@@ -20,11 +20,11 @@ export async function verifyOTP(
     const { accessToken, refreshToken } = response.data.data;
 
     // Store tokens securely in cookies
-    (await cookies()).set("accessToken", accessToken, {
+    (await cookies()).set("telephotos_access_token", accessToken, {
       httpOnly: true,
       secure: true,
     });
-    (await cookies()).set("refreshToken", refreshToken, {
+    (await cookies()).set("telephotos_refresh_token", refreshToken, {
       httpOnly: true,
       secure: true,
     });

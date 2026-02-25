@@ -1,7 +1,7 @@
 import { verifyOtp } from "@telephotos/services";
 import {
-  LOGIN_OTP_SESSION_ID_KEY,
-  LOGIN_PHONE_NUMBER_KEY,
+    LOGIN_OTP_SESSION_ID_KEY,
+    LOGIN_PHONE_NUMBER_KEY,
 } from "@telephotos/utils/constants";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -64,15 +64,15 @@ export const useOTPVerificationStep = () => {
 
       // Clear existing cookies first, then set new ones
       document.cookie =
-        "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        "telephotos_access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       document.cookie =
-        "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        "telephotos_refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
       // Set new tokens in cookies
-      document.cookie = `accessToken=${
+      document.cookie = `telephotos_access_token=${
         response.data.accessToken
       }; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax`;
-      document.cookie = `refreshToken=${
+      document.cookie = `telephotos_refresh_token=${
         response.data.refreshToken
       }; path=/; max-age=${40 * 24 * 60 * 60}; samesite=lax`;
 

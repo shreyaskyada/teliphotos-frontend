@@ -187,12 +187,21 @@ export default function LandingPage() {
                </div>
              </div>
              {/* Mock Dashboard Area */}
-             <div className="p-6 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-4 opacity-80 backdrop-blur-md">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                  <div key={i} className={`aspect-square rounded-2xl outline-1 outline outline-white/10 overflow-hidden bg-slate-800 relative group`}>
-                     <div className={`absolute inset-0 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 mix-blend-overlay`}></div>
-                     {/* decorative placeholder pulse */}
-                     <div className="w-full h-full animate-pulse bg-white/5"></div>
+             <div className="grid grid-cols-2 md:grid-cols-4 backdrop-blur-md">
+                {[
+                  "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1470071131384-001b85755536?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=400"
+                ].map((src, i) => (
+                  <div key={i} className="aspect-[4/3] sm:aspect-square border border-slate-900/50 overflow-hidden bg-slate-800 relative group">
+                     {/* eslint-disable-next-line @next/next/no-img-element */}
+                     <img src={src} alt="Gallery Mockup" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 ))}
              </div>

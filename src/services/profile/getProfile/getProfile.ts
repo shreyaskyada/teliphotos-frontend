@@ -12,7 +12,7 @@ export interface GetProfileResponse {
 export const getProfile = async (): Promise<GetProfileResponse> => {
   // Get access token from cookies
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
+  const accessToken = cookieStore.get("telephotos_access_token")?.value;
 
   if (!accessToken) {
     throw new Error("Access token not found in cookies");
