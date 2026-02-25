@@ -55,7 +55,7 @@ const Login = () => {
             <ProgressIndicator loginStep={loginStep} />
 
             {/* Content Area */}
-            <div className="px-6 pb-8 sm:px-10 sm:pb-10 pt-0 relative overflow-hidden">
+            <div className="px-6 pb-6 sm:px-10 sm:pb-8 pt-0 relative overflow-hidden">
               <div
                 className={`transition-all duration-500 ease-in-out w-full ${
                   loginStep === "phone"
