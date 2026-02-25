@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@telephotos/ui";
 import { MessageSquare, RefreshCw } from "lucide-react";
 import React from "react";
 import { useOTPVerificationStep } from "./useOTPVerificationStep";
@@ -19,19 +20,17 @@ const OtpVerificationStep: React.FC = () => {
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <div className="w-16 h-16 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 ring-1 ring-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-          <MessageSquare className="w-8 h-8 text-emerald-400" />
+      <div className="text-center mb-4">
+        <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3">
+          <MessageSquare className="w-7 h-7 text-white" />
         </div>
-        <h2 className="text-3xl font-extrabold bg-gradient-to-br from-white to-slate-400 bg-clip-text text-transparent mb-3">
+        <h2 className="text-2xl font-bold text-white mb-2">
           Check your Telegram
         </h2>
-        <p className="text-[15px] text-slate-300 mb-2">
+        <p className="text-sm text-slate-300 mb-1">
           We've sent a 5-digit code to your Telegram account
         </p>
-        <p className="text-sm font-mono text-slate-400 bg-black/20 inline-block px-3 py-1.5 rounded-full border border-white/5 mt-1">
-          Code sent to <span className="text-slate-300">{phoneNumber}</span>
-        </p>
+        <p className="text-sm text-slate-400">Code sent to {phoneNumber}</p>
       </div>
 
       <div className="space-y-4">
@@ -51,11 +50,11 @@ const OtpVerificationStep: React.FC = () => {
                 value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                className={`w-14 h-14 text-center bg-slate-900/40 border rounded-2xl focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500/50 text-2xl font-bold text-white shadow-inner transition-all duration-300 ${
+                className={`w-12 h-12 text-center bg-white/5 border rounded-2xl focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 text-xl font-bold text-white transition-all duration-300 ${
                   digit
                     ? "border-violet-500/50 bg-violet-500/10"
-                    : "border-white/10 hover:border-white/20"
-                } ${error ? "border-red-400/50 bg-red-500/5" : ""}`}
+                    : "border-white/10"
+                } ${error ? "border-red-400/50" : ""}`}
                 maxLength={1}
                 inputMode="numeric"
               />
@@ -93,12 +92,13 @@ const OtpVerificationStep: React.FC = () => {
             </button>
           )}
 
-          <div className="pt-2">
-            <button
-              className="text-sm font-medium transition-colors text-slate-400 hover:text-white"
+          <div className="pt-1">
+            <Button
+              variant="link"
+              className="text-sm transition-colors text-slate-400 hover:text-white"
             >
               Use a different phone number
-            </button>
+            </Button>
           </div>
         </div>
       </div>

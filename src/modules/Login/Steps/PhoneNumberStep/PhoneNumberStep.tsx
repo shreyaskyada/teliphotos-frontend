@@ -1,4 +1,4 @@
-import { PhoneInputField } from "@telephotos/ui";
+import { Button, PhoneInputField } from "@telephotos/ui";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { PhoneNumberStepProps } from "./types";
 import { usePhoneNumberStep } from "./usePhoneNumberStep";
@@ -14,9 +14,9 @@ const PhoneNumberStep: React.FC<PhoneNumberStepProps> = ({ setLoginStep }) => {
 
   return (
     <>
-      <div className="text-center mb-10">
-        <h2 className="text-3xl font-extrabold bg-gradient-to-br from-white to-slate-400 bg-clip-text text-transparent mb-3">Welcome back</h2>
-        <p className="text-slate-400 text-[15px] leading-relaxed max-w-sm mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-white mb-3">Welcome back</h2>
+        <p className="text-slate-300 ">
           Enter your phone number to receive a secure code via Telegram
         </p>
       </div>
@@ -52,27 +52,24 @@ const PhoneNumberStep: React.FC<PhoneNumberStepProps> = ({ setLoginStep }) => {
           </div>
         )}
 
-        <button
-          className={`group relative flex items-center justify-center space-x-3 w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 overflow-hidden ${
-            isLoading || !formData.value
-              ? "bg-white/5 text-slate-500 cursor-not-allowed border border-white/5"
-              : "bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] hover:scale-[1.02] active:scale-[0.98]"
-          }`}
+        <Button
+          variant="gradient"
+          className="space-x-3 py-4 px-6 w-full"
           type="submit"
           disabled={isLoading || !formData.value}
         >
-          {isLoading && !(!formData.value) ? (
+          {isLoading ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
               <span>Sending OTP...</span>
             </>
           ) : (
             <>
-              <span className="relative z-10">Continue with Telegram</span>
-              <ArrowRight className={`w-5 h-5 transition-transform duration-300 relative z-10 ${!(isLoading || !formData.value) ? "group-hover:translate-x-1" : ""}`} />
+              <span>Continue with Telegram</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </>
           )}
-        </button>
+        </Button>
       </form>
     </>
   );

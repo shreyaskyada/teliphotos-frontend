@@ -10,8 +10,8 @@ const Login = () => {
   const [loginStep, setLoginStep] = useState<LoginStep>("phone");
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0">
+    <div className="min-h-[100dvh] relative overflow-x-hidden overflow-y-auto bg-[#020617] text-slate-200">
+      <div className="fixed inset-0 pointer-events-none z-0">
         <div
           className={`absolute transition-all duration-1000 ${
             loginStep === "phone"
@@ -33,8 +33,8 @@ const Login = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6">
-        <div className="w-full max-w-lg">
+      <div className="relative z-10 min-h-[100dvh] flex flex-col justify-center items-center p-4 sm:p-6 py-12">
+        <div className="w-full max-w-[28rem] mx-auto flex-shrink-0">
           {/* Logo Section */}
           <div className="text-center mb-8 sm:mb-12">
             <div className="mx-auto w-20 h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-6 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
@@ -49,18 +49,17 @@ const Login = () => {
           </div>
 
           {/* Main Content Card */}
-          <div className="bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl sm:rounded-[2rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden ring-1 ring-white/5 relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
             {/* Progress Indicator */}
             <ProgressIndicator loginStep={loginStep} />
 
             {/* Content Area */}
-            <div className="px-5 sm:px-8 pb-6 sm:pb-8">
+            <div className="p-5 sm:p-8 pt-0 relative overflow-hidden">
               <div
-                className={`transition-all duration-700 ${
+                className={`transition-all duration-500 ${
                   loginStep === "phone"
-                    ? "opacity-100 transform translate-x-0"
-                    : "opacity-0 transform -translate-x-4 absolute pointer-events-none"
+                    ? "opacity-100 translate-x-0 relative z-10 block"
+                    : "opacity-0 -translate-x-8 absolute inset-0 pointer-events-none hidden"
                 }`}
               >
                 {/* Phone Number Step */}
@@ -68,10 +67,10 @@ const Login = () => {
               </div>
 
               <div
-                className={`transition-all duration-700 ${
+                className={`transition-all duration-500 ${
                   loginStep === "otp"
-                    ? "opacity-100 transform translate-x-0"
-                    : "opacity-0 transform translate-x-4 absolute pointer-events-none"
+                    ? "opacity-100 translate-x-0 relative z-10 block"
+                    : "opacity-0 translate-x-8 absolute inset-0 pointer-events-none hidden"
                 }`}
               >
                 <OTPVerificationStep />

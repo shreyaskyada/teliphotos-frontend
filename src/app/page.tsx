@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const BENTO_FEATURES = [
@@ -50,6 +51,7 @@ const BENTO_FEATURES = [
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,7 +62,7 @@ export default function LandingPage() {
   }, []);
 
   const handleGetStarted = () => {
-    window.location.href = "/login";
+    router.push("/login");
   };
 
   return (
