@@ -37,14 +37,14 @@ const Login = () => {
         <div className="flex-1 w-full min-h-[2rem]"></div>
         <div className="w-full max-w-[26rem] mx-auto flex-shrink-0">
           {/* Logo Section */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="mx-auto w-20 h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-6 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-4 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
               <Image src="/logo.png" alt="Telephotos Logo" width={80} height={80} className="w-full h-full object-cover" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent mb-3">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent mb-1.5 sm:mb-2">
               Telephotos
             </h1>
-            <p className="text-slate-400 text-lg leading-relaxed max-w-md mx-auto">
+            <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-md mx-auto">
               Your private telegram gallery
             </p>
           </div>
