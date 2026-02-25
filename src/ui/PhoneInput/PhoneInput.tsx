@@ -180,7 +180,7 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
   }, []);
 
   return (
-    <div className="space-y-2 w-full">
+    <div className="space-y-1.5 w-full">
       <label htmlFor={id} className="block text-sm font-medium text-slate-200">
         Phone Number
       </label>
@@ -201,7 +201,7 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
           <PopoverTrigger asChild>
             <button
               type="button"
-              className={`flex items-center gap-2 px-3 py-3 border-r border-slate-600/50 hover:bg-white/5 transition-all duration-200 flex-shrink-0 rounded-l-lg
+              className={`flex items-center gap-1.5 px-3 py-3 border-r border-slate-600/50 hover:bg-white/5 transition-all duration-200 flex-shrink-0 rounded-l-lg
                 ${open ? "bg-white/10" : ""}
               `}
               aria-label={`Selected country: ${selectedCountry.name}`}
@@ -285,7 +285,7 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
               onBlur: handleBlur,
             }}
             containerClass="!w-full"
-            inputClass={`!w-full !pl-4 !pr-4 !py-3.5 !bg-transparent !text-white !placeholder-slate-400
+            inputClass={`!w-full !pl-3 !pr-3 !py-3.5 !bg-transparent !text-white !placeholder-slate-400
               !text-[16px] !border-none !outline-none !rounded-none !m-0
               focus:!ring-0 focus:!border-none focus:!outline-none
             `}

@@ -34,8 +34,7 @@ const Login = () => {
       </div>
 
       <div className="relative z-10 min-h-[100dvh] flex flex-col p-4 sm:p-8">
-        <div className="flex-1 w-full min-h-[2rem]"></div>
-        <div className="w-full max-w-[26rem] mx-auto flex-shrink-0">
+        <div className="w-full max-w-[26rem] mx-auto my-auto flex-shrink-0">
           {/* Logo Section */}
           <div className="text-center mb-6 sm:mb-8">
             <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-4 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
@@ -79,7 +78,6 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <div className="flex-1 w-full min-h-[2rem]"></div>
       </div>
     </div>
   );
