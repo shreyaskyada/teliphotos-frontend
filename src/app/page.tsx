@@ -100,9 +100,6 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button onClick={handleGetStarted} className="hidden sm:block text-slate-300 hover:text-white text-sm font-medium transition-colors">
-              Sign In
-            </button>
             <button
               onClick={handleGetStarted}
               className="px-5 py-2.5 bg-white text-slate-900 hover:bg-slate-200 rounded-full font-semibold text-sm transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:scale-105 active:scale-95"
