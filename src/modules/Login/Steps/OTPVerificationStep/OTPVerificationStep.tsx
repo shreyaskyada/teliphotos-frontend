@@ -14,6 +14,7 @@ const OtpVerificationStep: React.FC = () => {
     otpRefs,
     handleOtpChange,
     handleOtpKeyDown,
+    handleOtpPaste,
     handleResendCode,
     phoneNumber,
   } = useOTPVerificationStep();
@@ -50,6 +51,7 @@ const OtpVerificationStep: React.FC = () => {
                 value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                onPaste={handleOtpPaste}
                 className={`w-10 h-12 sm:w-12 sm:h-12 text-center bg-white/5 border rounded-2xl focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 text-xl font-bold text-white transition-all duration-300 ${
                   digit
                     ? "border-violet-500/50 bg-violet-500/10"

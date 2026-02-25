@@ -36,13 +36,15 @@ const Login = () => {
       <div className="relative z-10 min-h-[100dvh] flex flex-col p-4 sm:p-8">
         <div className="w-full max-w-[26rem] mx-auto my-auto flex-shrink-0">
           {/* Logo Section */}
-          <div className="text-center mb-6 sm:mb-8">
-            <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 mb-4 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105">
-              <Image src="/logo.png" alt="Telephotos Logo" width={80} height={80} className="w-full h-full object-cover" />
+          <div className="mb-6 sm:mb-8 flex flex-col items-center text-center">
+            <div className="flex flex-row sm:flex-col items-center justify-center gap-3 sm:gap-0 mb-1.5 sm:mb-2">
+              <div className="w-14 h-14 sm:mx-auto sm:w-20 sm:h-20 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-violet-500/25 sm:mb-4 ring-1 ring-white/10 hover:ring-violet-500/50 transition-all hover:scale-105 flex-shrink-0">
+                <Image src="/logo.png" alt="Telephotos Logo" width={80} height={80} className="w-full h-full object-cover" />
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent">
+                Telephotos
+              </h1>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent mb-1.5 sm:mb-2">
-              Telephotos
-            </h1>
             <p className="text-slate-400 text-base sm:text-lg leading-relaxed max-w-md mx-auto">
               Your private telegram gallery
             </p>

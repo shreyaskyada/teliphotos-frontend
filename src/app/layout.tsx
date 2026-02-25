@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`font-sans antialiased bg-background`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );

@@ -44,6 +44,27 @@ export const useOTPVerificationStep = () => {
     }
   };
 
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData("text/plain").trim().replace(/\D/g, "").slice(0, 5);
+
+    if (pasteData) {
+      const newOtp = [...otpCode];
+      for (let i = 0; i < pasteData.length; i++) {
+        newOtp[i] = pasteData[i];
+      }
+      setOtpCode(newOtp);
+      setError("");
+
+      const focusIndex = Math.min(pasteData.length, 4);
+      otpRefs.current[focusIndex]?.focus();
+
+      if (newOtp.every((digit) => digit !== "")) {
+        handleOtpSubmit(newOtp.join(""));
+      }
+    }
+  };
+
   const handleOtpSubmit = async (newOtp: string) => {
     const code = newOtp;
 
@@ -99,6 +120,7 @@ export const useOTPVerificationStep = () => {
     otpRefs,
     handleOtpChange,
     handleOtpKeyDown,
+    handleOtpPaste,
     handleOtpSubmit,
     handleResendCode,
     phoneNumber,
