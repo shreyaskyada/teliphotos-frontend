@@ -14,14 +14,14 @@ const PhoneNumberStep: React.FC<PhoneNumberStepProps> = ({ setLoginStep }) => {
 
   return (
     <>
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-3">Welcome back</h2>
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-white mb-2">Welcome back</h2>
         <p className="text-slate-300 ">
           Enter your phone number to receive a secure code via Telegram
         </p>
       </div>
 
-      <form onSubmit={handlePhoneSubmit} className="space-y-6">
+      <form onSubmit={handlePhoneSubmit} className="space-y-5">
         <div className="space-y-2">
           <PhoneInputField
             onChangeFormData={({ data, formattedValue, value }) =>

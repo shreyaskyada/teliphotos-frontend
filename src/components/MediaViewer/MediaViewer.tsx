@@ -32,7 +32,7 @@ const getToken = (): string => {
 
   const accessToken = document.cookie
     .split("; ")
-    .find((row) => row.startsWith("accessToken="))
+    .find((row) => row.startsWith("telephotos_access_token="))
     ?.split("=")[1];
 
   return accessToken || "";

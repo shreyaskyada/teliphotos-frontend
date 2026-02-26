@@ -22,7 +22,6 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogTitle></DialogTitle>
       <DialogContent
         aria-label="Confirmation Dialog"
         className="sm:max-w-[425px] bg-card border-border p-6"
@@ -33,9 +32,9 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
           </div>
           
           <div className="space-y-2 text-center">
-            <h2 className="text-xl font-semibold text-foreground">
+            <DialogTitle className="text-xl font-semibold text-foreground text-center">
               {title}
-            </h2>
+            </DialogTitle>
             <p className="text-sm text-muted-foreground text-center">
               {message}
             </p>

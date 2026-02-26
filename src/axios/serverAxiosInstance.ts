@@ -16,7 +16,7 @@ serverAxiosInstance.interceptors.request.use(
     try {
       // Only run cookies logic in a server context
       const cookieStore = await cookies();
-      const accessToken = cookieStore.get("accessToken")?.value;
+      const accessToken = cookieStore.get("telephotos_access_token")?.value;
 
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;

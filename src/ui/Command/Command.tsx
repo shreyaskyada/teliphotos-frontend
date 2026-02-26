@@ -47,7 +47,7 @@ const CommandInput = React.forwardRef<
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "flex-1 bg-transparent text-sm font-medium placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+        "flex-1 bg-transparent text-base font-medium placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
         "dark:text-slate-100 dark:placeholder:text-slate-400",
         className
       )}
@@ -152,13 +152,14 @@ const CommandShortcut = ({
 CommandShortcut.displayName = "CommandShortcut";
 
 export {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
+    Command,
+    CommandDialog,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+    CommandSeparator,
+    CommandShortcut
 };
+

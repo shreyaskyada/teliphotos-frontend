@@ -1,7 +1,7 @@
 import { verifyOtp } from "@telephotos/services";
 import {
-  LOGIN_OTP_SESSION_ID_KEY,
-  LOGIN_PHONE_NUMBER_KEY,
+    LOGIN_OTP_SESSION_ID_KEY,
+    LOGIN_PHONE_NUMBER_KEY,
 } from "@telephotos/utils/constants";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -44,6 +44,27 @@ export const useOTPVerificationStep = () => {
     }
   };
 
+  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData("text/plain").trim().replace(/\D/g, "").slice(0, 5);
+
+    if (pasteData) {
+      const newOtp = [...otpCode];
+      for (let i = 0; i < pasteData.length; i++) {
+        newOtp[i] = pasteData[i];
+      }
+      setOtpCode(newOtp);
+      setError("");
+
+      const focusIndex = Math.min(pasteData.length, 4);
+      otpRefs.current[focusIndex]?.focus();
+
+      if (newOtp.every((digit) => digit !== "")) {
+        handleOtpSubmit(newOtp.join(""));
+      }
+    }
+  };
+
   const handleOtpSubmit = async (newOtp: string) => {
     const code = newOtp;
 
@@ -52,27 +73,34 @@ export const useOTPVerificationStep = () => {
       return;
     }
 
-    const phoneCodeHash = sessionStorage.getItem(LOGIN_OTP_SESSION_ID_KEY);
+    const phoneCodeHash = typeof window !== 'undefined' ? sessionStorage.getItem(LOGIN_OTP_SESSION_ID_KEY) : null;
+    const syncPhoneNumber = typeof window !== 'undefined' ? sessionStorage.getItem(LOGIN_PHONE_NUMBER_KEY) : null;
+    const finalPhoneNumber = syncPhoneNumber || phoneNumber;
+
+    if (!finalPhoneNumber) {
+      setError("Session expired or missing phone number. Please refresh and try again.");
+      return;
+    }
 
     try {
       setIsLoading(true);
       const response = await verifyOtp({
         otp: code,
         phoneCodeHash: phoneCodeHash!,
-        phoneNumber: phoneNumber!,
+        phoneNumber: finalPhoneNumber,
       });
 
       // Clear existing cookies first, then set new ones
       document.cookie =
-        "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        "telephotos_access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       document.cookie =
-        "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        "telephotos_refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
       // Set new tokens in cookies
-      document.cookie = `accessToken=${
+      document.cookie = `telephotos_access_token=${
         response.data.accessToken
       }; path=/; max-age=${7 * 24 * 60 * 60}; samesite=lax`;
-      document.cookie = `refreshToken=${
+      document.cookie = `telephotos_refresh_token=${
         response.data.refreshToken
       }; path=/; max-age=${40 * 24 * 60 * 60}; samesite=lax`;
 
@@ -99,6 +127,7 @@ export const useOTPVerificationStep = () => {
     otpRefs,
     handleOtpChange,
     handleOtpKeyDown,
+    handleOtpPaste,
     handleOtpSubmit,
     handleResendCode,
     phoneNumber,

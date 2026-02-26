@@ -1,752 +1,348 @@
 "use client";
+
+import { motion } from "framer-motion";
 import {
-  ArrowRight,
-  Camera,
-  Check,
-  Cloud,
-  Download,
-  Eye,
-  Folder,
-  Heart,
-  ImagePlus,
-  LayoutGrid,
-  MessageSquare,
-  Play,
-  Shield,
-  Smartphone,
-  Sparkles,
-  Upload,
-  Users,
+    ArrowRight,
+    Cloud,
+    FolderOpen,
+    ImagePlus,
+    LayoutGrid,
+    Lock,
+    Play,
+    Rocket,
+    ShieldCheck,
+    Sparkles
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const LandingPage = () => {
-  const handleGetStarted = () => {
-    window.location.href = "/login";
-  };
-  const [activeFeature, setActiveFeature] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
+const BENTO_FEATURES = [
+  {
+    title: "Unlimited Storage",
+    description: "Leverage Telegram's incredibly generous cloud to store as many memories as you want without monthly fees.",
+    icon: Cloud,
+    gradient: "from-blue-500 to-cyan-500",
+    colSpan: "col-span-1 md:col-span-2",
+  },
+  {
+    title: "Stunning Gallery UI",
+    description: "Forget endless chat scrolling. See your photos neatly arranged in a blazing fast, grid-based dashboard.",
+    icon: LayoutGrid,
+    gradient: "from-violet-500 to-purple-500",
+    colSpan: "col-span-1 md:col-span-1",
+  },
+  {
+    title: "Absolute Privacy",
+    description: "We don't host your files. They stay strictly inside your private Telegram channels, encrypted and secure.",
+    icon: ShieldCheck,
+    gradient: "from-emerald-400 to-green-600",
+    colSpan: "col-span-1 md:col-span-1",
+  },
+  {
+    title: "Channel Albums",
+    description: "Easily group your photos into Telegram channels. Use different channels for events, trips, or family memories.",
+    icon: FolderOpen,
+    gradient: "from-pink-500 to-rose-500",
+    colSpan: "col-span-1 md:col-span-2",
+  },
+];
+
+export default function LandingPage() {
+  const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    setIsVisible(true);
-    const interval = setInterval(() => {
-      setActiveFeature((prev) => (prev + 1) % 3);
-    }, 4000);
-    return () => clearInterval(interval);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const features = [
-    {
-      icon: LayoutGrid,
-      title: "Beautiful Gallery View",
-      description: "Browse your photos in a clean, visual gallery instead of scrolling through Telegram chats",
-      color: "from-violet-500 to-purple-600",
-    },
-    {
-      icon: MessageSquare,
-      title: "Telegram Powered",
-      description: "Log in with your Telegram account and your photos are stored directly in your own Telegram channel",
-      color: "from-blue-500 to-cyan-600",
-    },
-    {
-      icon: Upload,
-      title: "Easy Photo Upload",
-      description: "Upload photos through our interface and they're saved to your personal Telegram channel automatically",
-      color: "from-green-500 to-emerald-600",
-    },
-  ];
-
-  const useCases = [
-    {
-      icon: Camera,
-      title: "Personal Photo Gallery",
-      description:
-        "Keep your photos organized in dedicated Telegram channels and browse them in a beautiful gallery view.",
-    },
-    {
-      icon: Users,
-      title: "Multiple Channels",
-      description:
-        "Create separate channels for different albums — vacations, family, events — and switch between them easily.",
-    },
-    {
-      icon: Folder,
-      title: "Always Accessible",
-      description:
-        "Your photos live in your Telegram account, so you can access them from any device, anytime.",
-    },
-  ];
-
-  const highlights = [
-    { icon: LayoutGrid, label: "Gallery View" },
-    { icon: Upload, label: "Easy Upload" },
-    { icon: Shield, label: "Your Telegram Account" },
-    { icon: Smartphone, label: "Mobile Friendly" },
-  ];
+  const handleGetStarted = () => {
+    router.push("/dashboard");
+  };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-y-auto overflow-x-hidden">
-      {/* Dynamic Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+    <div className="min-h-screen bg-[#020617] text-slate-200 overflow-x-hidden selection:bg-violet-500/30">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-violet-600/20 blur-[120px] rounded-full mix-blend-screen" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[50%] bg-cyan-600/20 blur-[120px] rounded-full mix-blend-screen" />
+        <div className="absolute top-[40%] left-[20%] w-[60%] h-[40%] bg-blue-600/10 blur-[100px] rounded-full mix-blend-screen animate-pulse duration-[10000ms]" />
+        
+        {/* subtle grid patterns */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-60"></div>
       </div>
 
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-
-      {/* Header */}
-      <header className="relative z-10 px-6 py-6">
-        <nav className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/25 overflow-hidden">
-              <Image src="/logo.png" alt="Telephotos" width={48} height={48} className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent">
-                Telephotos
-              </h1>
-              <p className="text-xs text-slate-400">Photo Gallery for Telegram</p>
-            </div>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="#features"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
-              Features
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
-              How It Works
-            </a>
-            <a
-              href="#support"
-              className="text-slate-300 hover:text-white transition-colors duration-300"
-            >
-              Support
-            </a>
-          </div>
-
-          <button
-            onClick={() => (window.location.href = "/login")}
-            className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg shadow-violet-500/25 flex items-center space-x-2 group"
-          >
-            <span>Get Started</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
-        </nav>
-      </header>
-
-      {/* Hero Section */}
-      <section className="relative z-10 px-6 py-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div
-              className={`space-y-8 transition-all duration-1000 ${
-                isVisible
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 -translate-x-8"
-              }`}
-            >
-              {" "}
-              <div className="space-y-6">
-                <div className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-4 py-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-slate-300">
-                    Personal Photo Gallery for Telegram
-                  </span>
-                </div>
-
-                <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-                  <span className="bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent">
-                    Your Photos,
-                  </span>
-                  <br />
-                  <span className="bg-gradient-to-r from-violet-400 to-cyan-400 bg-clip-text text-transparent">
-                    Beautifully Organized
-                  </span>
-                </h1>
-
-                <p className="text-xl text-slate-300 leading-relaxed max-w-2xl">
-                  Upload and browse your photos in a beautiful gallery.
-                  Your photos are stored in your own Telegram channel —
-                  private, accessible, and always yours.
-                </p>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={handleGetStarted}
-                  className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 group"
-                >
-                  <span>Get Started</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </button>
-
-                <button className="flex items-center justify-center space-x-3 px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all duration-300 group">
-                  <Play className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                  <span>Watch Demo</span>
-                </button>
-              </div>
-              <div className="flex items-center space-x-8 pt-4">
-                <div className="flex items-center space-x-2">
-                  <MessageSquare className="w-5 h-5 text-blue-400" />
-                  <span className="text-sm text-slate-400">
-                    Photos stored in your own Telegram channel
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className={`relative transition-all duration-1000 delay-300 ${
-                isVisible
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 translate-x-8"
-              }`}
-            >
-              {" "}
-              <div className="relative">
-                {/* Main Phone Mockup */}
-                <div className="relative mx-auto w-80 h-[600px] bg-gradient-to-br from-slate-800 to-slate-900 rounded-[3rem] p-2 shadow-2xl">
-                  <div className="w-full h-full bg-slate-950 rounded-[2.5rem] overflow-hidden relative">
-                    {/* Status Bar */}
-                    <div className="flex items-center justify-between px-6 py-3 text-xs text-slate-400">
-                      <span>9:41</span>
-                      <div className="flex items-center space-x-1">
-                        <div className="w-4 h-2 bg-white rounded-sm"></div>
-                        <div className="w-6 h-3 border border-white rounded-sm">
-                          <div className="w-4 h-1 bg-white rounded-sm m-0.5"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* App Content */}
-                    <div className="px-4 py-2">
-                      <div className="flex items-center space-x-3 mb-6">
-                        <div className="w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden">
-                          <Image src="/logo.png" alt="Telephotos" width={32} height={32} className="w-full h-full object-cover" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-white text-sm">
-                            Telephotos
-                          </h3>
-                          <p className="text-xs text-slate-400">1,247 photos</p>
-                        </div>
-                      </div>
-
-                      {/* Photo Grid */}
-                      <div className="grid grid-cols-3 gap-1">
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-                          <div
-                            key={i}
-                            className="aspect-square bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-lg animate-pulse"
-                            style={{ animationDelay: `${i * 0.1}s` }}
-                          ></div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Elements */}
-                <div className="absolute -top-4 -right-4 bg-green-500 text-white p-3 rounded-2xl shadow-lg animate-bounce">
-                  <Shield className="w-6 h-6" />
-                </div>
-                <div className="absolute -bottom-4 -left-4 bg-blue-500 text-white p-3 rounded-2xl shadow-lg animate-bounce delay-1000">
-                  <MessageSquare className="w-6 h-6" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Highlights Section */}
-      <section className="relative z-10 px-6 py-16 border-y border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {highlights.map((item, index) => (
-              <div key={index} className="text-center group flex flex-col items-center">
-                <div className="w-14 h-14 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                  <item.icon className="w-7 h-7 text-violet-400" />
-                </div>
-                <div className="text-slate-300 font-medium">{item.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="relative z-10 px-6 py-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                Why Choose Telephotos?
-              </span>
-            </h2>
-            <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-              A beautiful gallery for your photos, powered by
-              Telegram
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-8 mb-16">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className={`group p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl hover:bg-white/10 transition-all duration-500 cursor-pointer ${
-                  activeFeature === index
-                    ? "ring-2 ring-violet-500/50 bg-white/10"
-                    : ""
-                }`}
-                onMouseEnter={() => setActiveFeature(index)}
-              >
-                <div
-                  className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg`}
-                >
-                  <feature.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-300 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Additional Features Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Cloud,
-                title: "Access Anywhere",
-                desc: "Your photos are in Telegram — view from any device",
-              },
-              {
-                icon: Smartphone,
-                title: "Mobile Friendly",
-                desc: "Optimized for mobile browsing",
-              },
-              {
-                icon: Eye,
-                title: "Channel Overview",
-                desc: "See all your photo channels at a glance",
-              },
-              {
-                icon: Download,
-                title: "Quick Download",
-                desc: "Save media to your device anytime",
-              },
-              {
-                icon: Heart,
-                title: "Favorites",
-                desc: "Mark your best photos",
-              },
-              {
-                icon: Folder,
-                title: "Channel-Based Albums",
-                desc: "Organize by creating separate channels",
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center space-x-4 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 group"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <item.icon className="w-6 h-6 text-violet-400" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white">{item.title}</h4>
-                  <p className="text-sm text-slate-400">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works Section */}
-      <section
-        id="how-it-works"
-        className="relative z-10 px-6 py-20 bg-white/5 backdrop-blur-sm"
+      {/* Navigation */}
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled ? "bg-slate-950/80 backdrop-blur-xl border-b border-white/5 py-4" : "bg-transparent py-6"
+        }`}
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6">
-                <Sparkles className="w-4 h-4 text-blue-400" />
-                <span className="text-sm text-blue-300 font-medium">
-                  Simple 3-Step Process
-                </span>
-              </div>
-
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                  How Telephotos Works
-                </span>
-              </h2>
-
-              <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-                Log in with your Telegram account, create a channel for
-                your photos, and start uploading. We store your photos
-                directly in your Telegram channel and show them in a
-                beautiful gallery.
-              </p>
-
-              <div className="space-y-4">
-                {[
-                  "Log in securely with your Telegram account",
-                  "Create a channel to organize your photos",
-                  "Upload photos — they go straight to your Telegram channel",
-                  "Browse your photos in a beautiful gallery view",
-                  "Download or view your photos anytime",
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                      <Check className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-slate-300">{item}</span>
-                  </div>
-                ))}
-              </div>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-violet-500/50 transition-all">
+              <Image src="/logo.png" alt="Telephotos Logo" width={40} height={40} className="w-full h-full object-cover" />
             </div>
-
-            <div className="relative">
-              <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-white/10">
-                <div className="text-center mb-6">
-                  <div className="w-20 h-20 bg-gradient-to-br from-violet-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <LayoutGrid className="w-10 h-10 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    Your Photo Gallery
-                  </h3>
-                  <p className="text-slate-400">
-                    Photos from your Telegram channel, beautifully displayed
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
-                    <span className="text-slate-300">Telegram Login</span>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
-                    <span className="text-slate-300">Channel Created</span>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-200"></div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
-                    <span className="text-slate-300">Photos Uploaded</span>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse delay-400"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases */}
-      <section className="relative z-10 px-6 py-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                Perfect For
-              </span>
-            </h2>
-            <p className="text-xl text-slate-400">
-              Whether it's personal memories or creative projects
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {useCases.map((useCase, index) => (
-              <div
-                key={index}
-                className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 hover:bg-white/10 transition-all duration-300"
-              >
-                <div className="w-14 h-14 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mb-6">
-                  <useCase.icon className="w-7 h-7 text-violet-400" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">
-                  {useCase.title}
-                </h3>
-                <p className="text-slate-300 leading-relaxed">
-                  {useCase.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Free to Use Section */}
-      <section
-        id="free-service"
-        className="relative z-10 px-6 py-20 bg-white/5 backdrop-blur-sm"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                Everything You Need
-              </span>
-            </h2>
-            <p className="text-xl text-slate-400">
-              A better way to manage your Telegram photos
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            {/* Main Card */}
-            <div className="bg-gradient-to-br from-violet-500/10 to-cyan-500/10 border-2 border-violet-500/30 rounded-3xl p-12 text-center relative overflow-hidden">
-              {/* Background decoration */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-violet-500/20 to-transparent rounded-full blur-2xl"></div>
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-cyan-500/20 to-transparent rounded-full blur-2xl"></div>
-
-              <div className="relative z-10">
-                <div className="w-20 h-20 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-violet-500/25">
-                  <Sparkles className="w-10 h-10 text-white" />
-                </div>
-
-                <h3 className="text-5xl font-bold text-white mb-4">
-                  Photo Gallery
-                </h3>
-                <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                  Upload photos to your personal Telegram channel and
-                  browse them in a beautiful gallery. Simple, private,
-                  and always accessible.
-                </p>
-
-                {/* Feature Grid */}
-                <div className="grid md:grid-cols-2 gap-6 mb-8">
-                  <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <ImagePlus className="w-6 h-6 text-violet-400" />
-                      <h4 className="font-semibold text-white">
-                        Upload & Browse
-                      </h4>
-                    </div>
-                    <p className="text-slate-400 text-sm">
-                      Upload photos and view them in a gallery layout
-                    </p>
-                  </div>
-
-                  <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Users className="w-6 h-6 text-cyan-400" />
-                      <h4 className="font-semibold text-white">
-                        Multi-Channel Support
-                      </h4>
-                    </div>
-                    <p className="text-slate-400 text-sm">
-                      Create and manage multiple photo channels
-                    </p>
-                  </div>
-
-                  <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Shield className="w-6 h-6 text-green-400" />
-                      <h4 className="font-semibold text-white">
-                        Your Account, Your Data
-                      </h4>
-                    </div>
-                    <p className="text-slate-400 text-sm">
-                      Photos stored in your own Telegram channel
-                    </p>
-                  </div>
-
-                  <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Download className="w-6 h-6 text-pink-400" />
-                      <h4 className="font-semibold text-white">
-                        Download Anytime
-                      </h4>
-                    </div>
-                    <p className="text-slate-400 text-sm">
-                      Download your photos whenever you need them
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleGetStarted}
-                  className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 mx-auto group"
-                >
-                  <span>Try Telephotos Now</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                </button>
-              </div>
-            </div>
-
-            {/* Why Telephotos Section */}
-            <div className="mt-16 text-center">
-              <h3 className="text-2xl font-bold text-white mb-6">
-                Why Telephotos?
-              </h3>
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="space-y-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl flex items-center justify-center mx-auto">
-                    <Heart className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <h4 className="font-semibold text-white">
-                    Telegram-Native
-                  </h4>
-                  <p className="text-slate-400 text-sm">
-                    Built specifically for Telegram users
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center mx-auto">
-                    <Eye className="w-6 h-6 text-green-400" />
-                  </div>
-                  <h4 className="font-semibold text-white">Beautiful Interface</h4>
-                  <p className="text-slate-400 text-sm">
-                    A premium gallery experience for your media
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-xl flex items-center justify-center mx-auto">
-                    <Sparkles className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <h4 className="font-semibold text-white">Simple & Fast</h4>
-                  <p className="text-slate-400 text-sm">
-                    Upload, browse, and download with ease
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative z-10 px-6 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-white via-violet-200 to-cyan-200 bg-clip-text text-transparent">
-              Start Building Your Photo Gallery
+            <span className="font-bold text-xl tracking-tight text-white group-hover:text-violet-200 transition-colors">
+              Telephotos
             </span>
-          </h2>
-          <p className="text-xl text-slate-300 mb-8 leading-relaxed">
-            Create your personal photo gallery powered by Telegram.
-            Upload, browse, and organize your photos.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          </Link>
+          
+          <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
+            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
+          </div>
+
+          <div className="flex items-center space-x-4">
             <button
               onClick={handleGetStarted}
-              className="bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700 px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-2xl shadow-violet-500/25 flex items-center justify-center space-x-3 group"
+              className="px-5 py-2.5 bg-white text-slate-900 hover:bg-slate-200 rounded-full font-semibold text-sm transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:scale-105 active:scale-95"
             >
-              <span>Get Started</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
-            <button className="flex items-center justify-center space-x-3 px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all duration-300">
-              <MessageSquare className="w-5 h-5" />
-              <span>Contact Support</span>
+              Get Started
             </button>
           </div>
+        </div>
+      </motion.nav>
+
+      {/* Hero Section */}
+      <section className="relative z-10 pt-40 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center text-center header-content">
+        <motion.div
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8, ease: "easeOut" }}
+           className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-violet-300 text-sm font-medium mb-8 hover:bg-white/10 transition-colors cursor-pointer"
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>The Ultimate Telegram Cloud Gallery</span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+          className="text-5xl md:text-7xl font-extrabold tracking-tight text-white max-w-4xl leading-[1.1] mb-8"
+        >
+          Unlimited Storage.
+          <br className="max-md:hidden" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400">
+            {" "}Zero Server Fees.
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed drop-shadow-sm"
+        >
+          Turn your Telegram account into a premium, limitless photo gallery. Organize your memories into albums and access them anywhere without ever touching iCloud or Google Photos again.
+        </motion.p>
+
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8, delay: 0.3 }}
+           className="flex flex-col sm:flex-row items-center gap-4"
+        >
+          <button
+            onClick={handleGetStarted}
+            className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 rounded-full text-white font-bold text-lg transition-all shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] hover:scale-105 active:scale-95 group"
+          >
+            Start Your Gallery
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
+          <a
+            href="#how-it-works"
+            className="flex items-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-semibold text-lg transition-all hover:scale-105 active:scale-95"
+          >
+            <Play className="w-5 h-5 text-slate-300" />
+            Watch Demo
+          </a>
+        </motion.div>
+
+        {/* Hero Image / Mockup */}
+        <motion.div
+           initial={{ opacity: 0, y: 80 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+           className="mt-20 relative w-full max-w-5xl rounded-2xl overflow-hidden glass-panel border border-white/10 shadow-2xl p-2"
+        >
+           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10"></div>
+           <div className="w-full bg-slate-950/80 rounded-xl overflow-hidden relative border border-white/5">
+             <div className="flex items-center px-4 py-3 bg-slate-900/50 border-b border-white/5">
+               <div className="flex gap-2">
+                 <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
+                 <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
+                 <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+               </div>
+               <div className="mx-auto bg-slate-800/50 text-slate-400 text-xs px-4 py-1.5 rounded-md flex items-center gap-2">
+                 <Lock className="w-3 h-3" />
+                 <span>telephotos.app/dashboard</span>
+               </div>
+             </div>
+             {/* Mock Dashboard Area */}
+             <div className="grid grid-cols-2 md:grid-cols-4 backdrop-blur-md">
+                {[
+                  "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1470071131384-001b85755536?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=400",
+                  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=400"
+                ].map((src, i) => (
+                  <div key={i} className="aspect-[4/3] sm:aspect-square border border-slate-900/50 overflow-hidden bg-slate-800 relative group">
+                     {/* eslint-disable-next-line @next/next/no-img-element */}
+                     <img src={src} alt="Gallery Mockup" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                ))}
+             </div>
+           </div>
+        </motion.div>
+      </section>
+
+
+      {/* Features Bento Grid */}
+      <section id="features" className="py-24 px-6 relative z-10">
+         <div className="max-w-7xl mx-auto">
+           <div className="text-center mb-16 max-w-3xl mx-auto">
+             <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">Everything you need. <br className="hidden md:block"/> Nothing you don't.</h2>
+             <p className="text-slate-400 text-lg">We took the infinite storage power of Telegram and wrapped it in a drop-dead gorgeous, easy-to-use gallery interface.</p>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {BENTO_FEATURES.map((feature, idx) => (
+                <div key={idx} className={`p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group relative overflow-hidden ${feature.colSpan}`}>
+                   <div className={`absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br ${feature.gradient} opacity-20 blur-3xl group-hover:opacity-40 transition-opacity`}></div>
+                   
+                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center shadow-lg mb-6 group-hover:scale-110 transition-transform`}>
+                     <feature.icon className="w-7 h-7 text-white" />
+                   </div>
+                   
+                   <h3 className="text-2xl font-bold text-white mb-3 tracking-tight">{feature.title}</h3>
+                   <p className="text-slate-400 leading-relaxed text-sm lg:text-base">
+                     {feature.description}
+                   </p>
+                </div>
+              ))}
+           </div>
+         </div>
+      </section>
+
+      {/* How it Works */}
+      <section id="how-it-works" className="py-24 px-6 bg-slate-900/30 border-y border-white/5">
+         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+            <div className="flex-1 space-y-8">
+               <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">How it works</h2>
+               <p className="text-lg text-slate-400">Transform your Telegram account into a photo powerhouse in three simple steps. No credit card required, ever.</p>
+               
+               <div className="space-y-6">
+                 {[
+                   { title: "Connect Telegram", desc: "Log in securely using your phone number. We strictly use the official API and do not store your data independently." },
+                   { title: "Select or Create a Channel", desc: "Pick an existing private channel or create a new one to act as your gallery folder." },
+                   { title: "Upload & Browse effortlessly", desc: "Drag and drop photos via our beautiful interface. They instantly sync back to Telegram and your gallery dashboard." }
+                 ].map((step, idx) => (
+                   <div key={idx} className="flex gap-4 group">
+                      <div className="flex flex-col items-center">
+                         <div className="w-10 h-10 rounded-full bg-violet-500/20 border border-violet-500/40 text-violet-400 font-bold flex items-center justify-center shrink-0 group-hover:bg-violet-500 group-hover:text-white transition-colors">
+                           {idx + 1}
+                         </div>
+                         {idx !== 2 && <div className="w-[1px] h-full bg-white/10 mt-2"></div>}
+                      </div>
+                      <div className="pb-6">
+                         <h4 className="text-xl font-bold text-slate-200 mb-2">{step.title}</h4>
+                         <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
+                      </div>
+                   </div>
+                 ))}
+               </div>
+
+               <button
+                  onClick={handleGetStarted}
+                  className="mt-4 px-6 py-3 bg-white text-slate-900 rounded-full font-bold hover:scale-105 active:scale-95 transition-transform"
+                >
+                  Create your first gallery
+                </button>
+            </div>
+
+            <div className="flex-1 w-full relative">
+               <div className="absolute inset-0 bg-gradient-to-tr from-violet-600/30 to-cyan-600/30 blur-[100px] rounded-full"></div>
+               <div className="relative bg-slate-900 border border-white/10 rounded-[2rem] p-4 shadow-2xl glass-panel">
+                  <div className="rounded-[1.5rem] bg-slate-950 overflow-hidden relative">
+                     {/* Mocked UI for "How it works" */}
+                     <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 bg-violet-500/20 rounded-xl flex items-center justify-center">
+                              <ImagePlus className="w-5 h-5 text-violet-400" />
+                           </div>
+                           <div>
+                              <div className="text-sm font-bold text-white">Upload Photos</div>
+                              <div className="text-xs text-slate-400">Drop files anywhere</div>
+                           </div>
+                        </div>
+                        <div className="flex gap-1">
+                           <div className="w-2 h-2 rounded-full bg-green-400/80 animate-pulse"></div>
+                           <div className="text-xs text-green-400 font-medium">Syncing</div>
+                        </div>
+                     </div>
+                     <div className="p-4 grid grid-cols-3 gap-2 opacity-50">
+                        {[1,2,3,4,5,6].map(i => (
+                           <div key={i} className="aspect-square bg-slate-800 rounded-lg"></div>
+                        ))}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+
+      {/* Footer CTA */}
+      <section className="py-32 px-6 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Ready to ditch iCloud limits?</h2>
+          <p className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+            Join Telephotos today and reclaim your storage space using the secure infrastructure of Telegram.
+          </p>
+          <button
+              onClick={handleGetStarted}
+              className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-full text-white font-bold text-xl transition-all shadow-[0_0_30px_rgba(6,182,212,0.3)] hover:shadow-[0_0_50px_rgba(6,182,212,0.5)] hover:scale-105 active:scale-95"
+            >
+              Start for Free
+              <Rocket className="w-6 h-6" />
+          </button>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer
-        id="support"
-        className="relative z-10 border-t border-white/10 px-6 py-16"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-2xl flex items-center justify-center overflow-hidden">
-                  <Image src="/logo.png" alt="Telephotos" width={40} height={40} className="w-full h-full object-cover" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-white">Telephotos</h3>
-                  <p className="text-xs text-slate-400">Photo Gallery for Telegram</p>
-                </div>
-              </div>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                A personal photo gallery for your Telegram channel
-                media. Upload, browse, and organize with ease.
-              </p>
+      {/* Footer Links */}
+      <footer className="py-12 px-6 border-t border-white/5 relative z-10 bg-[#020617]">
+         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+               <Image src="/logo.png" alt="Telephotos Logo" width={32} height={32} />
+               <span className="font-bold text-lg text-white">Telephotos</span>
+            </div>
+            
+            <div className="flex items-center gap-8 text-sm font-medium text-slate-400">
+               <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+               <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+               <a href="mailto:support@telephotos.app" className="hover:text-white transition-colors">Contact</a>
             </div>
 
-            <div>
-              <h4 className="font-semibold text-white mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="#features" className="hover:text-white transition-colors">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#how-it-works" className="hover:text-white transition-colors">
-                    How It Works
-                  </a>
-                </li>
-                <li>
-                  <a href="#free-service" className="hover:text-white transition-colors">
-                    Overview
-                  </a>
-                </li>
-              </ul>
+            <div className="text-sm text-slate-500">
+               &copy; {new Date().getFullYear()} Telephotos. All rights reserved.
             </div>
-
-            <div>
-              <h4 className="font-semibold text-white mb-4">Support</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="mailto:telephotos.app@gmail.com" className="hover:text-white transition-colors">
-                    Contact Us
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-white mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
-                <li>
-                  <a href="/privacy" className="hover:text-white transition-colors">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="/terms" className="hover:text-white transition-colors">
-                    Terms of Service
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between">
-            <p className="text-slate-400 text-sm">
-              © 2024 Telephotos. All rights reserved.
-            </p>
-            <div className="flex items-center space-x-6 mt-4 md:mt-0">
-              <div className="flex items-center space-x-2 text-sm text-slate-400">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span>All systems operational</span>
-              </div>
-            </div>
-          </div>
-        </div>
+         </div>
       </footer>
     </div>
   );
-};
-
-export default LandingPage;
+}
