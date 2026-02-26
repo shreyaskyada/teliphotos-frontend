@@ -1,18 +1,28 @@
+"use client";
+
+import { logout } from "@telephotos/app/login/actions";
 import {
-  Avatar,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    Avatar,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@telephotos/ui";
 import { Skeleton } from "@telephotos/ui/Skeleton";
 import { ChevronLeftIcon, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 import useUserProfile from "./useUserProfile";
 
 const UserProfile: React.FC = () => {
+  const router = useRouter();
   const { data, isLoading } = useUserProfile();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
 
   if (isLoading) {
     return (
@@ -48,7 +58,7 @@ const UserProfile: React.FC = () => {
       <DropdownMenuContent className="w-48 bg-slate-900 border border-white/10">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer text-red-400 hover:bg-white/10">
+        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-400 hover:bg-white/10">
           <LogOut className="w-4 h-4 mr-2" /> Logout
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -34,7 +34,7 @@ const Login = () => {
       </div>
 
       <div className="relative z-10 min-h-[100dvh] flex flex-col p-4 sm:p-8">
-        <div className="w-full max-w-[26rem] mx-auto my-auto flex-shrink-0">
+        <div className="w-full max-w-[30rem] mx-auto my-auto flex-shrink-0">
           {/* Logo Section */}
           <div className="mb-6 sm:mb-8 flex flex-col items-center text-center">
             <div className="flex flex-row sm:flex-col items-center justify-center gap-3 sm:gap-0 mb-1.5 sm:mb-2">

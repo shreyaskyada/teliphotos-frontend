@@ -35,3 +35,8 @@ export async function verifyOTP(
     return { success: false, error: "Invalid OTP" };
   }
 }
+
+export async function logout() {
+  (await cookies()).delete("telephotos_access_token");
+  (await cookies()).delete("telephotos_refresh_token");
+}

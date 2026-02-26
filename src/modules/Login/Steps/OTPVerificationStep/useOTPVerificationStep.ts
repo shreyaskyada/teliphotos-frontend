@@ -73,14 +73,21 @@ export const useOTPVerificationStep = () => {
       return;
     }
 
-    const phoneCodeHash = sessionStorage.getItem(LOGIN_OTP_SESSION_ID_KEY);
+    const phoneCodeHash = typeof window !== 'undefined' ? sessionStorage.getItem(LOGIN_OTP_SESSION_ID_KEY) : null;
+    const syncPhoneNumber = typeof window !== 'undefined' ? sessionStorage.getItem(LOGIN_PHONE_NUMBER_KEY) : null;
+    const finalPhoneNumber = syncPhoneNumber || phoneNumber;
+
+    if (!finalPhoneNumber) {
+      setError("Session expired or missing phone number. Please refresh and try again.");
+      return;
+    }
 
     try {
       setIsLoading(true);
       const response = await verifyOtp({
         otp: code,
         phoneCodeHash: phoneCodeHash!,
-        phoneNumber: phoneNumber!,
+        phoneNumber: finalPhoneNumber,
       });
 
       // Clear existing cookies first, then set new ones
