@@ -307,6 +307,42 @@ export default function LandingPage() {
       </section>
 
 
+      {/* FAQ Section */}
+      <section id="faq" className="py-24 px-6 relative z-10">
+         <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+               <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">Frequently Asked Questions</h2>
+               <p className="text-lg text-slate-400">Everything you need to know about Telephotos and how we secure your data.</p>
+            </div>
+            
+            <div className="space-y-6">
+              {[
+                { 
+                  q: "Is Telephotos really free?",
+                  a: "Yes. By leveraging the official Telegram API, we use your existing Telegram cloud storage. Telegram provides unlimited storage for free, and our gallery interface simply reads it for you."
+                },
+                {
+                  q: "Can you see my photos?",
+                  a: "Absolutely not. We have a strict zero-knowledge architecture. Your images are hosted directly on Telegram's servers and we never download or save them to our databases. We act merely as a frontend viewer."
+                },
+                {
+                  q: "Are my files compressed?",
+                  a: "Telegram does offer compression for fast chat sharing, but if you upload files as documents, they remain fully uncompressed. Telephotos supports highest-quality media streaming directly to your browser."
+                },
+                {
+                  q: "What happens if I stop using Telephotos?",
+                  a: "You lose absolutely nothing. Because all your photos are securely uploaded to your private Telegram Channels or Saved Messages, you can easily view, download, or delete them inside the official Telegram app at any time."
+                }
+              ].map((faq, idx) => (
+                <div key={idx} className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:bg-slate-800/50 transition-colors">
+                   <h3 className="text-xl font-bold text-white mb-2">{faq.q}</h3>
+                   <p className="text-slate-400 leading-relaxed">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+         </div>
+      </section>
+
       {/* Footer CTA */}
       <section className="py-32 px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -332,10 +368,11 @@ export default function LandingPage() {
                <span className="font-bold text-lg text-white">Telephotos</span>
             </div>
             
-            <div className="flex items-center gap-8 text-sm font-medium text-slate-400">
+            <div className="flex flex-wrap items-center justify-center md:justify-end gap-6 text-sm font-medium text-slate-400">
+               <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
                <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
                <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-               <a href="mailto:support@telephotos.app" className="hover:text-white transition-colors">Contact</a>
+               <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
             </div>
 
             <div className="text-sm text-slate-500">
