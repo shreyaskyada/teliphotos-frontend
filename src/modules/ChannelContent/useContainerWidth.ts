@@ -1,36 +1,46 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useContainerWidth = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth - 300 : 1200
-  ); // Default width accounting for sidebar
+  const [containerWidth, setContainerWidth] = useState(1200);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
     const updateWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
+      // documentElement.clientWidth correctly removes the OS vertical scrollbar width
+      const screenWidth = document.documentElement.clientWidth;
+      
+      // If we are on large screen desktop (lg: >= 1024px), sidebar is 280px static.
+      // If smaller, sidebar is hidden off-screen or overlays via mobile menu.
+      const isDesktop = screenWidth >= 1024;
+      const sidebarWidth = isDesktop ? 280 : 0;
+      
+      const newWidth = screenWidth - sidebarWidth;
+      
+      if (newWidth > 0 && newWidth !== containerWidth) {
+         setContainerWidth(newWidth);
       }
     };
 
-    // Initial measurement
+    // Fast immediate trigger on mount
     updateWidth();
 
-    // Set up resize observer for more accurate measurements
-    const resizeObserver = new ResizeObserver(updateWidth);
+    // Re-measure continuously on any window resize or layout shift
+    const ob = new ResizeObserver(() => {
+       window.clearTimeout(timeoutId);
+       timeoutId = setTimeout(updateWidth, 50);
+    });
+    ob.observe(document.body);
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    // Fallback to window resize listener
     window.addEventListener("resize", updateWidth);
 
     return () => {
-      resizeObserver.disconnect();
+      ob.disconnect();
       window.removeEventListener("resize", updateWidth);
+      window.clearTimeout(timeoutId);
     };
-  }, []);
+  }, [containerWidth]);
 
-  return { containerRef, containerWidth };
+  // Return empty function for ref so ChannelContent doesn't crash expecting a ref
+  return { containerRef: () => {}, containerWidth };
 };
