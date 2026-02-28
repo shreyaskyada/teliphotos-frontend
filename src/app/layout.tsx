@@ -18,6 +18,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Telephotos – Personal Photo Gallery for Telegram",
   description: "Telephotos is a personal photo gallery for Telegram. Upload, browse, and organize your photos in beautiful galleries — all backed by your own Telegram channel.",
+  verification: {
+    google: "0bmvhKB6RPRhoVyR5q6rxrrQvams8IkMP1P5g_CQEgw",
+  },
 };
 
 export default function RootLayout({
