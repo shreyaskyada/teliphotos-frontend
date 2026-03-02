@@ -3,6 +3,8 @@
 import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 
+
+
 const faqs = [
   {
     q: "What is Telephotos and how does it actually work?",

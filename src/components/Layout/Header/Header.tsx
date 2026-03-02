@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
             )}
           </button>
 
-          <Link href="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center">
               <Image src="/logo.png" alt="Telephotos" width={36} height={36} className="w-full h-full object-cover" />
             </div>

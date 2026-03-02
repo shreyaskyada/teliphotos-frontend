@@ -1,9 +1,6 @@
 import Link from "next/link";
 
-export const metadata = {
-  title: "Privacy Policy | Telephotos",
-  description: "Learn how Telephotos handles your data and protects your privacy.",
-};
+
 
 export default function PrivacyPolicy() {
   return (

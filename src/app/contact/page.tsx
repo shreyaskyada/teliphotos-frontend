@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Mail, MapPin, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
+
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);

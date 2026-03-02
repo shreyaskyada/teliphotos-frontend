@@ -4,6 +4,8 @@ import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 import { Cloud, FolderOpen, ImagePlus, LayoutGrid, ShieldCheck, Zap } from "lucide-react";
 
+
+
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200">
