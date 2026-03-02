@@ -1,7 +1,13 @@
-import { Button, PhoneInputField } from "@telephotos/ui";
+import { Button } from "@telephotos/ui";
 import { ArrowRight, Loader2 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { PhoneNumberStepProps } from "./types";
 import { usePhoneNumberStep } from "./usePhoneNumberStep";
+
+const PhoneInputField = dynamic(
+  () => import("@telephotos/ui").then((mod) => mod.PhoneInputField),
+  { ssr: false, loading: () => <div className="h-[74px] w-full animate-pulse bg-white/5 rounded-lg border border-slate-700"></div> }
+);
 
 const PhoneNumberStep: React.FC<PhoneNumberStepProps> = ({ setLoginStep }) => {
   const {
