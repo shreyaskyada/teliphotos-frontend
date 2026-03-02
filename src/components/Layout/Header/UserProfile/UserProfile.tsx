@@ -2,13 +2,13 @@
 
 import { logout } from "@telephotos/app/login/actions";
 import {
-    Avatar,
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  Avatar,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@telephotos/ui";
 import { Skeleton } from "@telephotos/ui/Skeleton";
 import { ChevronLeftIcon, LogOut } from "lucide-react";
@@ -39,7 +39,7 @@ const UserProfile: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center space-x-2 focus:outline-none text-">
+        <button type="button" aria-label="Open profile menu" className="flex items-center space-x-2 focus:outline-none text-">
           <Avatar name={`${data?.firstName} ${data?.lastName}`} />
 
           <div className="flex  flex-col items-start">

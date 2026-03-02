@@ -78,29 +78,35 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
             return (
               <div
                 key={channel._id}
-                className={`w-full flex items-center space-x-3 px-4 py-2 rounded-full transition-all duration-200 group cursor-pointer ${
-                  isActive
-                    ? "bg-primary/15 text-primary font-medium"
-                    : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
-                }`}
-                onClick={() => toggleChannel(channel.channelId)}
+                className="w-full flex items-center space-x-3 px-4 py-2 rounded-full transition-all duration-200 group"
               >
-                <div className="flex items-center space-x-3 flex-1 min-w-0">
-                  <Lock className={`w-4 h-4 ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
+                <button
+                  type="button"
+                  aria-pressed={isActive}
+                  aria-label={`Select channel ${channel.title}`}
+                  onClick={() => toggleChannel(channel.channelId)}
+                  className={`flex items-center space-x-3 flex-1 min-w-0 text-left cursor-pointer rounded-full px-2 py-1 transition-colors ${
+                    isActive
+                      ? "text-primary font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Lock className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} aria-hidden="true" />
                   <span className="truncate text-sm">{channel.title}</span>
-                </div>
-                
+                </button>
+
                 {/* Actions */}
                 <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                   <button
+                  <button
+                    type="button"
+                    aria-label={`Delete channel ${channel.title}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       openDeleteModal(channel.channelId, channel.title);
                     }}
-                    className="p-1.5 hover:bg-destructive/10 rounded-full hover:text-destructive transition-colors"
-                    title="Delete Channel"
+                    className="p-1.5 hover:bg-destructive/10 rounded-full hover:text-destructive transition-colors min-w-[28px] min-h-[28px] flex items-center justify-center"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -109,10 +115,12 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
       </div>
 
       <button
+        type="button"
+        aria-label="Create new channel"
         onClick={openCreateModal}
         className="w-full mt-4 flex items-center space-x-3 px-4 py-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all duration-200"
       >
-        <Plus className="w-5 h-5" />
+        <Plus className="w-5 h-5" aria-hidden="true" />
         <span className="text-sm font-medium">New Channel</span>
       </button>
 

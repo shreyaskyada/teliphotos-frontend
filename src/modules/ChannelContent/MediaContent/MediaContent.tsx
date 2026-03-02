@@ -5,6 +5,8 @@ import { MediaContentProps } from "./types";
 const MediaContent: React.FC<MediaContentProps> = ({
   item,
   liveContentUrl,
+  priority = false,
+  displayWidth,
 }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -76,6 +78,8 @@ const MediaContent: React.FC<MediaContentProps> = ({
             alt="Photo"
             width={item.width}
             height={item.height}
+            sizes={displayWidth ? `${displayWidth}px` : "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"}
+            priority={priority}
             className={`h-full w-full object-cover transition-opacity duration-300 ${
               loading && !hasLoadedBefore ? "opacity-0" : "opacity-100"
             }`}
