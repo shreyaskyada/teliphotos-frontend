@@ -2,7 +2,6 @@
 
 import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
-import { motion } from "framer-motion";
 import {
   ArrowRight,
   Cloud,
@@ -15,6 +14,7 @@ import {
   ShieldCheck,
   Sparkles
 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -82,43 +82,34 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative z-10 pt-40 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center text-center header-content">
-        <motion.div
-           initial={{ opacity: 0, y: 30 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.8, ease: "easeOut" }}
-           className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-violet-300 text-sm font-medium mb-8 hover:bg-white/10 transition-colors cursor-pointer"
+        <div
+           className="animate-fade-in-up inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-violet-300 text-sm font-medium mb-8 hover:bg-white/10 transition-colors cursor-pointer"
         >
           <Sparkles className="w-4 h-4" />
           <span>The Ultimate Telegram Cloud Gallery</span>
-        </motion.div>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-          className="text-5xl md:text-7xl font-extrabold tracking-tight text-white max-w-4xl leading-[1.1] mb-8"
+        <h1
+          className="animate-fade-in text-5xl md:text-7xl font-extrabold tracking-tight text-white max-w-4xl leading-[1.1] mb-8"
+          style={{ animationDelay: "100ms" }}
         >
           Unlimited Storage.
           <br className="max-md:hidden" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400">
             {" "}Zero Server Fees.
           </span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed drop-shadow-sm"
+        <p
+          className="animate-fade-in text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed drop-shadow-sm opacity-0"
+          style={{ animationDelay: "200ms" }}
         >
           Turn your Telegram account into a premium, limitless photo gallery. Organize your memories into albums and access them anywhere without ever touching iCloud or Google Photos again.
-        </motion.p>
+        </p>
 
-        <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.8, delay: 0.3 }}
-           className="flex flex-col sm:flex-row items-center gap-4"
+        <div
+           className="animate-fade-in-up flex flex-col sm:flex-row items-center gap-4 opacity-0"
+           style={{ animationDelay: "300ms" }}
         >
           <button
             onClick={handleGetStarted}
@@ -134,14 +125,12 @@ export default function LandingPage() {
             <Play className="w-5 h-5 text-slate-300" />
             Watch Demo
           </a>
-        </motion.div>
+        </div>
 
         {/* Hero Image / Mockup */}
-        <motion.div
-           initial={{ opacity: 0, y: 80 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-           className="mt-20 relative w-full max-w-5xl rounded-2xl overflow-hidden glass-panel border border-white/10 shadow-2xl p-2"
+        <div
+           className="animate-fade-in-up mt-20 relative w-full max-w-5xl rounded-2xl overflow-hidden glass-panel border border-white/10 shadow-2xl p-2 opacity-0"
+           style={{ animationDelay: "400ms", animationDuration: "1s" }}
         >
            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10"></div>
            <div className="w-full bg-slate-950/80 rounded-xl overflow-hidden relative border border-white/5">
@@ -156,27 +145,33 @@ export default function LandingPage() {
                  <span>telephotos.app/dashboard</span>
                </div>
              </div>
-             {/* Mock Dashboard Area */}
+             {/* Mock Dashboard Area — local images for zero-latency LCP */}
              <div className="grid grid-cols-2 md:grid-cols-4 backdrop-blur-md">
                 {[
-                  "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=400",
-                  "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&q=80&w=400",
-                  "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&q=80&w=400",
-                  "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80&w=400",
-                  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400",
-                  "https://images.unsplash.com/photo-1470071131384-001b85755536?auto=format&fit=crop&q=80&w=400",
-                  "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=400",
-                  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=400"
-                ].map((src, i) => (
+                  { src: "/hero/h1.jpg", alt: "Scenic landscape" },
+                  { src: "/hero/h2.jpg", alt: "Nature photo" },
+                  { src: "/hero/h3.jpg", alt: "Waterfall" },
+                  { src: "/hero/h4.jpg", alt: "Flowers" },
+                  { src: "/hero/h5.jpg", alt: "Mountain" },
+                  { src: "/hero/h6.jpg", alt: "Misty hills" },
+                  { src: "/hero/h7.jpg", alt: "Lake view" },
+                  { src: "/hero/h8.jpg", alt: "Coastal scene" },
+                ].map(({ src, alt }, i) => (
                   <div key={i} className="aspect-[4/3] sm:aspect-square border border-slate-900/50 overflow-hidden bg-slate-800 relative group">
-                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                     <img src={src} alt="Gallery Mockup" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                     <Image
+                      src={src}
+                      alt={alt}
+                      fill
+                      sizes="(max-width: 640px) 50vw, 25vw"
+                      priority={i < 4}
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                     />
                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                 ))}
              </div>
            </div>
-        </motion.div>
+        </div>
       </section>
 
 

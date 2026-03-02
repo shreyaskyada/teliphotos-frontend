@@ -3,6 +3,8 @@
 import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 
+
+
 export default function HowItWorksPage() {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200">

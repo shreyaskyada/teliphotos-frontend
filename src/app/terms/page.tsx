@@ -1,9 +1,6 @@
 import Link from "next/link";
 
-export const metadata = {
-  title: "Terms of Service | Telephotos",
-  description: "Read the terms and conditions for using Telephotos.",
-};
+
 
 export default function TermsOfService() {
   return (

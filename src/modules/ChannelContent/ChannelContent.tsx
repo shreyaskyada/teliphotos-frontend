@@ -10,8 +10,8 @@ import type { RenderItem } from "./types";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-  useJustifiedLayout,
-  useResponsiveRowHeight,
+    useJustifiedLayout,
+    useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const ChannelContent = () => {
@@ -103,10 +103,12 @@ const ChannelContent = () => {
               <>
                 {/* Close / deselect all button */}
                 <button
+                  type="button"
+                  aria-label="Deselect all"
                   onClick={deselectAll}
                   className="flex items-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
-                  <X />
+                  <X aria-hidden="true" />
                 </button>
                 <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                   {selectedItems.size} selected
@@ -125,10 +127,12 @@ const ChannelContent = () => {
               <>
                 {/* Delete button */}
                 <button
+                  type="button"
+                  aria-label="Delete selected items"
                   onClick={() => handleTrashClick()}
                   className="flex items-center text-red-600 hover:text-red-700 dark:text-red-400 rounded-full"
                 >
-                  <Trash2 />
+                  <Trash2 aria-hidden="true" />
                 </button>
               </>
             )}
@@ -296,6 +300,8 @@ const ChannelContent = () => {
                         liveContentUrl={
                           liveContentUrls[item.messageId as any]
                         }
+                        priority={item.originalIndex < 4}
+                        displayWidth={Math.round(item.displayWidth)}
                       />
                     </div>
                   </div>

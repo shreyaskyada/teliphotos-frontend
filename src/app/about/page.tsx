@@ -1,3 +1,5 @@
+
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 py-20 px-6">
