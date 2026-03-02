@@ -313,9 +313,10 @@ const MediaViewer = ({
                       ? "transform 0.2s ease-out"
                       : undefined,
                     willChange: "transform",
-                    opacity: isLoaded ? 1 : 0,
+                    opacity: 1,
                   }}
                   priority
+                  unoptimized
                 />
               )}
 
@@ -338,6 +339,7 @@ const MediaViewer = ({
                   opacity: isLoaded ? 1 : 0,
                 }}
                 priority
+                unoptimized
                 onLoad={() => setIsLoaded(true)}
               />
             </div>

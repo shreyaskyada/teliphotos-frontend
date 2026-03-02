@@ -1,20 +1,20 @@
 "use client";
 
+import { PublicFooter } from "@telephotos/components/PublicFooter";
+import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 import { motion } from "framer-motion";
 import {
-    ArrowRight,
-    Cloud,
-    FolderOpen,
-    ImagePlus,
-    LayoutGrid,
-    Lock,
-    Play,
-    Rocket,
-    ShieldCheck,
-    Sparkles
+  ArrowRight,
+  Cloud,
+  FolderOpen,
+  ImagePlus,
+  LayoutGrid,
+  Lock,
+  Play,
+  Rocket,
+  ShieldCheck,
+  Sparkles
 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -78,39 +78,7 @@ export default function LandingPage() {
       </div>
 
       {/* Navigation */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? "bg-slate-950/80 backdrop-blur-xl border-b border-white/5 py-4" : "bg-transparent py-6"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-xl overflow-hidden ring-1 ring-white/10 group-hover:ring-violet-500/50 transition-all">
-              <Image src="/logo.png" alt="Telephotos Logo" width={40} height={40} className="w-full h-full object-cover" />
-            </div>
-            <span className="font-bold text-xl tracking-tight text-white group-hover:text-violet-200 transition-colors">
-              Telephotos
-            </span>
-          </Link>
-          
-          <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a>
-            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={handleGetStarted}
-              className="px-5 py-2.5 bg-white text-slate-900 hover:bg-slate-200 rounded-full font-semibold text-sm transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:scale-105 active:scale-95"
-            >
-              Get Started
-            </button>
-          </div>
-        </div>
-      </motion.nav>
+      <PublicNavbar />
 
       {/* Hero Section */}
       <section className="relative z-10 pt-40 pb-20 px-6 max-w-7xl mx-auto flex flex-col items-center text-center header-content">
@@ -343,6 +311,51 @@ export default function LandingPage() {
          </div>
       </section>
 
+      {/* Massive SEO Context Explanation Block */}
+      <section className="py-24 px-6 bg-slate-900/30 border-t border-b border-white/5 relative z-10">
+         <div className="max-w-4xl mx-auto prose prose-invert lg:prose-xl prose-headings:text-white prose-p:text-slate-400 prose-a:text-cyan-400">
+            <h2 className="text-4xl font-extrabold mb-8">Unleashing the True Potential of Cloud Storage with Telephotos</h2>
+            <p>
+              In today's fast-paced digital era, our smartphones and digital cameras are capturing moments with unprecedented detail. Each high-resolution photograph, each sweeping 4K panoramic video, and each consecutive burst mode sequence consumes massive chunks of binary data. The result? We are constantly running into arbitrary storage limits imposed by major tech conglomerates. We are told that we must upgrade, that we must pay a recurring monthly subscription fee indefinitely just to retain our own memories. Telephotos exists to challenge this exact paradigm. By fundamentally rethinking how cloud storage can be accessed and utilized, Telephotos delivers an unparalleled, infinite photo gallery experience completely free of arbitrary subscription walls.
+            </p>
+            <p>
+              The core innovation behind Telephotos is surprisingly elegant. Rather than attempting to build and monopolize a massive array of expensive server farms—costs which would ultimately be passed down to you, the user—Telephotos leverages the world's most generous, heavily optimized, and decentralized messaging infrastructure: the official Telegram network. For years, Telegram has offered its users unlimited cloud storage in the form of "Saved Messages" and private, encrypted channels. Millions of people have attempted to use these chat interfaces to back up their family photos and work documents. However, a chat interface is inherently linear. It is designed for messaging, not for media archiving. Scrolling backwards through thousands of messages to find a single photograph from years ago is a deeply frustrating user experience. It lacks the visual hierarchy, the lazy-loaded grids, and the album-based organization of a true gallery app.
+            </p>
+            
+            <h3 className="text-2xl font-bold mt-12 mb-4">A Zero-Knowledge Bridge to Infinite Storage</h3>
+            <p>
+              Telephotos acts as a sophisticated, bridge-like frontend. When you authenticate with our web application, you do so using your own Telegram credentials. We do not create a proprietary account for you; we utilize the secure, official MTProto API to request a local session right on your browser. This establishes a zero-knowledge architecture. Our database servers do not ingest, copy, or retain your raw photographs. The bits and bytes flow directly from your device, through temporary routing tunnels, straight into the encrypted vault of your Telegram channels. Because we do not store your data, we cannot scan your data. We cannot sell your metadata to advertising agencies, nor can we algorithmically analyze your facial features for demographic profiling. Your privacy remains absolute, bounded by the industry-leading encryption standards set forth by the Telegram network itself.
+            </p>
+            <p>
+              Furthermore, the structural mechanism of Telephotos ensures that your data remains fundamentally uncompressed. This is a critical distinction in the cloud storage market. Many popular platforms, such as Google Photos or Apple iCloud, employ aggressive lossy compression algorithms on their free or low-tier plans to save server space. They analyze your crisp, beautiful RAW image and reduce its color depth, strip away vital EXIF metadata like timestamps and geographical coordinates, and compress the pixel density. A 15-megabyte photograph might be quietly reduced to a 2-megabyte approximation. With Telephotos, you upload your imagery 'as documents' via the Telegram API, which explicitly signals the network to bypass any visual compression algorithms entirely. What you upload into Telephotos is a mathematically identical bit-for-bit copy. You get the peace of mind knowing that when you download these files a decade from now, they will contain the exact data they had the moment the camera shutter clicked.
+            </p>
+
+            <h3 className="text-2xl font-bold mt-12 mb-4">Engineered for Velocity and Reliability</h3>
+            <p>
+              Building a buttery-smooth viewing experience on top of a decentralized chat protocol requires intense technical optimization. If Telephotos attempted to download and render 50 uncompressed 15-megabyte photos simultaneously onto your screen, your browser tab would immediately crash from memory exhaustion, and your mobile data plan would be entirely vaporized in seconds. To solve this, Telephotos implements aggressive, dynamic asynchronous rendering utilizing the BlurHash algorithm and lightweight thumbnail generation. When you upload a picture, the API generates a microscopic blurred preview placeholder alongside a highly optimized compressed thumbnail. As you scroll through your Telephotos gallery grid, only these ultra-lightweight thumbnails are rendered. The grid behaves instantly, providing a seamless visual collage of your albums. 
+            </p>
+            <p>
+              It is only when you actively click on a specific thumbnail to view the image in full-screen mode that the application fetches the massive, uncompressed original file from the Telegram cloud. This sophisticated architecture ensures that navigating through thousands of family memories feels as instant and tactile as a native operating system application native to your iPhone or Android, completely masking the complex decentralized network humming beneath the surface.
+            </p>
+
+            <h3 className="text-2xl font-bold mt-12 mb-4">Reclaiming Your Digital Independence</h3>
+            <p>
+              Perhaps the most profound benefit of using Telephotos is the total eradication of vendor lock-in. When you entrust your entire photo library to closed ecosystems, attempting to migrate to a competing platform is made intentionally arduous. Export tools are often slow, buggy, or deliver disorganized 'Takeout' zip files peppered with confusing JSON metadata fragments. Cloud providers know that the longer they hold your data, the harder it is for you to leave their ecosystem, practically guaranteeing that you will eventually upgrade to a higher paid subscription tier out of sheer exhaustion and convenience.
+            </p>
+            <p>
+              Telephotos destroys this dynamic. Because every album you create and every photo you upload via Telephotos simply corresponds to a native Telegram private channel, your data exists independently of our web interface. If tomorrow you decide you no longer wish to use the Telephotos dashboard, you simply close the tab. You lose nothing. All of your photos, meticulously organized in the channels you created, remain safely tucked inside your standard Telegram application. You can view them on your desktop, forward them to friends in normal chats, or highlight thousands of them and click 'Save to Downloads' flawlessly. You use Telephotos solely because the gallery interface is gorgeous, fast, and highly functional, not because your files are held hostage behind a proprietary wall. 
+            </p>
+
+            <h3 className="text-2xl font-bold mt-12 mb-4">Empowering Photographers, Travelers, and Families Alike</h3>
+            <p>
+              This boundless capacity unlocks new, expansive use cases that were previously financially unviable for ordinary consumers. Professional photographers out on major shoots can use Telephotos as a rapid proxy dump, sending raw files securely to the cloud without monitoring an artificial quota bar. Heavy travelers and content creators capturing constant 4K vlogs can synchronize their media instantaneously, confident that dropping a 2-gigabyte file into a private channel folder will execute reliably. And for the everyday family user, it represents an end to anxiety—an end to manually triaging and deleting old memories simply to make room for a new holiday video.
+            </p>
+            <p>
+              Ultimately, Telephotos is more than just a gallery interface; it is a movement towards data ownership. We believe that your digital history should belong to you, without strings attached, without compression, and without monthly rent. By marrying the profound technological achievements of the Telegram API with a world-class, design-forward interface, Telephotos offers the definitive solution for next-generation infinite cloud storage. Join us in reclaiming your digital independence today, and transform the way you interact with your memories forever.
+            </p>
+         </div>
+      </section>
+
       {/* Footer CTA */}
       <section className="py-32 px-6 relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -361,25 +374,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer Links */}
-      <footer className="py-12 px-6 border-t border-white/5 relative z-10 bg-[#020617]">
-         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-               <Image src="/logo.png" alt="Telephotos Logo" width={32} height={32} />
-               <span className="font-bold text-lg text-white">Telephotos</span>
-            </div>
-            
-            <div className="flex flex-wrap items-center justify-center md:justify-end gap-6 text-sm font-medium text-slate-400">
-               <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
-               <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-               <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-               <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-            </div>
-
-            <div className="text-sm text-slate-500">
-               &copy; {new Date().getFullYear()} Telephotos. All rights reserved.
-            </div>
-         </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
