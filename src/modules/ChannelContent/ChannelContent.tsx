@@ -3,6 +3,7 @@
 import { Skeleton } from "@telephotos/ui";
 import { Trash2, X } from "lucide-react";
 import { useMemo } from "react";
+import AdBanner300x250 from "../../components/AdBanner300x250";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { MediaContent } from "./MediaContent";
@@ -10,9 +11,12 @@ import type { RenderItem } from "./types";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-    useJustifiedLayout,
-    useResponsiveRowHeight,
+  useJustifiedLayout,
+  useResponsiveRowHeight,
 } from "./useJustifiedLayout";
+
+const AD_EVERY_N_ROWS = 5; // Insert an ad after every 5 photo rows
+const AD_HEIGHT = 270;     // 250px ad + 20px margin
 
 const ChannelContent = () => {
   const {
@@ -60,12 +64,13 @@ const ChannelContent = () => {
     spacing: 2, // Reduced spacing for better space utilization
   });
 
-  const { positionedItems, totalHeight } = useMemo(() => {
+  const { positionedItems, adPositions, totalHeight } = useMemo(() => {
     const spacing = 2;
     let currentTop = 0;
     const itemsWithPos: any[] = [];
+    const adPositions: number[] = []; // top-offsets where ads should be inserted
 
-    rows.forEach((row) => {
+    rows.forEach((row, rowIndex) => {
       let currentLeft = 0;
       row.items.forEach((item) => {
         itemsWithPos.push({
@@ -76,9 +81,15 @@ const ChannelContent = () => {
         currentLeft += item.displayWidth + spacing;
       });
       currentTop += row.rowHeight + spacing;
+
+      // After every N-th row, reserve space for an ad
+      if ((rowIndex + 1) % AD_EVERY_N_ROWS === 0) {
+        adPositions.push(currentTop);
+        currentTop += AD_HEIGHT;
+      }
     });
 
-    return { positionedItems: itemsWithPos, totalHeight: currentTop };
+    return { positionedItems: itemsWithPos, adPositions, totalHeight: currentTop };
   }, [rows]);
 
   // O(1) lookup map for stable item references (avoids .find in render loop)
@@ -308,6 +319,36 @@ const ChannelContent = () => {
                 </div>
               );
             })}
+
+            {/* Inline 300x250 ad banners between rows */}
+            {adPositions.map((topOffset, adIdx) => (
+              <div
+                key={`ad-${adIdx}`}
+                className="absolute flex items-center justify-center w-full"
+                style={{ top: topOffset, height: AD_HEIGHT }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: 10,
+                      color: "rgba(255,255,255,0.25)",
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Advertisement
+                  </span>
+                  <AdBanner300x250 />
+                </div>
+              </div>
+            ))}
 
             {/* Loading more indicator */}
             {isFetchingNextPage && (
