@@ -2,6 +2,7 @@ import { AdSenseRenderer } from "@telephotos/components/AdSenseRenderer";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -81,6 +82,14 @@ export default function RootLayout({
         {children}
         <AdSenseRenderer />
         <Analytics />
+        {/* Monetag vignette ad */}
+        <Script
+          id="monetag-vignette"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){s.dataset.zone='10677869',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
+          }}
+        />
       </body>
     </html>
   );
