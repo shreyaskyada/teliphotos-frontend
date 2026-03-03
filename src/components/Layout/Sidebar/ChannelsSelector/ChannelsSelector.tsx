@@ -55,8 +55,8 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-2 min-h-0 custom-scrollbar">
-      <div className="space-y-1">
+    <div className="flex-1 overflow-y-auto px-3 py-2 min-h-0 custom-scrollbar">
+      <div className="space-y-0.5">
         {/* Error State */}
         {error && <div className="text-destructive text-sm p-3">{error}</div>}
         {/* Loading State (Skeletons) */}
@@ -64,7 +64,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
           Array.from({ length: 5 }).map((_, idx) => (
             <div
               key={idx}
-              className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full"
+              className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg"
             >
               <Skeleton className="w-5 h-5 rounded-full !bg-slate-700/60" style={{ animationDelay: `${idx * 0.1}s` }} />
               <Skeleton className={`h-4 rounded ${idx % 2 === 0 ? 'w-28' : 'w-20'}`} style={{ animationDelay: `${idx * 0.1}s` }} />
@@ -78,25 +78,45 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
             return (
               <div
                 key={channel._id}
-                className="w-full flex items-center space-x-3 px-4 py-2 rounded-full transition-all duration-200 group"
+                className={`w-full flex items-center rounded-lg transition-all duration-200 group relative overflow-hidden ${
+                  isActive
+                    ? "bg-primary/15 shadow-sm"
+                    : "hover:bg-muted/20"
+                }`}
               >
+                {/* Left accent bar for active state */}
+                <div
+                  className={`absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full transition-all duration-300 ${
+                    isActive ? "h-5 bg-primary opacity-100" : "h-0 opacity-0"
+                  }`}
+                />
+
                 <button
                   type="button"
                   aria-pressed={isActive}
                   aria-label={`Select channel ${channel.title}`}
                   onClick={() => toggleChannel(channel.channelId)}
-                  className={`flex items-center space-x-3 flex-1 min-w-0 text-left cursor-pointer rounded-full px-2 py-1 transition-colors ${
-                    isActive
-                      ? "text-primary font-medium"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className="flex items-center space-x-3 flex-1 min-w-0 text-left cursor-pointer px-4 py-2.5"
                 >
-                  <Lock className={`w-4 h-4 shrink-0 ${isActive ? "text-primary" : "text-muted-foreground"}`} aria-hidden="true" />
-                  <span className="truncate text-sm">{channel.title}</span>
+                  <Lock
+                    className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
+                      isActive ? "text-primary" : "text-muted-foreground"
+                    }`}
+                    aria-hidden="true"
+                  />
+                  <span
+                    className={`truncate text-sm transition-all duration-200 ${
+                      isActive
+                        ? "text-foreground font-semibold"
+                        : "text-muted-foreground font-normal group-hover:text-foreground"
+                    }`}
+                  >
+                    {channel.title}
+                  </span>
                 </button>
 
-                {/* Actions */}
-                <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Delete action — visible on hover */}
+                <div className="flex items-center pr-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     type="button"
                     aria-label={`Delete channel ${channel.title}`}
@@ -104,7 +124,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
                       e.stopPropagation();
                       openDeleteModal(channel.channelId, channel.title);
                     }}
-                    className="p-1.5 hover:bg-destructive/10 rounded-full hover:text-destructive transition-colors min-w-[28px] min-h-[28px] flex items-center justify-center"
+                    className="p-1.5 hover:bg-destructive/15 rounded-md hover:text-destructive transition-colors min-w-[28px] min-h-[28px] flex items-center justify-center"
                   >
                     <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
@@ -113,6 +133,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
             );
           })}
       </div>
+
 
       <button
         type="button"

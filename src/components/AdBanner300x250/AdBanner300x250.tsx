@@ -3,33 +3,41 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Monetag 300×250 Medium Rectangle Ad Unit
- * Rendered inline — safe to mount multiple times on the page.
+ * 300×250 Medium Rectangle Ad Unit
+ * Uses an isolated iframe srcdoc so window.atOptions doesn't 
+ * conflict with any other ad units on the same page.
  */
 const AdBanner300x250 = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const injected = useRef(false);
 
   useEffect(() => {
-    if (injected.current || !containerRef.current) return;
+    if (injected.current || !iframeRef.current) return;
     injected.current = true;
 
-    // Set atOptions on window then load invoke.js into this container
-    const win = window as any;
-    win.atOptions = {
-      key: "b73978964bd99e20414c74af283322f2",
-      format: "iframe",
-      height: 250,
-      width: 300,
-      params: {},
-    };
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: transparent; overflow: hidden; }
+</style>
+</head>
+<body>
+<script>
+  atOptions = {
+    'key': 'b73978964bd99e20414c74af283322f2',
+    'format': 'iframe',
+    'height': 250,
+    'width': 300,
+    'params': {}
+  };
+<\/script>
+<script src="https://www.highperformanceformat.com/b73978964bd99e20414c74af283322f2/invoke.js"><\/script>
+</body>
+</html>`;
 
-    const script = document.createElement("script");
-    script.src =
-      "https://www.highperformanceformat.com/b73978964bd99e20414c74af283322f2/invoke.js";
-    script.async = true;
-    script.setAttribute("data-cfasync", "false");
-    containerRef.current.appendChild(script);
+    iframeRef.current.srcdoc = html;
   }, []);
 
   return (
@@ -37,17 +45,22 @@ const AdBanner300x250 = () => {
       style={{
         width: 300,
         height: 250,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(255,255,255,0.07)",
         borderRadius: 8,
         overflow: "hidden",
         flexShrink: 0,
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.06)",
       }}
-      ref={containerRef}
-    />
+    >
+      <iframe
+        ref={iframeRef}
+        width={300}
+        height={250}
+        style={{ border: "none", display: "block" }}
+        scrolling="no"
+        title="Advertisement 300x250"
+      />
+    </div>
   );
 };
 
