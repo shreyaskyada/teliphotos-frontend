@@ -76,6 +76,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         {/* Monetag site verification */}
         <meta name="monetag" content="b30691f35e0ec18eb5ccf9a31b83fabb" />
+        {/* Monetag ad script */}
+        <script src="https://quge5.com/88/tag.min.js" data-zone="216083" async data-cfasync="false" />
       </head>
       <body
         className={`font-sans antialiased bg-background`}
