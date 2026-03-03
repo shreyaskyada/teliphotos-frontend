@@ -84,13 +84,6 @@ export default function RootLayout({
       <body
         className={`font-sans antialiased bg-background`}
       >
-        {/* Monetag Native Banner */}
-        <script
-          async
-          data-cfasync="false"
-          src="https://pl28837079.effectivegatecpm.com/2a11a7ef59b4111458913408aec23e5c/invoke.js"
-        />
-        <div id="container-2a11a7ef59b4111458913408aec23e5c" />
         {children}
         <AdSenseRenderer />
         <Analytics />
