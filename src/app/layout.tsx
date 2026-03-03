@@ -74,6 +74,12 @@ export default function RootLayout({
         {/* Preconnect hints for any remaining external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        {/* Monetag vignette ad - must be in <head> for verification */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(s){s.dataset.zone='10677869',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`,
+          }}
+        />
       </head>
       <body
         className={`font-sans antialiased bg-background`}
