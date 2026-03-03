@@ -74,6 +74,8 @@ export default function RootLayout({
         {/* Preconnect hints for any remaining external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        {/* Monetag site verification */}
+        <meta name="monetag" content="b30691f35e0ec18eb5ccf9a31b83fabb" />
       </head>
       <body
         className={`font-sans antialiased bg-background`}
