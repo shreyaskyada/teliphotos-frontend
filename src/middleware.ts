@@ -6,6 +6,7 @@ interface DecodedToken {
 }
 
 const publicRoutes = ["/", "/login"];
+const publicFilePatterns = /\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|txt|xml)$/i;
 // ⏱ Define a threshold in seconds (e.g., 2 minutes = 120 seconds)
 const REFRESH_THRESHOLD = 120;
 
@@ -59,6 +60,11 @@ export async function middleware(req: NextRequest) {
     } catch {
       // Refresh failed, let them stay on login
     }
+  }
+
+  // Allow static/public files (sw.js, images, fonts, etc.) without auth
+  if (publicFilePatterns.test(req.nextUrl.pathname)) {
+    return NextResponse.next();
   }
 
   // Allow access to public routes without authentication
@@ -149,7 +155,7 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Apply middleware to all routes except static assets
+// Apply middleware to all routes except static assets and public files
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|icon.png|logo.png).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|icon.png|logo.png|sw.js|hero/).*)"],
 };
