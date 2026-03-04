@@ -4,6 +4,7 @@ import { Button, Skeleton } from "@telephotos/ui";
 import { Trash2, Upload, X } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import AdBanner300x250 from "../../components/AdBanner300x250";
+import { AdBanner728x90 } from "../../components/AdBanner728x90";
 import { useUpload } from "../../components/Layout/GlobalDropzone/UploadContext";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
 import { ConfirmationDialog } from "./ConfirmationDialog";
@@ -17,7 +18,8 @@ import {
 } from "./useJustifiedLayout";
 
 const AD_EVERY_N_ROWS = 5; // Insert an ad after every 5 photo rows
-const AD_HEIGHT = 290;     // 250px ad + 80px margin (40px top/bottom)
+const MOBILE_AD_HEIGHT = 290;  // 250px ad + 40px margin
+const DESKTOP_AD_HEIGHT = 130;  // 90px ad + 40px margin
 
 const ChannelContent = () => {
   const {
@@ -78,7 +80,8 @@ const ChannelContent = () => {
     const spacing = 2;
     let currentTop = 0;
     const itemsWithPos: any[] = [];
-    const adPositions: number[] = []; // top-offsets where ads should be inserted
+    const adPositions: { top: number; height: number }[] = [];
+    const adHeight = containerWidth >= 768 ? DESKTOP_AD_HEIGHT : MOBILE_AD_HEIGHT;
 
     rows.forEach((row, rowIndex) => {
       let currentLeft = 0;
@@ -94,13 +97,13 @@ const ChannelContent = () => {
 
       // After every N-th row, reserve space for an ad
       if ((rowIndex + 1) % AD_EVERY_N_ROWS === 0) {
-        adPositions.push(currentTop);
-        currentTop += AD_HEIGHT;
+        adPositions.push({ top: currentTop, height: adHeight });
+        currentTop += adHeight;
       }
     });
 
     return { positionedItems: itemsWithPos, adPositions, totalHeight: currentTop };
-  }, [rows]);
+  }, [rows, containerWidth]);
 
   // O(1) lookup map for stable item references (avoids .find in render loop)
   const stableItemsMap = useMemo(() => {
@@ -344,11 +347,11 @@ const ChannelContent = () => {
             })}
 
             {/* Inline 300x250 ad banners between rows */}
-            {adPositions.map((topOffset, adIdx) => (
+            {adPositions.map((ad, adIdx) => (
               <div
                 key={`ad-${adIdx}`}
                 className="absolute flex items-center justify-center w-full"
-                style={{ top: topOffset, height: AD_HEIGHT }}
+                style={{ top: ad.top, height: ad.height }}
               >
                 <div
                   style={{
@@ -368,7 +371,14 @@ const ChannelContent = () => {
                   >
                     Advertisement
                   </span>
-                  <AdBanner300x250 />
+                  {/* Desktop Banner (728x90) */}
+                  <div className="hidden md:flex">
+                    <AdBanner728x90 />
+                  </div>
+                  {/* Mobile Banner (300x250) */}
+                  <div className="flex md:hidden">
+                    <AdBanner300x250 />
+                  </div>
                 </div>
               </div>
             ))}
