@@ -78,37 +78,32 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
             return (
               <div
                 key={channel._id}
-                className={`w-full flex items-center rounded-lg transition-all duration-200 group relative overflow-hidden ${
+                className={`w-full flex items-center rounded-full transition-all duration-200 group relative overflow-hidden mb-0.5 ${
                   isActive
-                    ? "bg-primary/15 shadow-sm"
-                    : "hover:bg-muted/20"
+                    ? "bg-primary/15 text-primary"
+                    : "hover:bg-muted/50"
                 }`}
               >
-                {/* Left accent bar for active state */}
-                <div
-                  className={`absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full transition-all duration-300 ${
-                    isActive ? "h-5 bg-primary opacity-100" : "h-0 opacity-0"
-                  }`}
-                />
-
                 <button
                   type="button"
                   aria-pressed={isActive}
                   aria-label={`Select channel ${channel.title}`}
                   onClick={() => toggleChannel(channel.channelId)}
-                  className="flex items-center space-x-3 flex-1 min-w-0 text-left cursor-pointer px-4 py-2.5"
+                  className="flex items-center space-x-3 flex-1 min-w-0 text-left cursor-pointer px-4 py-3"
                 >
                   <Lock
-                    className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
-                      isActive ? "text-primary" : "text-muted-foreground"
+                    className={`w-4 h-4 shrink-0 transition-all duration-200 ${
+                      isActive
+                        ? "text-primary"
+                        : "text-muted-foreground group-hover:text-foreground/80"
                     }`}
                     aria-hidden="true"
                   />
                   <span
                     className={`truncate text-sm transition-all duration-200 ${
                       isActive
-                        ? "text-foreground font-semibold"
-                        : "text-muted-foreground font-normal group-hover:text-foreground"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground font-medium group-hover:text-foreground/90"
                     }`}
                   >
                     {channel.title}
@@ -116,7 +111,9 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
                 </button>
 
                 {/* Delete action — visible on hover */}
-                <div className="flex items-center pr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className={`flex items-center pr-2 transition-opacity ${
+                  isActive ? "opacity-100 sm:opacity-0 sm:group-hover:opacity-100" : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                }`}>
                   <button
                     type="button"
                     aria-label={`Delete channel ${channel.title}`}
@@ -124,7 +121,7 @@ const ChannelsSelector: React.FC<ChannelsSelectorProps> = ({
                       e.stopPropagation();
                       openDeleteModal(channel.channelId, channel.title);
                     }}
-                    className="p-1.5 hover:bg-destructive/15 rounded-md hover:text-destructive transition-colors min-w-[28px] min-h-[28px] flex items-center justify-center"
+                    className="p-1.5 hover:bg-destructive/15 rounded-full hover:text-destructive transition-colors min-w-[28px] min-h-[28px] flex items-center justify-center text-muted-foreground/50"
                   >
                     <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>

@@ -1,9 +1,10 @@
 "use client";
 
-import { Skeleton } from "@telephotos/ui";
-import { Trash2, X } from "lucide-react";
-import { useMemo } from "react";
+import { Button, Skeleton } from "@telephotos/ui";
+import { Trash2, Upload, X } from "lucide-react";
+import { useEffect, useMemo } from "react";
 import AdBanner300x250 from "../../components/AdBanner300x250";
+import { useUpload } from "../../components/Layout/GlobalDropzone/UploadContext";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { MediaContent } from "./MediaContent";
@@ -16,7 +17,7 @@ import {
 } from "./useJustifiedLayout";
 
 const AD_EVERY_N_ROWS = 5; // Insert an ad after every 5 photo rows
-const AD_HEIGHT = 270;     // 250px ad + 20px margin
+const AD_HEIGHT = 290;     // 250px ad + 80px margin (40px top/bottom)
 
 const ChannelContent = () => {
   const {
@@ -46,6 +47,15 @@ const ChannelContent = () => {
 
   const { containerRef, containerWidth } = useContainerWidth();
   const targetRowHeight = useResponsiveRowHeight(containerWidth);
+  const { openFilePicker } = useUpload();
+
+  useEffect(() => {
+    if (channel?.title) {
+      document.title = `${channel.title} | Telephotos`;
+    } else {
+      document.title = "Telephotos | Unlimited Free Telegram Photo Gallery";
+    }
+  }, [channel?.title]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -57,7 +67,7 @@ const ChannelContent = () => {
   };
 
   const { rows } = useJustifiedLayout(items, {
-    containerWidth: containerWidth - (containerWidth > 640 ? 68 : 44), // Account for responsive padding + 20px right space
+    containerWidth, // useContainerWidth accurately measures the contentRect box, no padding subtraction needed
     targetRowHeight,
     maxRowHeight: targetRowHeight * 2.0, // Allow more flexibility upward for better space utilization
     minRowHeight: targetRowHeight * 0.6, // Allow more flexibility downward
@@ -104,7 +114,7 @@ const ChannelContent = () => {
   return (
     <div className="w-full h-full flex flex-col">
       {/* Selection / Header bar */}
-      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
+      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between h-7">
           {/* Left side */}
           <div className="flex items-center gap-3">
@@ -147,13 +157,26 @@ const ChannelContent = () => {
                 </button>
               </>
             )}
+
+            {/* Upload Button */}
+            {selectedItems.size === 0 && !isLoading && channel && (
+              <Button
+                type="button"
+                onClick={openFilePicker}
+                aria-label="Upload photos"
+                className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 h-8 shadow-sm"
+              >
+                <Upload className="w-4 h-4" aria-hidden="true" />
+                <span className="hidden sm:inline text-sm font-medium">Upload</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
 
       {/* Loading state - Skeleton Grid */}
       {isLoading && (
-        <div className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0">
+        <div className="flex-1 px-4 lg:px-6 py-4 overflow-y-auto overflow-x-hidden min-h-0">
           {/* Row 1 - 3 landscape items */}
           <div className="flex gap-0.5 mb-0.5">
             <Skeleton className="h-[180px] sm:h-[220px] flex-[1.4] rounded-none" />
@@ -223,7 +246,7 @@ const ChannelContent = () => {
         <div
           ref={containerRef}
           onScroll={handleScroll}
-          className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0"
+          className="flex-1 px-4 lg:px-6 py-4 overflow-y-auto overflow-x-hidden min-h-0"
         >
           <div 
             className="relative w-full" 

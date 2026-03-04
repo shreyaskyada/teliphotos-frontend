@@ -1,10 +1,8 @@
 "use client";
 
-import { Button } from "@telephotos/ui";
-import { Menu, Search, Upload, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useUpload } from "../GlobalDropzone/UploadContext";
 import { AvatarProfile } from "./UserProfile";
 
 type HeaderProps = {
@@ -13,7 +11,6 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
-  const { openFilePicker } = useUpload();
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
@@ -57,16 +54,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleMenu, isSidebarOpen }) => {
             />
           </div>
 
-          {/* Upload Button */}
-          <Button
-            type="button"
-            onClick={openFilePicker}
-            aria-label="Upload photos"
-            className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 h-10 shadow-sm"
-          >
-            <Upload className="w-4 h-4" aria-hidden="true" />
-            <span className="hidden sm:inline text-sm font-medium">Upload</span>
-          </Button>
+
 
           {/* Profile Dropdown */}
           <AvatarProfile />
