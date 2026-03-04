@@ -62,8 +62,15 @@ export const useChannelContent = () => {
   const items: RenderItem[] = useMemo(() => {
     const rawMedia = messages?.media || [];
     const result: RenderItem[] = [];
+    const seenIds = new Set<string>();
 
     for (const msg of rawMedia) {
+      if (!msg || !msg.id) continue;
+      
+      const messageId = String(msg.id);
+      if (seenIds.has(messageId)) continue;
+      seenIds.add(messageId);
+
       const media = msg?.media as any;
       if (!media) continue;
 
@@ -106,7 +113,6 @@ export const useChannelContent = () => {
         height = media.height;
       }
 
-      const messageId = String(msg.id);
       const imageURL = (msg as any).imageURL || getPhotoVideoThumbnailURL(channelId as string, messageId);
 
       // Re-use cached item if nothing changed (stable reference prevents re-renders)
