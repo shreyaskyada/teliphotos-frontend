@@ -44,15 +44,30 @@ export const useChannelContent = () => {
       const exists = existingMedia.some(m => Number(m.id) === mediaId);
       
       if (!exists) {
-        console.log(`[useChannelContent] New media discovery (${mediaId}). Batching refetch...`);
-        
-        if (refetchTimerRef.current) clearTimeout(refetchTimerRef.current);
-        
-        refetchTimerRef.current = setTimeout(() => {
-          console.log(`[useChannelContent] Flickering prevention: Executing batched refetch.`);
-          refetchMessages();
-          refetchTimerRef.current = null;
-        }, 1500); 
+        let isNewUpload = true;
+        // Prevent looping when the backend emits over websocket for old paginated images 
+        // that are still being processed in the background. If the mediaId is older 
+        // than our newest item, it's just a background task, not a new upload.
+        if (existingMedia.length > 0) {
+          const highestId = Math.max(...existingMedia.map(m => Number(m.id || 0)));
+          if (mediaId <= highestId) {
+            isNewUpload = false;
+          }
+        }
+
+        if (isNewUpload) {
+          console.log(`[useChannelContent] New media discovery (${mediaId}). Batching refetch...`);
+          
+          if (refetchTimerRef.current) clearTimeout(refetchTimerRef.current);
+          
+          refetchTimerRef.current = setTimeout(() => {
+            console.log(`[useChannelContent] Flickering prevention: Executing batched refetch.`);
+            refetchMessages();
+            refetchTimerRef.current = null;
+          }, 1500); 
+        } else {
+          console.log(`[useChannelContent] Ignored background paginated media discovery (${mediaId}). Preventing flicker loop.`);
+        }
       }
     }, [messages?.media, refetchMessages])
   );

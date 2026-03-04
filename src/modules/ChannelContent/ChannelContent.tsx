@@ -2,7 +2,7 @@
 
 import { Button, Skeleton } from "@telephotos/ui";
 import { Trash2, Upload, X } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import AdBanner300x250 from "../../components/AdBanner300x250";
 import { AdBanner728x90 } from "../../components/AdBanner728x90";
 import { useUpload } from "../../components/Layout/GlobalDropzone/UploadContext";
@@ -50,6 +50,23 @@ const ChannelContent = () => {
   const { containerRef, containerWidth } = useContainerWidth();
   const targetRowHeight = useResponsiveRowHeight(containerWidth);
   const { openFilePicker } = useUpload();
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetchingNextPage) return;
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      });
+
+      if (node) observerRef.current.observe(node);
+    },
+    [isFetchingNextPage, hasNextPage, fetchNextPage]
+  );
 
   useEffect(() => {
     if (channel?.title) {
@@ -216,7 +233,7 @@ const ChannelContent = () => {
       )}
 
       {/* Empty state */}
-      {!isLoading && items.length === 0 && (
+      {!isLoading && items.length === 0 && !hasNextPage && (
 
         <div className="flex flex-col items-center justify-center flex-1">
           <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
@@ -244,7 +261,7 @@ const ChannelContent = () => {
       )}
 
       {/* Media grid - Justified Layout (Flattened for performance/flicker-free updates) */}
-      {!isLoading && items.length > 0 && (
+      {!isLoading && (items.length > 0 || hasNextPage) && (
 
         <div
           ref={containerRef}
@@ -253,7 +270,7 @@ const ChannelContent = () => {
         >
           <div 
             className="relative w-full" 
-            style={{ height: totalHeight + (isFetchingNextPage ? 80 : 0) }}
+            style={{ height: totalHeight + (hasNextPage ? 80 : 0) }}
           >
             {positionedItems.map((item) => {
               const isSelected = selectedItems.has(item.messageId);
@@ -383,10 +400,11 @@ const ChannelContent = () => {
               </div>
             ))}
 
-            {/* Loading more indicator */}
-            {isFetchingNextPage && (
+            {/* Loading more indicator & intersection sentinel */}
+            {hasNextPage && (
               <div 
-                className="absolute w-full flex justify-center items-center py-8"
+                ref={loadMoreRef}
+                className={`absolute w-full flex justify-center items-center py-8 transition-opacity duration-300 ${!isFetchingNextPage ? 'opacity-0' : 'opacity-100'}`}
                 style={{ top: totalHeight }}
               >
                 <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
