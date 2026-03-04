@@ -1,46 +1,42 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const useContainerWidth = () => {
   const [containerWidth, setContainerWidth] = useState(1200);
+  const [element, setElement] = useState<HTMLElement | null>(null);
+
+  const containerRef = useCallback((node: HTMLElement | null) => {
+    setElement(node);
+  }, []);
 
   useEffect(() => {
+    if (!element) return;
+
+    // Fast initial reading
+    const computedStyle = getComputedStyle(element);
+    const initialWidth = element.clientWidth - parseFloat(computedStyle.paddingLeft || "0") - parseFloat(computedStyle.paddingRight || "0");
+    if (initialWidth > 0) {
+      setContainerWidth((prev) => (prev !== initialWidth ? initialWidth : prev));
+    }
+
     let timeoutId: NodeJS.Timeout;
-    
-    const updateWidth = () => {
-      // documentElement.clientWidth correctly removes the OS vertical scrollbar width
-      const screenWidth = document.documentElement.clientWidth;
-      
-      // If we are on large screen desktop (lg: >= 1024px), sidebar is 280px static.
-      // If smaller, sidebar is hidden off-screen or overlays via mobile menu.
-      const isDesktop = screenWidth >= 1024;
-      const sidebarWidth = isDesktop ? 280 : 0;
-      
-      const newWidth = screenWidth - sidebarWidth;
-      
-      if (newWidth > 0 && newWidth !== containerWidth) {
-         setContainerWidth(newWidth);
-      }
-    };
-
-    // Fast immediate trigger on mount
-    updateWidth();
-
-    // Re-measure continuously on any window resize or layout shift
-    const ob = new ResizeObserver(() => {
-       window.clearTimeout(timeoutId);
-       timeoutId = setTimeout(updateWidth, 50);
+    const ob = new ResizeObserver((entries) => {
+      window.clearTimeout(timeoutId);
+      const entry = entries[0];
+      timeoutId = setTimeout(() => {
+        const width = entry.contentRect.width;
+        if (width > 0) {
+          setContainerWidth((prev) => (prev !== width ? width : prev));
+        }
+      }, 30);
     });
-    ob.observe(document.body);
 
-    window.addEventListener("resize", updateWidth);
+    ob.observe(element);
 
     return () => {
       ob.disconnect();
-      window.removeEventListener("resize", updateWidth);
       window.clearTimeout(timeoutId);
     };
-  }, [containerWidth]);
+  }, [element]);
 
-  // Return empty function for ref so ChannelContent doesn't crash expecting a ref
-  return { containerRef: () => {}, containerWidth };
+  return { containerRef, containerWidth };
 };

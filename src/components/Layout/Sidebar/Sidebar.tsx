@@ -56,17 +56,17 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
         />
 
         {/* Footer */}
-        <div className="p-4 mt-auto shrink-0 space-y-1">
-          <button type="button" aria-label="Favorites" className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all duration-200">
-            <Star className="w-5 h-5" aria-hidden="true" />
+        <div className="px-3 pb-3 mt-auto shrink-0 space-y-0.5 border-t border-border/30 pt-3">
+          <button type="button" aria-label="Favorites" className="w-full group flex items-center space-x-3 px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
+            <Star className="w-4 h-4 transition-all duration-200 group-hover:text-foreground/80" aria-hidden="true" />
             <span className="text-sm font-medium">Favorites</span>
           </button>
-          <button type="button" aria-label="Tags" className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all duration-200">
-            <Tag className="w-5 h-5" aria-hidden="true" />
+          <button type="button" aria-label="Tags" className="w-full group flex items-center space-x-3 px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
+            <Tag className="w-4 h-4 transition-all duration-200 group-hover:text-foreground/80" aria-hidden="true" />
             <span className="text-sm font-medium">Tags</span>
           </button>
-          <button type="button" aria-label="Settings" className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-all duration-200">
-            <Settings className="w-5 h-5" aria-hidden="true" />
+          <button type="button" aria-label="Settings" className="w-full group flex items-center space-x-3 px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
+            <Settings className="w-4 h-4 transition-all duration-200 group-hover:rotate-45" aria-hidden="true" />
             <span className="text-sm font-medium">Settings</span>
           </button>
         </div>

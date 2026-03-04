@@ -3,17 +3,23 @@
 import { useEffect, useRef } from "react";
 
 /**
- * 300×250 Medium Rectangle Ad Unit
+ * 728×90 Leaderboard Ad Unit (Desktop)
  * Uses an isolated iframe srcdoc so window.atOptions doesn't 
  * conflict with any other ad units on the same page.
+ * 
+ * IMPORTANT: You must replace 'YOUR_728x90_MONETAG_ZONE_KEY' 
+ * with a valid key generated from your Monetag dashboard for this resolution.
  */
-const AdBanner300x250 = () => {
+const AdBanner728x90 = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const injected = useRef(false);
 
   useEffect(() => {
     if (injected.current || !iframeRef.current) return;
     injected.current = true;
+
+    // Update the 'key' below to your actual 728x90 Monetag zone key.
+    const YOUR_ZONE_KEY = "c8ad73f96ccd7b14545b3eea9b4359fb";
 
     const html = `<!DOCTYPE html>
 <html>
@@ -26,14 +32,14 @@ const AdBanner300x250 = () => {
 <body>
 <script>
   atOptions = {
-    'key': 'b73978964bd99e20414c74af283322f2',
+    'key': '${YOUR_ZONE_KEY}',
     'format': 'iframe',
-    'height': 250,
-    'width': 300,
+    'height': 90,
+    'width': 728,
     'params': {}
   };
 <\/script>
-<script src="https://www.highperformanceformat.com/b73978964bd99e20414c74af283322f2/invoke.js"><\/script>
+<script src="https://www.highperformanceformat.com/${YOUR_ZONE_KEY}/invoke.js"><\/script>
 </body>
 </html>`;
 
@@ -43,8 +49,8 @@ const AdBanner300x250 = () => {
   return (
     <div
       style={{
-        width: 300,
-        height: 250,
+        width: 728,
+        height: 90,
         borderRadius: 8,
         overflow: "hidden",
         flexShrink: 0,
@@ -54,14 +60,14 @@ const AdBanner300x250 = () => {
     >
       <iframe
         ref={iframeRef}
-        width={300}
-        height={250}
+        width={728}
+        height={90}
         style={{ border: "none", display: "block" }}
         scrolling="no"
-        title="Advertisement 300x250"
+        title="Advertisement 728x90"
       />
     </div>
   );
 };
 
-export default AdBanner300x250;
+export default AdBanner728x90;

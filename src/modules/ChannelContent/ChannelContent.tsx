@@ -1,9 +1,11 @@
 "use client";
 
-import { Skeleton } from "@telephotos/ui";
-import { Trash2, X } from "lucide-react";
-import { useMemo } from "react";
+import { Button, Skeleton } from "@telephotos/ui";
+import { Trash2, Upload, X } from "lucide-react";
+import { useEffect, useMemo } from "react";
 import AdBanner300x250 from "../../components/AdBanner300x250";
+import { AdBanner728x90 } from "../../components/AdBanner728x90";
+import { useUpload } from "../../components/Layout/GlobalDropzone/UploadContext";
 import MediaViewer from "../../components/MediaViewer/MediaViewer";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { MediaContent } from "./MediaContent";
@@ -16,7 +18,8 @@ import {
 } from "./useJustifiedLayout";
 
 const AD_EVERY_N_ROWS = 5; // Insert an ad after every 5 photo rows
-const AD_HEIGHT = 270;     // 250px ad + 20px margin
+const MOBILE_AD_HEIGHT = 290;  // 250px ad + 40px margin
+const DESKTOP_AD_HEIGHT = 130;  // 90px ad + 40px margin
 
 const ChannelContent = () => {
   const {
@@ -46,6 +49,15 @@ const ChannelContent = () => {
 
   const { containerRef, containerWidth } = useContainerWidth();
   const targetRowHeight = useResponsiveRowHeight(containerWidth);
+  const { openFilePicker } = useUpload();
+
+  useEffect(() => {
+    if (channel?.title) {
+      document.title = `${channel.title} | Telephotos`;
+    } else {
+      document.title = "Telephotos | Unlimited Free Telegram Photo Gallery";
+    }
+  }, [channel?.title]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -57,7 +69,7 @@ const ChannelContent = () => {
   };
 
   const { rows } = useJustifiedLayout(items, {
-    containerWidth: containerWidth - (containerWidth > 640 ? 68 : 44), // Account for responsive padding + 20px right space
+    containerWidth, // useContainerWidth accurately measures the contentRect box, no padding subtraction needed
     targetRowHeight,
     maxRowHeight: targetRowHeight * 2.0, // Allow more flexibility upward for better space utilization
     minRowHeight: targetRowHeight * 0.6, // Allow more flexibility downward
@@ -68,7 +80,8 @@ const ChannelContent = () => {
     const spacing = 2;
     let currentTop = 0;
     const itemsWithPos: any[] = [];
-    const adPositions: number[] = []; // top-offsets where ads should be inserted
+    const adPositions: { top: number; height: number }[] = [];
+    const adHeight = containerWidth >= 768 ? DESKTOP_AD_HEIGHT : MOBILE_AD_HEIGHT;
 
     rows.forEach((row, rowIndex) => {
       let currentLeft = 0;
@@ -84,13 +97,13 @@ const ChannelContent = () => {
 
       // After every N-th row, reserve space for an ad
       if ((rowIndex + 1) % AD_EVERY_N_ROWS === 0) {
-        adPositions.push(currentTop);
-        currentTop += AD_HEIGHT;
+        adPositions.push({ top: currentTop, height: adHeight });
+        currentTop += adHeight;
       }
     });
 
     return { positionedItems: itemsWithPos, adPositions, totalHeight: currentTop };
-  }, [rows]);
+  }, [rows, containerWidth]);
 
   // O(1) lookup map for stable item references (avoids .find in render loop)
   const stableItemsMap = useMemo(() => {
@@ -104,7 +117,7 @@ const ChannelContent = () => {
   return (
     <div className="w-full h-full flex flex-col">
       {/* Selection / Header bar */}
-      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex-shrink-0">
+      <div className="sticky top-0 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6 py-3 flex-shrink-0">
         <div className="flex items-center justify-between h-7">
           {/* Left side */}
           <div className="flex items-center gap-3">
@@ -147,13 +160,26 @@ const ChannelContent = () => {
                 </button>
               </>
             )}
+
+            {/* Upload Button */}
+            {selectedItems.size === 0 && !isLoading && channel && (
+              <Button
+                type="button"
+                onClick={openFilePicker}
+                aria-label="Upload photos"
+                className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 h-8 shadow-sm"
+              >
+                <Upload className="w-4 h-4" aria-hidden="true" />
+                <span className="hidden sm:inline text-sm font-medium">Upload</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
 
       {/* Loading state - Skeleton Grid */}
       {isLoading && (
-        <div className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0">
+        <div className="flex-1 px-4 lg:px-6 py-4 overflow-y-auto overflow-x-hidden min-h-0">
           {/* Row 1 - 3 landscape items */}
           <div className="flex gap-0.5 mb-0.5">
             <Skeleton className="h-[180px] sm:h-[220px] flex-[1.4] rounded-none" />
@@ -223,7 +249,7 @@ const ChannelContent = () => {
         <div
           ref={containerRef}
           onScroll={handleScroll}
-          className="flex-1 px-3 sm:px-6 pr-5 py-4 overflow-auto min-h-0"
+          className="flex-1 px-4 lg:px-6 py-4 overflow-y-auto overflow-x-hidden min-h-0"
         >
           <div 
             className="relative w-full" 
@@ -321,11 +347,11 @@ const ChannelContent = () => {
             })}
 
             {/* Inline 300x250 ad banners between rows */}
-            {adPositions.map((topOffset, adIdx) => (
+            {adPositions.map((ad, adIdx) => (
               <div
                 key={`ad-${adIdx}`}
                 className="absolute flex items-center justify-center w-full"
-                style={{ top: topOffset, height: AD_HEIGHT }}
+                style={{ top: ad.top, height: ad.height }}
               >
                 <div
                   style={{
@@ -345,7 +371,14 @@ const ChannelContent = () => {
                   >
                     Advertisement
                   </span>
-                  <AdBanner300x250 />
+                  {/* Desktop Banner (728x90) */}
+                  <div className="hidden md:flex">
+                    <AdBanner728x90 />
+                  </div>
+                  {/* Mobile Banner (300x250) */}
+                  <div className="flex md:hidden">
+                    <AdBanner300x250 />
+                  </div>
                 </div>
               </div>
             ))}
