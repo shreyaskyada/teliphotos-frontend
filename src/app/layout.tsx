@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://telephotos.app/",
+    url: "https://telephotos.app",
     title: "Telephotos | Free Photo Storage Cloud",
     description: "Transform your Telegram account into a free photo storage cloud gallery. Upload, organize, and view uncompressed memories for free without server fees.",
     siteName: "Telephotos",
@@ -59,6 +59,9 @@ export const metadata: Metadata = {
       height: 630,
       alt: "Telephotos"
     }],
+  },
+  alternates: {
+    canonical: "/",
   },
   twitter: {
     card: "summary_large_image",

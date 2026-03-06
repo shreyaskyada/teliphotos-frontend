@@ -4,6 +4,10 @@ import React from "react";
 
 export const metadata: Metadata = {
   title: "Dashboard",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function LayoutPage({
