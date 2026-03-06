@@ -4,10 +4,6 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "My Gallery",
   description: "Browse and manage your private Telegram photo gallery.",
-  robots: {
-    index: false,
-    follow: false,
-  },
 };
 
 export default async function ChannelContentPage() {
