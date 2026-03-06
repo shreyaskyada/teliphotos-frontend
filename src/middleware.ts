@@ -5,7 +5,18 @@ interface DecodedToken {
   exp: number;
 }
 
-const publicRoutes = ["/", "/login"];
+const publicRoutes = [
+  "/",
+  "/login",
+  "/about",
+  "/features",
+  "/how-it-works",
+  "/faq",
+  "/terms",
+  "/privacy",
+  "/contact"
+];
+const publicPrefixes = ["/blog"];
 const publicFilePatterns = /\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|woff|woff2|txt|xml)$/i;
 // ⏱ Define a threshold in seconds (e.g., 2 minutes = 120 seconds)
 const REFRESH_THRESHOLD = 120;
@@ -68,7 +79,10 @@ export async function middleware(req: NextRequest) {
   }
 
   // Allow access to public routes without authentication
-  if (publicRoutes.includes(req.nextUrl.pathname)) {
+  if (
+    publicRoutes.includes(req.nextUrl.pathname) ||
+    publicPrefixes.some((prefix) => req.nextUrl.pathname.startsWith(prefix))
+  ) {
     return NextResponse.next();
   }
 
@@ -155,7 +169,7 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Apply middleware to all routes except static assets and public files
+// Apply middleware to all routes except static assets, public files, and API routes
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|icon.png|logo.png|sw.js|hero/).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|icon.png|logo.png|sw.js|hero|robots.txt|sitemap.xml).*)"],
 };

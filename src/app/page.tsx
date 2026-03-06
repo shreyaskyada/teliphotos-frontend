@@ -4,6 +4,7 @@ import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 import {
   ArrowRight,
+  ChevronDown,
   Cloud,
   FolderOpen,
   ImagePlus,
@@ -49,6 +50,41 @@ const BENTO_FEATURES = [
   },
 ];
 
+function FAQItem({ faq }: { faq: { q: string; a: string } }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div 
+      className={`bg-slate-900/50 border border-white/5 rounded-2xl transition-all duration-300 overflow-hidden ${
+        isOpen ? 'bg-white/[0.04] border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.1)]' : 'hover:bg-white/[0.02]'
+      }`}
+    >
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full text-left p-6 flex items-center justify-between focus:outline-none gap-4 group"
+      >
+        <h3 className={`text-xl font-bold transition-colors ${isOpen ? 'text-violet-300' : 'text-white group-hover:text-violet-200'}`}>
+          {faq.q}
+        </h3>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-all duration-300 flex-shrink-0 ${isOpen ? 'rotate-180 bg-violet-500/20 text-violet-300' : 'text-slate-400'}`}>
+          <ChevronDown className="w-5 h-5" />
+        </div>
+      </button>
+      <div 
+        className={`grid transition-all duration-300 ease-in-out ${
+          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <p className="px-6 pb-6 text-slate-400 leading-relaxed">
+            {faq.a}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
@@ -77,6 +113,27 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-60"></div>
       </div>
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Telephotos",
+            "operatingSystem": "Web",
+            "applicationCategory": "UtilitiesApplication, Photography",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "Transform your Telegram account into a free photo storage cloud gallery. Upload, organize, and view uncompressed memories for free without server fees.",
+            "url": "https://telephotos.app",
+            "image": "https://telephotos.app/logo.png"
+          })
+        }}
+      />
+
       {/* Navigation */}
       <PublicNavbar />
 
@@ -86,7 +143,7 @@ export default function LandingPage() {
            className="animate-fade-in-up inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-violet-300 text-sm font-medium mb-8 hover:bg-white/10 transition-colors cursor-pointer"
         >
           <Sparkles className="w-4 h-4" />
-          <span>The Ultimate Telegram Cloud Gallery</span>
+          <span>The Ultimate Free Photo Storage Cloud</span>
         </div>
 
         <h1
@@ -104,7 +161,7 @@ export default function LandingPage() {
           className="animate-fade-in text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed drop-shadow-sm opacity-0"
           style={{ animationDelay: "200ms" }}
         >
-          Turn your Telegram account into a premium, limitless photo gallery. Organize your memories into albums and access them anywhere without ever touching iCloud or Google Photos again.
+          Your personal free photo storage cloud. Organize your precious memories into beautiful albums and access them anywhere without ever paying server fees again.
         </p>
 
         <div
@@ -148,14 +205,14 @@ export default function LandingPage() {
              {/* Mock Dashboard Area — local images for zero-latency LCP */}
              <div className="grid grid-cols-2 md:grid-cols-4 backdrop-blur-md">
                 {[
-                  { src: "/hero/h1.jpg", alt: "Scenic landscape" },
-                  { src: "/hero/h2.jpg", alt: "Nature photo" },
-                  { src: "/hero/h3.jpg", alt: "Waterfall" },
-                  { src: "/hero/h4.jpg", alt: "Flowers" },
-                  { src: "/hero/h5.jpg", alt: "Mountain" },
-                  { src: "/hero/h6.jpg", alt: "Misty hills" },
-                  { src: "/hero/h7.jpg", alt: "Lake view" },
-                  { src: "/hero/h8.jpg", alt: "Coastal scene" },
+                  { src: "/hero/h1.jpg", alt: "Scenic landscape saved in Telephotos unlimited cloud storage" },
+                  { src: "/hero/h2.jpg", alt: "Nature photo backed up to Telegram photo gallery" },
+                  { src: "/hero/h3.jpg", alt: "Waterfall secure photo sharing with Telephotos" },
+                  { src: "/hero/h4.jpg", alt: "Flowers stored in private Telegram cloud" },
+                  { src: "/hero/h5.jpg", alt: "Mountain adventure free photo backup" },
+                  { src: "/hero/h6.jpg", alt: "Misty hills digital memories organized" },
+                  { src: "/hero/h7.jpg", alt: "Lake view alternative to Google Photos storage" },
+                  { src: "/hero/h8.jpg", alt: "Coastal scene saved on free cloud storage" },
                 ].map(({ src, alt }, i) => (
                   <div key={i} className="aspect-[4/3] sm:aspect-square border border-slate-900/50 overflow-hidden bg-slate-800 relative group">
                      <Image
@@ -223,7 +280,7 @@ export default function LandingPage() {
                          {idx !== 2 && <div className="w-[1px] h-full bg-white/10 mt-2"></div>}
                       </div>
                       <div className="pb-6">
-                         <h4 className="text-xl font-bold text-slate-200 mb-2">{step.title}</h4>
+                         <h3 className="text-xl font-bold text-slate-200 mb-2">{step.title}</h3>
                          <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
                       </div>
                    </div>
@@ -297,59 +354,13 @@ export default function LandingPage() {
                   a: "You lose absolutely nothing. Because all your photos are securely uploaded to your private Telegram Channels or Saved Messages, you can easily view, download, or delete them inside the official Telegram app at any time."
                 }
               ].map((faq, idx) => (
-                <div key={idx} className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:bg-slate-800/50 transition-colors">
-                   <h3 className="text-xl font-bold text-white mb-2">{faq.q}</h3>
-                   <p className="text-slate-400 leading-relaxed">{faq.a}</p>
-                </div>
+                <FAQItem key={idx} faq={faq} />
               ))}
             </div>
          </div>
       </section>
 
-      {/* Massive SEO Context Explanation Block */}
-      <section className="py-24 px-6 bg-slate-900/30 border-t border-b border-white/5 relative z-10">
-         <div className="max-w-4xl mx-auto prose prose-invert lg:prose-xl prose-headings:text-white prose-p:text-slate-400 prose-a:text-cyan-400">
-            <h2 className="text-4xl font-extrabold mb-8">Unleashing the True Potential of Cloud Storage with Telephotos</h2>
-            <p>
-              In today's fast-paced digital era, our smartphones and digital cameras are capturing moments with unprecedented detail. Each high-resolution photograph, each sweeping 4K panoramic video, and each consecutive burst mode sequence consumes massive chunks of binary data. The result? We are constantly running into arbitrary storage limits imposed by major tech conglomerates. We are told that we must upgrade, that we must pay a recurring monthly subscription fee indefinitely just to retain our own memories. Telephotos exists to challenge this exact paradigm. By fundamentally rethinking how cloud storage can be accessed and utilized, Telephotos delivers an unparalleled, infinite photo gallery experience completely free of arbitrary subscription walls.
-            </p>
-            <p>
-              The core innovation behind Telephotos is surprisingly elegant. Rather than attempting to build and monopolize a massive array of expensive server farms—costs which would ultimately be passed down to you, the user—Telephotos leverages the world's most generous, heavily optimized, and decentralized messaging infrastructure: the official Telegram network. For years, Telegram has offered its users unlimited cloud storage in the form of "Saved Messages" and private, encrypted channels. Millions of people have attempted to use these chat interfaces to back up their family photos and work documents. However, a chat interface is inherently linear. It is designed for messaging, not for media archiving. Scrolling backwards through thousands of messages to find a single photograph from years ago is a deeply frustrating user experience. It lacks the visual hierarchy, the lazy-loaded grids, and the album-based organization of a true gallery app.
-            </p>
-            
-            <h3 className="text-2xl font-bold mt-12 mb-4">A Zero-Knowledge Bridge to Infinite Storage</h3>
-            <p>
-              Telephotos acts as a sophisticated, bridge-like frontend. When you authenticate with our web application, you do so using your own Telegram credentials. We do not create a proprietary account for you; we utilize the secure, official MTProto API to request a local session right on your browser. This establishes a zero-knowledge architecture. Our database servers do not ingest, copy, or retain your raw photographs. The bits and bytes flow directly from your device, through temporary routing tunnels, straight into the encrypted vault of your Telegram channels. Because we do not store your data, we cannot scan your data. We cannot sell your metadata to advertising agencies, nor can we algorithmically analyze your facial features for demographic profiling. Your privacy remains absolute, bounded by the industry-leading encryption standards set forth by the Telegram network itself.
-            </p>
-            <p>
-              Furthermore, the structural mechanism of Telephotos ensures that your data remains fundamentally uncompressed. This is a critical distinction in the cloud storage market. Many popular platforms, such as Google Photos or Apple iCloud, employ aggressive lossy compression algorithms on their free or low-tier plans to save server space. They analyze your crisp, beautiful RAW image and reduce its color depth, strip away vital EXIF metadata like timestamps and geographical coordinates, and compress the pixel density. A 15-megabyte photograph might be quietly reduced to a 2-megabyte approximation. With Telephotos, you upload your imagery 'as documents' via the Telegram API, which explicitly signals the network to bypass any visual compression algorithms entirely. What you upload into Telephotos is a mathematically identical bit-for-bit copy. You get the peace of mind knowing that when you download these files a decade from now, they will contain the exact data they had the moment the camera shutter clicked.
-            </p>
 
-            <h3 className="text-2xl font-bold mt-12 mb-4">Engineered for Velocity and Reliability</h3>
-            <p>
-              Building a buttery-smooth viewing experience on top of a decentralized chat protocol requires intense technical optimization. If Telephotos attempted to download and render 50 uncompressed 15-megabyte photos simultaneously onto your screen, your browser tab would immediately crash from memory exhaustion, and your mobile data plan would be entirely vaporized in seconds. To solve this, Telephotos implements aggressive, dynamic asynchronous rendering utilizing the BlurHash algorithm and lightweight thumbnail generation. When you upload a picture, the API generates a microscopic blurred preview placeholder alongside a highly optimized compressed thumbnail. As you scroll through your Telephotos gallery grid, only these ultra-lightweight thumbnails are rendered. The grid behaves instantly, providing a seamless visual collage of your albums. 
-            </p>
-            <p>
-              It is only when you actively click on a specific thumbnail to view the image in full-screen mode that the application fetches the massive, uncompressed original file from the Telegram cloud. This sophisticated architecture ensures that navigating through thousands of family memories feels as instant and tactile as a native operating system application native to your iPhone or Android, completely masking the complex decentralized network humming beneath the surface.
-            </p>
-
-            <h3 className="text-2xl font-bold mt-12 mb-4">Reclaiming Your Digital Independence</h3>
-            <p>
-              Perhaps the most profound benefit of using Telephotos is the total eradication of vendor lock-in. When you entrust your entire photo library to closed ecosystems, attempting to migrate to a competing platform is made intentionally arduous. Export tools are often slow, buggy, or deliver disorganized 'Takeout' zip files peppered with confusing JSON metadata fragments. Cloud providers know that the longer they hold your data, the harder it is for you to leave their ecosystem, practically guaranteeing that you will eventually upgrade to a higher paid subscription tier out of sheer exhaustion and convenience.
-            </p>
-            <p>
-              Telephotos destroys this dynamic. Because every album you create and every photo you upload via Telephotos simply corresponds to a native Telegram private channel, your data exists independently of our web interface. If tomorrow you decide you no longer wish to use the Telephotos dashboard, you simply close the tab. You lose nothing. All of your photos, meticulously organized in the channels you created, remain safely tucked inside your standard Telegram application. You can view them on your desktop, forward them to friends in normal chats, or highlight thousands of them and click 'Save to Downloads' flawlessly. You use Telephotos solely because the gallery interface is gorgeous, fast, and highly functional, not because your files are held hostage behind a proprietary wall. 
-            </p>
-
-            <h3 className="text-2xl font-bold mt-12 mb-4">Empowering Photographers, Travelers, and Families Alike</h3>
-            <p>
-              This boundless capacity unlocks new, expansive use cases that were previously financially unviable for ordinary consumers. Professional photographers out on major shoots can use Telephotos as a rapid proxy dump, sending raw files securely to the cloud without monitoring an artificial quota bar. Heavy travelers and content creators capturing constant 4K vlogs can synchronize their media instantaneously, confident that dropping a 2-gigabyte file into a private channel folder will execute reliably. And for the everyday family user, it represents an end to anxiety—an end to manually triaging and deleting old memories simply to make room for a new holiday video.
-            </p>
-            <p>
-              Ultimately, Telephotos is more than just a gallery interface; it is a movement towards data ownership. We believe that your digital history should belong to you, without strings attached, without compression, and without monthly rent. By marrying the profound technological achievements of the Telegram API with a world-class, design-forward interface, Telephotos offers the definitive solution for next-generation infinite cloud storage. Join us in reclaiming your digital independence today, and transform the way you interact with your memories forever.
-            </p>
-         </div>
-      </section>
 
       {/* Footer CTA */}
       <section className="py-32 px-6 relative overflow-hidden">

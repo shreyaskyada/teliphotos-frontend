@@ -109,7 +109,7 @@ function FeatureSection({ title, description, icon, align }: { title: string, de
                 {icon}
             </div>
             <div className="flex-1 space-y-4">
-                <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{title}</h3>
+                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{title}</h2>
                 <div className="text-slate-400 leading-relaxed text-lg space-y-4">
                     {description}
                 </div>

@@ -78,7 +78,7 @@ function TimelineStep({ num, title, content }: { num: string, title: string, con
             {/* Content card */}
             <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-slate-900/50 p-6 md:p-8 rounded-2xl border border-white/5 hover:border-violet-500/30 transition-colors ml-auto md:ml-0 shadow-lg">
                 <div className="flex flex-col space-y-3">
-                    <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
+                    <h2 className="text-xl font-bold text-white tracking-tight">{title}</h2>
                     <p className="text-slate-400 leading-relaxed">
                         {content}
                     </p>

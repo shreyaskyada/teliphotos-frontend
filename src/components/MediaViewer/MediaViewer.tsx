@@ -3,26 +3,27 @@
 import { getPhotoVideoThumbnailURL } from "@telephotos/services/media";
 import { Button } from "@telephotos/ui";
 import {
-    ArrowLeft,
-    ArrowRight,
-    Download,
-    Grid3X3,
-    Info,
-    Maximize,
-    Minimize,
-    Pause,
-    Play,
-    RotateCcw,
-    Share2,
-    Trash2,
-    Volume2,
-    VolumeX,
-    X,
-    ZoomIn,
-    ZoomOut,
+  ArrowLeft,
+  ArrowRight,
+  Download,
+  Grid3X3,
+  Info,
+  Maximize,
+  Minimize,
+  Pause,
+  Play,
+  RotateCcw,
+  Share2,
+  Trash2,
+  Volume2,
+  VolumeX,
+  X,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { AdBanner728x90Carousel } from "../../components/AdBanner728x90Carousel";
 import type { MediaViewerProps } from "./types";
 import { useMediaViewer } from "./useMediaViewer";
 
@@ -80,6 +81,7 @@ const MediaViewer = ({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [showAd, setShowAd] = useState(true);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-hide controls
@@ -105,7 +107,8 @@ const MediaViewer = ({
     };
 
     document.addEventListener("mousemove", handleMouseMove);
-    hideControls();
+    // Show controls initially or whenever the photo index changes
+    showControlsTemporarily();
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
@@ -113,7 +116,7 @@ const MediaViewer = ({
         clearTimeout(controlsTimeoutRef.current);
       }
     };
-  }, [isOpen]);
+  }, [isOpen, index]);
 
   if (!isOpen) return null;
 
@@ -405,6 +408,38 @@ const MediaViewer = ({
           )}
         </div>
       </div>
+
+      {/* Floating Carousel Ad - Show only outside of Thumbnail picker */}
+      {!showThumbnails && current && showAd && (
+        <div 
+          className="absolute bottom-16 left-1/2 -translate-x-1/2 z-10 transition-opacity duration-300 hidden md:block"
+          style={{ 
+            opacity: showControls ? 1 : 0 
+          }}
+        >
+          <div className="flex flex-col items-center gap-1.5 relative">
+            <div className="w-full flex justify-between items-center px-2">
+              <span className="text-[10px] text-white/40 tracking-widest uppercase">
+                Advertisement
+              </span>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowAd(false);
+                }}
+                className="text-white/40 hover:text-white transition-colors bg-black/20 hover:bg-black/50 rounded-full p-1 backdrop-blur-sm -mb-2 z-20 relative"
+                aria-label="Close advertisement"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+            
+            <div className="relative">
+              <AdBanner728x90Carousel />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Navigation Arrows */}
       <button

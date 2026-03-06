@@ -44,15 +44,30 @@ export const useChannelContent = () => {
       const exists = existingMedia.some(m => Number(m.id) === mediaId);
       
       if (!exists) {
-        console.log(`[useChannelContent] New media discovery (${mediaId}). Batching refetch...`);
-        
-        if (refetchTimerRef.current) clearTimeout(refetchTimerRef.current);
-        
-        refetchTimerRef.current = setTimeout(() => {
-          console.log(`[useChannelContent] Flickering prevention: Executing batched refetch.`);
-          refetchMessages();
-          refetchTimerRef.current = null;
-        }, 1500); 
+        let isNewUpload = true;
+        // Prevent looping when the backend emits over websocket for old paginated images 
+        // that are still being processed in the background. If the mediaId is older 
+        // than our newest item, it's just a background task, not a new upload.
+        if (existingMedia.length > 0) {
+          const highestId = Math.max(...existingMedia.map(m => Number(m.id || 0)));
+          if (mediaId <= highestId) {
+            isNewUpload = false;
+          }
+        }
+
+        if (isNewUpload) {
+          console.log(`[useChannelContent] New media discovery (${mediaId}). Batching refetch...`);
+          
+          if (refetchTimerRef.current) clearTimeout(refetchTimerRef.current);
+          
+          refetchTimerRef.current = setTimeout(() => {
+            console.log(`[useChannelContent] Flickering prevention: Executing batched refetch.`);
+            refetchMessages();
+            refetchTimerRef.current = null;
+          }, 1500); 
+        } else {
+          console.log(`[useChannelContent] Ignored background paginated media discovery (${mediaId}). Preventing flicker loop.`);
+        }
       }
     }, [messages?.media, refetchMessages])
   );
@@ -62,8 +77,15 @@ export const useChannelContent = () => {
   const items: RenderItem[] = useMemo(() => {
     const rawMedia = messages?.media || [];
     const result: RenderItem[] = [];
+    const seenIds = new Set<string>();
 
     for (const msg of rawMedia) {
+      if (!msg || !msg.id) continue;
+      
+      const messageId = String(msg.id);
+      if (seenIds.has(messageId)) continue;
+      seenIds.add(messageId);
+
       const media = msg?.media as any;
       if (!media) continue;
 
@@ -106,7 +128,6 @@ export const useChannelContent = () => {
         height = media.height;
       }
 
-      const messageId = String(msg.id);
       const imageURL = (msg as any).imageURL || getPhotoVideoThumbnailURL(channelId as string, messageId);
 
       // Re-use cached item if nothing changed (stable reference prevents re-renders)
