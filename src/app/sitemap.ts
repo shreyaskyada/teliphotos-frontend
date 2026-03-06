@@ -1,4 +1,6 @@
+import fs from "fs";
 import type { MetadataRoute } from "next";
+import path from "path";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://telephotos.app";
@@ -15,18 +17,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/terms", priority: 0.4, changeFreq: "yearly" as const },
   ];
 
-  const blogSlugs = [
-    "how-to-organize-digital-memories-in-2024",
-    "how-to-use-telegram-as-unlimited-cloud-storage",
-    "reclaiming-digital-ownership",
-    "secure-photo-sharing-with-friends-and-family",
-    "stop-paying-for-icloud-tips-and-tricks",
-    "the-environmental-impact-of-cloud-storage",
-    "the-future-of-decentralized-photo-galleries",
-    "top-5-reasons-to-switch-from-google-photos",
-    "understanding-zero-knowledge-privacy",
-    "why-mtproto-encryption-matters",
-  ];
+  let blogSlugs: string[] = [];
+  try {
+    const blogDir = path.join(process.cwd(), "src/app/blog");
+    blogSlugs = fs
+      .readdirSync(blogDir)
+      .filter((file) => {
+        const isDir = fs.statSync(path.join(blogDir, file)).isDirectory();
+        return isDir && !file.startsWith("[") && !file.startsWith(".");
+      });
+  } catch (error) {
+    console.warn("Could not read blog directory during sitemap generation", error);
+  }
 
   const staticEntries = staticPages.map(({ path, priority, changeFreq }) => ({
     url: `${baseUrl}${path}`,

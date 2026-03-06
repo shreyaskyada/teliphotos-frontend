@@ -77,8 +77,25 @@ function FAQItem({ faq }: { faq: { q: string; a: string } }) {
 }
 
 export default function FAQPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.a,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PublicNavbar />
       
       <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto space-y-12">
@@ -100,7 +117,7 @@ export default function FAQPage() {
         <div className="mt-16 bg-slate-900 border border-white/10 rounded-2xl p-8 text-center space-y-4 shadow-xl glass-panel relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-violet-600/10 to-cyan-600/10 z-0"></div>
             <div className="relative z-10">
-                <h3 className="text-2xl font-bold text-white">Still have questions?</h3>
+                <h2 className="text-2xl font-bold text-white">Still have questions?</h2>
                 <p className="text-slate-400 mb-6">Our support team is always here to help you get the most out of your infinite gallery.</p>
                 <a href="/contact" className="inline-block px-8 py-3 bg-white text-slate-900 font-bold rounded-full hover:scale-105 transition-transform">
                     Contact Support

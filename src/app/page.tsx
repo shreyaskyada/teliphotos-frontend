@@ -3,17 +3,17 @@
 import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 import {
-    ArrowRight,
-    ChevronDown,
-    Cloud,
-    FolderOpen,
-    ImagePlus,
-    LayoutGrid,
-    Lock,
-    Play,
-    Rocket,
-    ShieldCheck,
-    Sparkles
+  ArrowRight,
+  ChevronDown,
+  Cloud,
+  FolderOpen,
+  ImagePlus,
+  LayoutGrid,
+  Lock,
+  Play,
+  Rocket,
+  ShieldCheck,
+  Sparkles
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -113,6 +113,27 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] opacity-60"></div>
       </div>
 
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "Telephotos",
+            "operatingSystem": "Web",
+            "applicationCategory": "UtilitiesApplication, Photography",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "Transform your Telegram account into a free photo storage cloud gallery. Upload, organize, and view uncompressed memories for free without server fees.",
+            "url": "https://telephotos.app",
+            "image": "https://telephotos.app/logo.png"
+          })
+        }}
+      />
+
       {/* Navigation */}
       <PublicNavbar />
 
@@ -122,7 +143,7 @@ export default function LandingPage() {
            className="animate-fade-in-up inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-violet-300 text-sm font-medium mb-8 hover:bg-white/10 transition-colors cursor-pointer"
         >
           <Sparkles className="w-4 h-4" />
-          <span>The Ultimate Telegram Cloud Gallery</span>
+          <span>The Ultimate Free Photo Storage Cloud</span>
         </div>
 
         <h1
@@ -140,7 +161,7 @@ export default function LandingPage() {
           className="animate-fade-in text-lg md:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed drop-shadow-sm opacity-0"
           style={{ animationDelay: "200ms" }}
         >
-          Turn your Telegram account into a premium, limitless photo gallery. Organize your memories into albums and access them anywhere without ever touching iCloud or Google Photos again.
+          Your personal free photo storage cloud. Organize your precious memories into beautiful albums and access them anywhere without ever paying server fees again.
         </p>
 
         <div
@@ -184,14 +205,14 @@ export default function LandingPage() {
              {/* Mock Dashboard Area — local images for zero-latency LCP */}
              <div className="grid grid-cols-2 md:grid-cols-4 backdrop-blur-md">
                 {[
-                  { src: "/hero/h1.jpg", alt: "Scenic landscape" },
-                  { src: "/hero/h2.jpg", alt: "Nature photo" },
-                  { src: "/hero/h3.jpg", alt: "Waterfall" },
-                  { src: "/hero/h4.jpg", alt: "Flowers" },
-                  { src: "/hero/h5.jpg", alt: "Mountain" },
-                  { src: "/hero/h6.jpg", alt: "Misty hills" },
-                  { src: "/hero/h7.jpg", alt: "Lake view" },
-                  { src: "/hero/h8.jpg", alt: "Coastal scene" },
+                  { src: "/hero/h1.jpg", alt: "Scenic landscape saved in Telephotos unlimited cloud storage" },
+                  { src: "/hero/h2.jpg", alt: "Nature photo backed up to Telegram photo gallery" },
+                  { src: "/hero/h3.jpg", alt: "Waterfall secure photo sharing with Telephotos" },
+                  { src: "/hero/h4.jpg", alt: "Flowers stored in private Telegram cloud" },
+                  { src: "/hero/h5.jpg", alt: "Mountain adventure free photo backup" },
+                  { src: "/hero/h6.jpg", alt: "Misty hills digital memories organized" },
+                  { src: "/hero/h7.jpg", alt: "Lake view alternative to Google Photos storage" },
+                  { src: "/hero/h8.jpg", alt: "Coastal scene saved on free cloud storage" },
                 ].map(({ src, alt }, i) => (
                   <div key={i} className="aspect-[4/3] sm:aspect-square border border-slate-900/50 overflow-hidden bg-slate-800 relative group">
                      <Image
@@ -259,7 +280,7 @@ export default function LandingPage() {
                          {idx !== 2 && <div className="w-[1px] h-full bg-white/10 mt-2"></div>}
                       </div>
                       <div className="pb-6">
-                         <h4 className="text-xl font-bold text-slate-200 mb-2">{step.title}</h4>
+                         <h3 className="text-xl font-bold text-slate-200 mb-2">{step.title}</h3>
                          <p className="text-slate-400 text-sm leading-relaxed">{step.desc}</p>
                       </div>
                    </div>

@@ -57,17 +57,26 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
 
         {/* Footer */}
         <div className="px-3 pb-3 mt-auto shrink-0 space-y-0.5 border-t border-border/30 pt-3">
-          <button type="button" aria-label="Favorites" className="w-full group flex items-center space-x-3 px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
-            <Star className="w-4 h-4 transition-all duration-200 group-hover:text-foreground/80" aria-hidden="true" />
-            <span className="text-sm font-medium">Favorites</span>
+          <button type="button" aria-label="Favorites" className="w-full group flex items-center justify-between px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
+            <div className="flex items-center space-x-3">
+              <Star className="w-4 h-4 transition-all duration-200 group-hover:text-foreground/80" aria-hidden="true" />
+              <span className="text-sm font-medium">Favorites</span>
+            </div>
+            <span className="text-[10px] uppercase tracking-wider font-bold bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">Soon</span>
           </button>
-          <button type="button" aria-label="Tags" className="w-full group flex items-center space-x-3 px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
-            <Tag className="w-4 h-4 transition-all duration-200 group-hover:text-foreground/80" aria-hidden="true" />
-            <span className="text-sm font-medium">Tags</span>
+          <button type="button" aria-label="Tags" className="w-full group flex items-center justify-between px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
+            <div className="flex items-center space-x-3">
+              <Tag className="w-4 h-4 transition-all duration-200 group-hover:text-foreground/80" aria-hidden="true" />
+              <span className="text-sm font-medium">Tags</span>
+            </div>
+            <span className="text-[10px] uppercase tracking-wider font-bold bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">Soon</span>
           </button>
-          <button type="button" aria-label="Settings" className="w-full group flex items-center space-x-3 px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
-            <Settings className="w-4 h-4 transition-all duration-200 group-hover:rotate-45" aria-hidden="true" />
-            <span className="text-sm font-medium">Settings</span>
+          <button type="button" aria-label="Settings" className="w-full group flex items-center justify-between px-4 py-3 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200">
+            <div className="flex items-center space-x-3">
+              <Settings className="w-4 h-4 transition-all duration-200 group-hover:rotate-45" aria-hidden="true" />
+              <span className="text-sm font-medium">Settings</span>
+            </div>
+            <span className="text-[10px] uppercase tracking-wider font-bold bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">Soon</span>
           </button>
         </div>
       </div>
