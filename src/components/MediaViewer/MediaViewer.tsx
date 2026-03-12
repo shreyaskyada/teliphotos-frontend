@@ -3,23 +3,23 @@
 import { getPhotoVideoThumbnailURL } from "@telephotos/services/media";
 import { Button } from "@telephotos/ui";
 import {
-  ArrowLeft,
-  ArrowRight,
-  Download,
-  Grid3X3,
-  Info,
-  Maximize,
-  Minimize,
-  Pause,
-  Play,
-  RotateCcw,
-  Share2,
-  Trash2,
-  Volume2,
-  VolumeX,
-  X,
-  ZoomIn,
-  ZoomOut,
+    ArrowLeft,
+    ArrowRight,
+    Download,
+    Grid3X3,
+    Info,
+    Maximize,
+    Minimize,
+    Pause,
+    Play,
+    RotateCcw,
+    Share2,
+    Trash2,
+    Volume2,
+    VolumeX,
+    X,
+    ZoomIn,
+    ZoomOut,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -201,9 +201,9 @@ const MediaViewer = ({
           {/* Left side - Navigation info */}
           <div className="flex items-center gap-4">
             <div className="text-white/90 text-sm font-medium">
-              {index + 1} of {items.length}
+              {index + 1} / {items.length}
             </div>
-            <div className="text-white/70 text-xs">
+            <div className="text-white/70 text-xs hidden sm:block truncate max-w-[200px]">
               {current?.fileName ||
                 `${current?.kind?.toUpperCase()} ${index + 1}`}
             </div>
@@ -215,7 +215,7 @@ const MediaViewer = ({
               variant="ghost"
               size="sm"
               onClick={() => setShowThumbnails(!showThumbnails)}
-              className="text-white/90 hover:text-white hover:bg-white/20"
+              className="text-white/90 hover:text-white hover:bg-white/20 hidden sm:flex"
             >
               <Grid3X3 className="w-4 h-4" />
             </Button>
@@ -224,7 +224,7 @@ const MediaViewer = ({
               variant="ghost"
               size="sm"
               onClick={() => setShowInfo(!showInfo)}
-              className="text-white/90 hover:text-white hover:bg-white/20"
+              className="text-white/90 hover:text-white hover:bg-white/20 hidden sm:flex"
             >
               <Info className="w-4 h-4" />
             </Button>
@@ -266,7 +266,7 @@ const MediaViewer = ({
               variant="ghost"
               size="sm"
               onClick={toggleFullscreen}
-              className="text-white/90 hover:text-white hover:bg-white/20"
+              className="text-white/90 hover:text-white hover:bg-white/20 hidden sm:flex"
             >
               {isFullscreen ? (
                 <Minimize className="w-4 h-4" />
@@ -443,7 +443,7 @@ const MediaViewer = ({
 
       {/* Navigation Arrows */}
       <button
-        className={`absolute left-4 top-1/2 -translate-y-1/2 text-white text-2xl select-none rounded-full w-12 h-12 flex items-center justify-center bg-black/50 hover:bg-black/70 transition-all duration-200 backdrop-blur-sm ${
+        className={`absolute left-4 top-1/2 -translate-y-1/2 text-white text-2xl select-none rounded-full w-12 h-12 hidden md:flex items-center justify-center bg-black/50 hover:bg-black/70 transition-all duration-200 backdrop-blur-sm ${
           showControls ? "opacity-100" : "opacity-0"
         } ${index === 0 ? "opacity-30 cursor-not-allowed" : "hover:scale-110"}`}
         onClick={(e) => {
@@ -457,7 +457,7 @@ const MediaViewer = ({
       </button>
 
       <button
-        className={`absolute right-4 top-1/2 -translate-y-1/2 text-white text-2xl select-none rounded-full w-12 h-12 flex items-center justify-center bg-black/50 hover:bg-black/70 transition-all duration-200 backdrop-blur-sm ${
+        className={`absolute right-4 top-1/2 -translate-y-1/2 text-white text-2xl select-none rounded-full w-12 h-12 hidden md:flex items-center justify-center bg-black/50 hover:bg-black/70 transition-all duration-200 backdrop-blur-sm ${
           showControls ? "opacity-100" : "opacity-0"
         } ${
           index === items.length - 1
@@ -476,7 +476,7 @@ const MediaViewer = ({
 
       {/* Zoom Controls */}
       <div
-        className={`absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 transition-all duration-300 ${
+        className={`absolute right-4 top-1/2 -translate-y-1/2 hidden md:flex flex-col gap-2 transition-all duration-300 ${
           showControls ? "opacity-100" : "opacity-0"
         }`}
         style={{

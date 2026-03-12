@@ -327,7 +327,7 @@ function GlobalUploaderInner({
       <AnimatePresence>
         {files.length > 0 && (
           <motion.div
-            className="fixed bottom-6 right-6 bg-neutral-900/95 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[24px] w-[380px] max-h-[70vh] z-[9999] flex flex-col border border-white/10 overflow-hidden"
+            className="fixed bottom-4 right-4 left-4 sm:left-auto sm:right-6 sm:bottom-6 sm:w-[380px] bg-neutral-900/95 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[24px] max-h-[70vh] z-[9999] flex flex-col border border-white/10 overflow-hidden"
             initial={{ y: 100, opacity: 0, scale: 0.95 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 100, opacity: 0, scale: 0.95 }}

@@ -13,8 +13,8 @@ import type { RenderItem } from "./types";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-  useJustifiedLayout,
-  useResponsiveRowHeight,
+    useJustifiedLayout,
+    useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const AD_EVERY_N_ROWS = 5; // Insert an ad after every 5 photo rows
@@ -90,11 +90,11 @@ const ChannelContent = () => {
     targetRowHeight,
     maxRowHeight: targetRowHeight * 2.0, // Allow more flexibility upward for better space utilization
     minRowHeight: targetRowHeight * 0.6, // Allow more flexibility downward
-    spacing: 2, // Reduced spacing for better space utilization
+    spacing: containerWidth > 640 ? 4 : 2, // Dynamic spacing based on screen size
   });
 
   const { positionedItems, adPositions, totalHeight } = useMemo(() => {
-    const spacing = 2;
+    const spacing = containerWidth > 640 ? 4 : 2;
     let currentTop = 0;
     const itemsWithPos: any[] = [];
     const adPositions: { top: number; height: number }[] = [];
@@ -156,7 +156,7 @@ const ChannelContent = () => {
                 </span>
               </>
             ) : (
-              <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+              <span className="text-base sm:text-lg font-bold sm:font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[200px] sm:max-w-none">
                 {channel?.title}
               </span>
             )}
@@ -184,7 +184,7 @@ const ChannelContent = () => {
                 type="button"
                 onClick={openFilePicker}
                 aria-label="Upload photos"
-                className="flex items-center space-x-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 h-8 shadow-sm"
+                className="flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 rounded-full w-8 h-8 sm:w-auto sm:px-5 sm:h-8 shadow-sm p-0 sm:p-auto"
               >
                 <Upload className="w-4 h-4" aria-hidden="true" />
                 <span className="hidden sm:inline text-sm font-medium">Upload</span>
