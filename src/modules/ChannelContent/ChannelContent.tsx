@@ -13,8 +13,8 @@ import type { RenderItem } from "./types";
 import { useChannelContent } from "./useChannelContent";
 import { useContainerWidth } from "./useContainerWidth";
 import {
-    useJustifiedLayout,
-    useResponsiveRowHeight,
+  useJustifiedLayout,
+  useResponsiveRowHeight,
 } from "./useJustifiedLayout";
 
 const AD_EVERY_N_ROWS = 5; // Insert an ad after every 5 photo rows

@@ -26,14 +26,15 @@ const AdBanner160x600 = () => {
 <body>
 <script>
   atOptions = {
-    'key': '0ef08852f7327f12d9e0881d4508b99c',
-    'format': 'iframe',
-    'height': 600,
-    'width': 160,
-    'params': {}
+    'key' : '0ef08852f7327f12d9e0881d4508b99c',
+    'format' : 'iframe',
+    'height' : 600,
+    'width' : 160,
+    'params' : {}
   };
-<\/script>
-<script src="https://www.highperformanceformat.com/0ef08852f7327f12d9e0881d4508b99c/invoke.js"><\/script>
+</script>
+<script src="https://www.highperformanceformat.com/0ef08852f7327f12d9e0881d4508b99c/invoke.js"></script>
+
 </body>
 </html>`;
 

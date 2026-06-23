@@ -18,8 +18,6 @@ const AdBanner728x90 = () => {
     if (injected.current || !iframeRef.current) return;
     injected.current = true;
 
-    // Update the 'key' below to your actual 728x90 Monetag zone key.
-    const YOUR_ZONE_KEY = "c8ad73f96ccd7b14545b3eea9b4359fb";
 
     const html = `<!DOCTYPE html>
 <html>
@@ -30,21 +28,25 @@ const AdBanner728x90 = () => {
 </style>
 </head>
 <body>
+
 <script>
   atOptions = {
-    'key': '${YOUR_ZONE_KEY}',
-    'format': 'iframe',
-    'height': 90,
-    'width': 728,
-    'params': {}
+    'key' : 'c8ad73f96ccd7b14545b3eea9b4359fb',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
   };
-<\/script>
-<script src="https://www.highperformanceformat.com/${YOUR_ZONE_KEY}/invoke.js"><\/script>
+</script>
+<script src="https://www.highperformanceformat.com/c8ad73f96ccd7b14545b3eea9b4359fb/invoke.js"></script>
+
+
 </body>
 </html>`;
 
     iframeRef.current.srcdoc = html;
   }, []);
+
 
   return (
     <div
