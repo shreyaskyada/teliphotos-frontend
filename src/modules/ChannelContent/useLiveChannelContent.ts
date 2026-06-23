@@ -38,17 +38,21 @@ export const useLiveChannelContent = (
 
     const handleJobStatus = (job: LiveMediaUpdate) => {
       const mId = Number(job.mediaId);
-      if (!mId || !job.url) return;
+      if (!mId) return;
 
       // Skip if URL hasn't actually changed
       if (urlsRef.current[mId] === job.url) return;
 
-      // Update ref in-place
-      urlsRef.current[mId] = job.url;
+      // Update ref in-place (either cache url or delete if null/expired)
+      if (job.url) {
+        urlsRef.current[mId] = job.url;
+      } else {
+        delete urlsRef.current[mId];
+      }
       pendingUpdates.current = true;
 
       // Notify parent if this is a new media item we might need to fetch metadata for
-      if (onNewMedia) {
+      if (onNewMedia && job.url) {
         onNewMedia(mId);
       }
 
