@@ -16,7 +16,7 @@ let socket: any;
 export const useLiveChannelContent = (
   batchId: string,
   channelId?: string,
-  onNewMedia?: (mediaId: number) => void
+  onNewMedia?: (mediaId: number) => void,
 ): Record<number, string> => {
   const [urls, setUrls] = useState<Record<number, string>>({});
   const urlsRef = useRef<Record<number, string>>({});
@@ -37,8 +37,6 @@ export const useLiveChannelContent = (
     if (channelId) socket.emit("join", channelId);
 
     const handleJobStatus = (job: LiveMediaUpdate) => {
-      console.log(`[useLiveChannelContent] Received job-status:`, job);
-      
       const mId = Number(job.mediaId);
       if (!mId || !job.url) return;
 
@@ -73,5 +71,5 @@ export const useLiveChannelContent = (
     };
   }, [batchId, channelId, onNewMedia]);
 
-  return urls; 
+  return urls;
 };

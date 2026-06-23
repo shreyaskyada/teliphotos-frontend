@@ -102,7 +102,6 @@ function GlobalUploaderInner({
         return;
       }
 
-      console.log(`[GlobalDropzone] Upload status update raw string:`, jobResponse);
 
       setFiles((prev) => {
         const idx = prev.findIndex((f) => f.file.name === job.filename);
@@ -140,7 +139,6 @@ function GlobalUploaderInner({
             }));
           
           if (newMessages.length > 0) {
-            console.log(`[GlobalDropzone] Received end-to-end success for ${job.filename}. Adding to cache.`);
             updateChannelCache(newMessages);
           }
         }
@@ -255,7 +253,6 @@ function GlobalUploaderInner({
           .filter(Boolean);
         
         if (newMessages.length > 0) {
-          console.log(`[GlobalDropzone] Proactively adding ${newMessages.length} messages from API response`);
           updateChannelCache(newMessages);
         }
       }
