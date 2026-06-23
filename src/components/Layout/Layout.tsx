@@ -50,7 +50,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               >
                 Advertisement
               </span>
-              <div className="sticky top-6">
+              <div className="sticky top-6 w-full px-2">
                 <AdBanner160x600 />
               </div>
             </aside>

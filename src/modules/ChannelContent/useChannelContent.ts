@@ -56,17 +56,13 @@ export const useChannelContent = () => {
         }
 
         if (isNewUpload) {
-          console.log(`[useChannelContent] New media discovery (${mediaId}). Batching refetch...`);
           
           if (refetchTimerRef.current) clearTimeout(refetchTimerRef.current);
           
           refetchTimerRef.current = setTimeout(() => {
-            console.log(`[useChannelContent] Flickering prevention: Executing batched refetch.`);
             refetchMessages();
             refetchTimerRef.current = null;
           }, 1500); 
-        } else {
-          console.log(`[useChannelContent] Ignored background paginated media discovery (${mediaId}). Preventing flicker loop.`);
         }
       }
     }, [messages?.media, refetchMessages])
@@ -157,8 +153,7 @@ export const useChannelContent = () => {
     // Sort newest-first by Telegram message send time (Unix timestamp).
     result.sort((a, b) => ((b as any).date ?? 0) - ((a as any).date ?? 0));
 
-    console.log(`[useChannelContent] Rendered ${result.length} items from ${rawMedia.length} raw messages`);
-    return result;
+      return result;
   }, [messages, channelId]);
 
   const viewerItems = useMemo(
