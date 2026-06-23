@@ -1,5 +1,3 @@
-"use client";
-
 import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 

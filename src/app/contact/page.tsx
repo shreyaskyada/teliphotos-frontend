@@ -1,10 +1,10 @@
 "use client";
 
+import { PublicFooter } from "@telephotos/components/PublicFooter";
+import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 import { motion } from "framer-motion";
 import { Mail, MapPin, MessageCircle } from "lucide-react";
 import { useState } from "react";
-
-
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -20,9 +20,10 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 py-20 px-6">
-      <div className="max-w-7xl mx-auto flex flex-col items-center">
-        
+    <div className="min-h-screen bg-[#020617] text-slate-200">
+      <PublicNavbar />
+      
+      <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto flex flex-col items-center">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4">
             Contact <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">Us</span>
@@ -120,7 +121,9 @@ export default function ContactPage() {
            </form>
 
         </div>
-      </div>
+      </main>
+
+      <PublicFooter />
     </div>
   );
 }

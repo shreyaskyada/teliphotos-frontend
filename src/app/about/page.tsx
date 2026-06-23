@@ -1,9 +1,12 @@
-
+import { PublicFooter } from "@telephotos/components/PublicFooter";
+import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 py-20 px-6">
-      <div className="max-w-4xl mx-auto space-y-12">
+    <div className="min-h-screen bg-[#020617] text-slate-200">
+      <PublicNavbar />
+      
+      <main className="pt-32 pb-24 px-6 max-w-4xl mx-auto space-y-12">
         <div className="text-center space-y-4">
            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-4">
              About <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">Telephotos</span>
@@ -45,7 +48,9 @@ export default function AboutPage() {
             </p>
           </section>
         </div>
-      </div>
+      </main>
+
+      <PublicFooter />
     </div>
   );
 }
