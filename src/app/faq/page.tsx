@@ -1,9 +1,6 @@
-"use client";
-
+import { FAQItem } from "@telephotos/components/FAQItem";
 import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 
 
 
@@ -38,43 +35,7 @@ const faqs = [
   }
 ];
 
-function FAQItem({ faq }: { faq: { q: string; a: string } }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div 
-      className={`bg-slate-900/50 border border-white/5 rounded-2xl transition-all duration-300 overflow-hidden ${
-        isOpen ? 'bg-white/[0.04] border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.1)]' : 'hover:bg-white/[0.02]'
-      }`}
-    >
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left p-6 sm:p-8 flex items-center justify-between focus:outline-none gap-4 group"
-      >
-        <h2 className={`text-xl sm:text-2xl font-bold transition-colors ${isOpen ? 'text-violet-300' : 'text-white group-hover:text-violet-200'}`}>
-          {faq.q}
-        </h2>
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-all duration-300 flex-shrink-0 ${isOpen ? 'rotate-180 bg-violet-500/20 text-violet-300' : 'text-slate-400'}`}>
-          <ChevronDown className="w-6 h-6" />
-        </div>
-      </button>
-      <div 
-        className={`grid transition-all duration-300 ease-in-out ${
-          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="px-6 sm:px-8 pb-6 sm:pb-8">
-            <div className="w-12 h-1 bg-violet-500/50 mb-4 rounded-full"></div>
-            <p className="text-slate-400 leading-relaxed text-lg">
-              {faq.a}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+// Collapsible FAQ item logic is handled in the shared client component @telephotos/components/FAQItem
 
 export default function FAQPage() {
   const jsonLd = {
@@ -110,7 +71,7 @@ export default function FAQPage() {
 
         <div className="space-y-6 pt-8">
           {faqs.map((faq, idx) => (
-            <FAQItem key={idx} faq={faq} />
+            <FAQItem key={idx} faq={faq} large={true} />
           ))}
         </div>
 

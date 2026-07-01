@@ -1,10 +1,8 @@
-"use client";
-
+import { FAQItem } from "@telephotos/components/FAQItem";
 import { PublicFooter } from "@telephotos/components/PublicFooter";
 import { PublicNavbar } from "@telephotos/components/PublicNavbar";
 import {
   ArrowRight,
-  ChevronDown,
   Cloud,
   FolderOpen,
   ImagePlus,
@@ -16,8 +14,7 @@ import {
   Sparkles
 } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const BENTO_FEATURES = [
   {
@@ -50,56 +47,7 @@ const BENTO_FEATURES = [
   },
 ];
 
-function FAQItem({ faq }: { faq: { q: string; a: string } }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div 
-      className={`bg-slate-900/50 border border-white/5 rounded-2xl transition-all duration-300 overflow-hidden ${
-        isOpen ? 'bg-white/[0.04] border-white/10 shadow-[0_0_30px_rgba(139,92,246,0.1)]' : 'hover:bg-white/[0.02]'
-      }`}
-    >
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left p-6 flex items-center justify-between focus:outline-none gap-4 group"
-      >
-        <h3 className={`text-xl font-bold transition-colors ${isOpen ? 'text-violet-300' : 'text-white group-hover:text-violet-200'}`}>
-          {faq.q}
-        </h3>
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-all duration-300 flex-shrink-0 ${isOpen ? 'rotate-180 bg-violet-500/20 text-violet-300' : 'text-slate-400'}`}>
-          <ChevronDown className="w-5 h-5" />
-        </div>
-      </button>
-      <div 
-        className={`grid transition-all duration-300 ease-in-out ${
-          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
-        <div className="overflow-hidden">
-          <p className="px-6 pb-6 text-slate-400 leading-relaxed">
-            {faq.a}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function LandingPage() {
-  const [scrolled, setScrolled] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const handleGetStarted = () => {
-    router.push("/dashboard");
-  };
 
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 overflow-x-hidden selection:bg-violet-500/30">
@@ -168,13 +116,13 @@ export default function LandingPage() {
            className="animate-fade-in-up flex flex-col sm:flex-row items-center gap-4 opacity-0"
            style={{ animationDelay: "300ms" }}
         >
-          <button
-            onClick={handleGetStarted}
+          <Link
+            href="/dashboard"
             className="flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 rounded-full text-white font-bold text-lg transition-all shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)] hover:scale-105 active:scale-95 group"
           >
             Start Your Gallery
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
           <a
             href="#how-it-works"
             className="flex items-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full font-semibold text-lg transition-all hover:scale-105 active:scale-95"
@@ -287,12 +235,12 @@ export default function LandingPage() {
                  ))}
                </div>
 
-               <button
-                  onClick={handleGetStarted}
-                  className="mt-4 px-6 py-3 bg-white text-slate-900 rounded-full font-bold hover:scale-105 active:scale-95 transition-transform"
+                <Link
+                  href="/dashboard"
+                  className="mt-4 inline-block px-6 py-3 bg-white text-slate-900 rounded-full font-bold hover:scale-105 active:scale-95 transition-transform"
                 >
                   Create your first gallery
-                </button>
+                </Link>
             </div>
 
             <div className="flex-1 w-full relative">
@@ -369,13 +317,13 @@ export default function LandingPage() {
           <p className="text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
             Join Telephotos today and reclaim your storage space using the secure infrastructure of Telegram.
           </p>
-          <button
-              onClick={handleGetStarted}
+          <Link
+              href="/dashboard"
               className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-full text-white font-bold text-xl transition-all shadow-[0_0_30px_rgba(6,182,212,0.3)] hover:shadow-[0_0_50px_rgba(6,182,212,0.5)] hover:scale-105 active:scale-95"
             >
               Start for Free
               <Rocket className="w-6 h-6" />
-          </button>
+          </Link>
         </div>
       </section>
 
