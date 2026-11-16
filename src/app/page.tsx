@@ -33,7 +33,7 @@ const BENTO_FEATURES = [
   },
   {
     title: "Absolute Privacy",
-    description: "We don't host your files. They stay strictly inside your private Telegram channels, encrypted and secure.",
+    description: "We never keep permanent copies of your files. Your originals live in your private Telegram channels, and preview thumbnails expire within an hour.",
     icon: ShieldCheck,
     gradient: "from-emerald-400 to-green-600",
     colSpan: "col-span-1 md:col-span-1",
@@ -291,7 +291,7 @@ export default function LandingPage() {
                 },
                 {
                   q: "Can you see my photos?",
-                  a: "Absolutely not. We have a strict zero-knowledge architecture. Your images are hosted directly on Telegram's servers and we never download or save them to our databases. We act merely as a frontend viewer."
+                  a: "Nobody at Telephotos looks through your photos, and we never keep permanent copies. Your originals are stored in your own Telegram channels. Uploads pass through our server on the way to Telegram and are deleted right after, and preview thumbnails are cached for about an hour. Our servers hold your Telegram login session, which you can revoke anytime from Telegram → Settings → Devices."
                 },
                 {
                   q: "Are my files compressed?",

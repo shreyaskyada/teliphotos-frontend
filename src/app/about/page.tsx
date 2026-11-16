@@ -37,7 +37,7 @@ export default function AboutPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">Privacy by Design</h2>
             <p className="text-slate-400 leading-relaxed">
-              We operate under a strict "Zero Host" policy. Telephotos does not store your images, videos, or messages on our own database servers. Our backend strictly acts as a pipeline to the official Telegram infrastructure. Your files live only inside your encrypted Telegram channels, to which only you have access.
+              Telephotos never keeps permanent copies of your images or videos. Your files live in your own Telegram channels. Our backend passes uploads through to Telegram and deletes the temporary files right after, and it caches small preview thumbnails for only about an hour. We store just the metadata needed to show your gallery, plus your encrypted Telegram login session, which you can revoke anytime from Telegram. Telephotos is an independent app and is not affiliated with Telegram.
             </p>
           </section>
 

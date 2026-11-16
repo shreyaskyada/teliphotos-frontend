@@ -32,9 +32,13 @@ export const useLiveChannelContent = (
       });
     }
 
-    // Join rooms
-    if (batchId) socket.emit("join", batchId);
-    if (channelId) socket.emit("join", channelId);
+    // Join rooms — the server drops room membership on disconnect, so re-join on every (re)connect
+    const joinRooms = () => {
+      if (batchId) socket.emit("join", batchId);
+      if (channelId) socket.emit("join", channelId);
+    };
+    joinRooms();
+    socket.on("connect", joinRooms);
 
     const handleJobStatus = (job: LiveMediaUpdate) => {
       const mId = Number(job.mediaId);
@@ -72,6 +76,7 @@ export const useLiveChannelContent = (
 
     return () => {
       socket.off("job-status", handleJobStatus);
+      socket.off("connect", joinRooms);
     };
   }, [batchId, channelId, onNewMedia]);
 

@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "Is Telephotos really 100% free with unlimited storage?",
-    a: "Yes! Because we leverage the official Telegram API, your files are stored within your Telegram account. Telegram famously provides unlimited cloud storage for all users, up to 2GB per file (or 4GB for Premium users). We do not charge you for the data storage because we do not host your files. Our service acts purely as a dashboard or remote viewer for the files existing in your Telegram cloud."
+    a: "Yes! Because we leverage the official Telegram API, your files are stored within your Telegram account. Telegram famously provides unlimited cloud storage for all users, up to 2GB per file (or 4GB for Premium users). We do not charge you for the data storage because your files live in your Telegram account, not on our servers. Our service acts as a dashboard for the files in your Telegram cloud, and it is funded by ads. Storage remains subject to Telegram's own limits and policies."
   },
   {
     q: "Will Telephotos compress or reduce the quality of my photos?",
@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: "Can Telephotos or anyone else see my private photos?",
-    a: "Absolutely not. Telephotos is built with a zero-knowledge architecture. All photos are stored directly in your personal Telegram space. We do not download, host, or mirror your images on our servers. Your data is protected by the same world-class encryption that Telegram uses for its private chats and secret channels. Our backend strictly pipes the data straight between you and Telegram without ever looking at the contents."
+    a: "Nobody at Telephotos looks through your photos, and we never keep permanent copies of them. Your originals are stored in your own Telegram channels, protected by Telegram's cloud encryption. To make the gallery work, our servers do handle your media briefly and automatically: uploads pass through our server on their way to Telegram and are deleted right after, and small preview thumbnails are cached for about an hour so your grid loads fast. Telephotos is not end-to-end encrypted: like any app you log in to with Telegram, our servers hold a login session for your account, which you can end anytime from Telegram → Settings → Devices. Our Privacy Policy explains exactly what we store."
   },
   {
     q: "What happens if I decide to stop using Telephotos?",
@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     q: "Do I need a Telegram account to sign up?",
-    a: "Yes, an active Telegram account is required since all the backend storage operations happen through your account. When you log in to Telephotos, you authorize our app using your Telegram phone number, strictly for accessing your own storage."
+    a: "Yes, an active Telegram account is required since all the backend storage operations happen through your account. When you log in to Telephotos, you authorize our app using your Telegram phone number. This adds a Telegram session for Telephotos, which we use only to manage the channels and media you work with in Telephotos. Telephotos is an independent app and is not affiliated with Telegram."
   }
 ];
 

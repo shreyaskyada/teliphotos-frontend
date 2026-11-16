@@ -2,6 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import clientAxiosInstance from "@telephotos/axios/clientAxiosInstance";
+import { refreshChannelFirstPage } from "@telephotos/services/channels";
 import { CONFIG } from "@telephotos/utils/config";
 import { isCancel } from "axios";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,7 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle2, ChevronDown, Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { io } from "socket.io-client";
 import { UploadProvider, useUpload } from "./UploadContext";
@@ -17,12 +18,31 @@ import { UploadProvider, useUpload } from "./UploadContext";
 interface UploadFile {
   id: string;
   file: File;
+  channelId: string;
   preview: string;
   progress: number;
-  stage: "uploading" | "telegram" | "done" | "error" | "converting" | "processing" | "rejected" | string;
+  stage: "queued" | "uploading" | "telegram" | "done" | "error" | "converting" | "processing" | "rejected" | string;
   controller?: AbortController;
   error?: string;
 }
+
+// The backend sends at most 2 files per account to Telegram at once, so 3 in flight
+// keeps one file transferring while two are processed — more only piles up on the server
+const MAX_PARALLEL_UPLOADS = 3;
+// Stages in which a file holds no upload slot
+const IDLE_STAGES = ["queued", "done", "error", "rejected"];
+// At most one gallery refresh per channel per interval while uploads keep completing
+const REFRESH_INTERVAL_MS = 3000;
+const MAX_VISIBLE_ROWS = 50;
+
+// Dock ordering: active first, then failures, then what's left to do, then finished
+const stagePriority = (stage: string) => {
+  if (!IDLE_STAGES.includes(stage)) return 0;
+  if (stage === "error") return 1;
+  if (stage === "rejected") return 2;
+  if (stage === "queued") return 3;
+  return 4;
+};
 
 let socket: any;
 
@@ -37,61 +57,37 @@ function GlobalUploaderInner({
   const queryClient = useQueryClient();
   const STATIC_CHANNEL_ID = channelId as string;
   const { registerInputRef } = useUpload();
-  const invalidateTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshTimersRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-  const updateChannelCache = useCallback((newMessages: any[]) => {
-    if (!newMessages || newMessages.length === 0) return;
-
-    queryClient.setQueryData(
-      ["channelContent", STATIC_CHANNEL_ID],
-      (oldData: any) => {
-        if (!oldData || !oldData.pages || oldData.pages.length === 0) return oldData;
-
-        // Get existing media from all pages to check for duplicates
-        const allExistingMedia = oldData.pages.flatMap((page: any) => page.data?.media || []);
-        const existingIds = new Set(allExistingMedia.map((m: any) => String(m.id)));
-
-        // Only add messages that aren't already in the list
-        const messagesToAdd = newMessages.filter(
-          (m: any) => m && m.id && !existingIds.has(String(m.id))
+  // Upload responses carry raw Telegram `Updates` objects, not the message shape
+  // the content API returns, so refetch the newest page instead of patching the cache.
+  // Throttled (not debounced) so a long batch still shows progress in the gallery,
+  // and every completion during the wait is picked up by the pending refresh.
+  const scheduleChannelRefresh = useCallback((targetChannelId: string) => {
+    const timers = refreshTimersRef.current;
+    if (timers.has(targetChannelId)) return;
+    timers.set(
+      targetChannelId,
+      setTimeout(() => {
+        timers.delete(targetChannelId);
+        refreshChannelFirstPage(queryClient, targetChannelId).catch((error) =>
+          console.error("Failed to refresh channel content:", error)
         );
-
-        if (messagesToAdd.length === 0) return oldData;
-
-        // Clone the pages and prepend new items to the FIRST page
-        const newPages = [...oldData.pages];
-        const firstPage = { ...newPages[0] };
-        const firstPageData = { ...firstPage.data };
-        
-        const combinedMedia = [...messagesToAdd, ...(firstPageData.media || [])];
-        
-        // Ensure newest (highest ID) is always on top within the first page
-        combinedMedia.sort((a, b) => Number(b.id) - Number(a.id));
-
-        newPages[0] = {
-          ...firstPage,
-          data: {
-            ...firstPageData,
-            media: combinedMedia,
-          }
-        };
-
-        return {
-          ...oldData,
-          pages: newPages,
-        };
-      }
+      }, REFRESH_INTERVAL_MS)
     );
-  }, [STATIC_CHANNEL_ID, queryClient]);
+  }, [queryClient]);
 
   useEffect(() => {
     if (!socket) {
       socket = io(CONFIG.BASE_BACKEND_URL, { transports: ["websocket"] });
     }
 
-    if (STATIC_CHANNEL_ID) {
-      socket.emit("join", STATIC_CHANNEL_ID);
-    }
+    // The server drops room membership on disconnect, so re-join on every (re)connect
+    const joinRoom = () => {
+      if (STATIC_CHANNEL_ID) socket.emit("join", STATIC_CHANNEL_ID);
+    };
+    joinRoom();
+    socket.on("connect", joinRoom);
 
     const handleUploadStatus = (jobResponse: any) => {
       let job: any;
@@ -103,8 +99,15 @@ function GlobalUploaderInner({
       }
 
 
+      // The socket stays in rooms of previously visited channels, and filenames
+      // repeat (e.g. IMG_0001.jpg), so only match an in-flight upload to the same channel
       setFiles((prev) => {
-        const idx = prev.findIndex((f) => f.file.name === job.filename);
+        const idx = prev.findIndex(
+          (f) =>
+            f.file.name === job.filename &&
+            f.channelId === String(job.channelId) &&
+            !IDLE_STAGES.includes(f.stage)
+        );
         if (idx === -1) return prev;
         const newFiles = [...prev];
         const currentFile = newFiles[idx];
@@ -120,46 +123,35 @@ function GlobalUploaderInner({
         return newFiles;
       });
 
-      // E2E success handling — only add to cache if it's the final success event
-      if (job.status === "telegram_uploaded" && job.is_telegram_uploaded && job.messageInfo) {
-        const results = Array.isArray(job.messageInfo) ? job.messageInfo : [job.messageInfo];
-        if (results.length > 0) {
-          const newMessages = results
-            .filter((res: any) => res.messageId)
-            .map((res: any) => ({
-              _id: res.mediaId || Math.random().toString(),
-              channelId: STATIC_CHANNEL_ID,
-              messageId: String(res.messageId),
-              type: "photo",
-              contentType: res.mimeType || "image/jpeg",
-              thumbnailUrl: null, // Proactive update doesn't have URLs yet
-              originalUrl: null,
-              createdAt: new Date().toISOString(),
-              lastProcessedAt: new Date().toISOString(),
-            }));
-          
-          if (newMessages.length > 0) {
-            updateChannelCache(newMessages);
-          }
-        }
+      if (job.status === "telegram_uploaded" && job.is_telegram_uploaded && job.channelId) {
+        scheduleChannelRefresh(String(job.channelId));
       }
     };
 
     socket.on("upload-status", handleUploadStatus);
 
-    const currentTimer = invalidateTimerRef.current;
     return () => {
       socket.off("upload-status", handleUploadStatus);
-      if (currentTimer) {
-        clearTimeout(currentTimer);
-      }
+      socket.off("connect", joinRoom);
     };
-  }, [STATIC_CHANNEL_ID, updateChannelCache]);
+  }, [STATIC_CHANNEL_ID, scheduleChannelRefresh]);
+
+  useEffect(() => {
+    const timers = refreshTimersRef.current;
+    return () => {
+      timers.forEach(clearTimeout);
+      timers.clear();
+    };
+  }, []);
 
   const handleDrop = async (acceptedFiles: File[], fileRejections: any[]) => {
+    // No channel is selected on /dashboard, so there is nowhere to upload to
+    if (!STATIC_CHANNEL_ID) return;
+
     const rejectedMapped: UploadFile[] = fileRejections.map(({ file, errors }) => ({
       id: Math.random().toString(36).substring(2, 11),
       file,
+      channelId: STATIC_CHANNEL_ID,
       preview: "",
       progress: 0,
       stage: "rejected",
@@ -174,60 +166,87 @@ function GlobalUploaderInner({
       return {
         id: Math.random().toString(36).substring(2, 11),
         file,
+        channelId: STATIC_CHANNEL_ID,
         preview: isHeic ? "" : URL.createObjectURL(file), // Empty preview for HEIC initially
         progress: 0,
-        stage: "uploading",
-        controller: new AbortController(),
+        // Started by the queue effect below, a few at a time
+        stage: "queued",
       };
     });
 
     setFiles((prev) => [...mapped, ...rejectedMapped, ...prev]);
-
-    // Process HEIC previews in background
-    mapped.forEach(async (item) => {
-      const isHeic =
-        item.file.name.toLowerCase().endsWith(".heic") ||
-        item.file.name.toLowerCase().endsWith(".heif");
-
-      if (isHeic) {
-        try {
-          const heic2any = (await import("heic2any")).default;
-          const result = await heic2any({
-            blob: item.file,
-            toType: "image/jpeg",
-            quality: 0.8,
-          });
-          const blob = Array.isArray(result) ? result[0] : result;
-          const url = URL.createObjectURL(blob);
-
-          setFiles((prev) =>
-            prev.map((p) =>
-              p.file === item.file ? { ...p, preview: url } : p
-            )
-          );
-        } catch (error) {
-          console.error("HEIC conversion failed:", error);
-          // Fallback to original file or generic icon could go here
-          // For now, let's keep it empty or try raw URL (which might not render)
-          setFiles((prev) =>
-             prev.map((p) =>
-               p.file === item.file ? { ...p, preview: URL.createObjectURL(item.file) } : p
-             )
-           );
-        }
-      }
-    });
-
-    mapped.forEach((f) => uploadFile(f));
   };
+
+  // HEIC previews are decoded in the browser, which is heavy — so it's done when a
+  // file starts uploading (a few at a time), not for every file in the drop at once
+  const loadHeicPreview = async (item: UploadFile) => {
+    try {
+      const heic2any = (await import("heic2any")).default;
+      const result = await heic2any({
+        blob: item.file,
+        toType: "image/jpeg",
+        quality: 0.8,
+      });
+      const blob = Array.isArray(result) ? result[0] : result;
+      const url = URL.createObjectURL(blob);
+
+      setFiles((prev) =>
+        prev.map((p) => (p.id === item.id ? { ...p, preview: url } : p))
+      );
+    } catch (error) {
+      console.error("HEIC conversion failed:", error);
+      // Fall back to the raw file URL (renders in Safari, blank elsewhere)
+      setFiles((prev) =>
+        prev.map((p) =>
+          p.id === item.id ? { ...p, preview: URL.createObjectURL(item.file) } : p
+        )
+      );
+    }
+  };
+
+  // Upload queue: start queued files whenever a slot frees up, instead of
+  // sending a whole drop of hundreds of files at once
+  useEffect(() => {
+    const inFlight = files.filter((f) => !IDLE_STAGES.includes(f.stage)).length;
+    const slots = MAX_PARALLEL_UPLOADS - inFlight;
+    if (slots <= 0) return;
+
+    // New drops are prepended, so the oldest queued files are at the end
+    const toStart = files
+      .filter((f) => f.stage === "queued")
+      .reverse()
+      .slice(0, slots)
+      .map((f) => ({ ...f, stage: "uploading", progress: 0, controller: new AbortController() }));
+    if (toStart.length === 0) return;
+
+    const startedById = new Map(toStart.map((f) => [f.id, f]));
+    setFiles((prev) =>
+      prev.map((p) => {
+        const started = startedById.get(p.id);
+        return started
+          ? { ...p, stage: started.stage, progress: 0, controller: started.controller }
+          : p;
+      })
+    );
+    toStart.forEach((f) => {
+      uploadFile(f);
+      if (!f.preview) loadHeicPreview(f);
+    });
+    // uploadFile/loadHeicPreview only use stable setters and the item passed in
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files]);
 
   const uploadFile = async (f: UploadFile) => {
     const formData = new FormData();
     formData.append("file", f.file);
 
+    // Each attempt has its own controller; ignore results of an older attempt that
+    // finishes after the user already retried
+    const isThisAttempt = (p: UploadFile) => p.id === f.id && p.controller === f.controller;
+
     try {
-      const response = await clientAxiosInstance.post(
-        `/channels/${STATIC_CHANNEL_ID}/media-upload`,
+      await clientAxiosInstance.post(
+        `/channels/${f.channelId}/media-upload`,
         formData,
         {
           signal: f.controller?.signal,
@@ -236,53 +255,75 @@ function GlobalUploaderInner({
             if (event.total) {
               const progress = Math.round((event.loaded * 100) / event.total);
               setFiles((prev) =>
-                prev.map((p) => (p.file === f.file ? { ...p, progress } : p))
+                prev.map((p) => (isThisAttempt(p) ? { ...p, progress } : p))
               );
             }
           },
         }
       );
 
-      // Proactively update the query cache to include the new items
-      const newUploads = response.data?.data;
-      if (Array.isArray(newUploads)) {
-        // Flatten the array of arrays (sentResults) and extract 'result' objects
-        const newMessages = newUploads
-          .flat()
-          .map((u: any) => u?.result)
-          .filter(Boolean);
-        
-        if (newMessages.length > 0) {
-          updateChannelCache(newMessages);
-        }
-      }
-
+      // The backend only answers 200 once the photo is saved to Telegram and the
+      // gallery (failures come back as 4xx/5xx), so the response is the source of truth
+      scheduleChannelRefresh(f.channelId);
       setFiles((prev) =>
-        prev.map((p) => {
-          if (p.file !== f.file) return p;
-          // If already done or error, don't overwrite with generic done
-          if (p.stage === "done" || p.stage === "error") return p;
-          // Backend now waits for Telegram upload, so 200 OK means done
-          return { ...p, stage: "done", progress: 100 };
-        })
+        prev.map((p) => (isThisAttempt(p) ? { ...p, stage: "done", progress: 100, error: undefined } : p))
       );
-    } catch (err) {
-      if (isCancel(err)) console.log("Upload cancelled:", f.file.name);
+    } catch (err: any) {
+      // Cancelled items were already removed from the list
+      if (isCancel(err)) return;
+      const message =
+        err?.response?.data?.message || err?.message || "Upload failed";
       setFiles((prev) =>
-        prev.map((p) => (p.file === f.file ? { ...p, stage: "error" } : p))
+        prev.map((p) => (isThisAttempt(p) ? { ...p, stage: "error", error: message } : p))
       );
     }
   };
 
-  const handleCancel = (file: File) => {
-    setFiles((prev) => prev.filter((p) => p.file !== file));
-    const f = files.find((p) => p.file === file);
-    f?.controller?.abort();
+  const handleRetry = (f: UploadFile) => {
+    // A socket error can arrive before the HTTP response — drop that old attempt
+    // so it can't overwrite the retry's state
+    f.controller?.abort();
+    // Back into the queue so retries also respect the upload limit
+    setFiles((prev) =>
+      prev.map((p) =>
+        p.id === f.id
+          ? { ...p, progress: 0, stage: "queued", error: undefined, controller: undefined }
+          : p
+      )
+    );
   };
+
+  const handleCancel = (id: string) => {
+    const f = files.find((p) => p.id === id);
+    f?.controller?.abort();
+    if (f?.preview) URL.revokeObjectURL(f.preview);
+    setFiles((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const handleClearAll = () => {
+    // Abort anything still in flight; queued files are simply dropped
+    files.forEach((f) => {
+      f.controller?.abort();
+      if (f.preview) URL.revokeObjectURL(f.preview);
+    });
+    setFiles([]);
+  };
+
+  // A batch can hold hundreds of files; rendering (and layout-animating) a row for
+  // each one would make every progress tick expensive. Show the most relevant ones.
+  const visibleFiles = useMemo(
+    () =>
+      [...files]
+        .sort((a, b) => stagePriority(a.stage) - stagePriority(b.stage))
+        .slice(0, MAX_VISIBLE_ROWS),
+    [files]
+  );
+  const hiddenCount = files.length - visibleFiles.length;
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     noClick: true,
     noKeyboard: true,
+    disabled: !STATIC_CHANNEL_ID,
     onDrop: handleDrop,
     accept: {
       "image/*": [],
@@ -339,16 +380,23 @@ function GlobalUploaderInner({
                 {(() => {
                   const total = files.filter(f => f.stage !== 'rejected').length;
                   const done = files.filter(f => f.stage === 'done').length;
-                  const inProgress = total > done;
+                  const failed = files.filter(f => f.stage === 'error').length;
+                  const inProgress = total > done + failed;
                   return (
                     <div className="flex items-center gap-1.5">
                       {inProgress && <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />}
                       <span className={`text-[13px] font-medium px-2 py-0.5 rounded-full ${
-                        inProgress 
-                          ? 'bg-blue-500/20 text-blue-300' 
+                        inProgress
+                          ? 'bg-blue-500/20 text-blue-300'
+                          : failed > 0
+                          ? 'bg-red-500/20 text-red-300'
                           : 'bg-green-500/20 text-green-400'
                       }`}>
-                        {inProgress ? `${done} / ${total}` : `${total} complete`}
+                        {inProgress
+                          ? `${done} / ${total}`
+                          : failed > 0
+                          ? `${failed} failed`
+                          : `${total} complete`}
                       </span>
                     </div>
                   );
@@ -365,9 +413,9 @@ function GlobalUploaderInner({
                   </motion.div>
                 </button>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); setFiles([]); }}
+                  onClick={(e) => { e.stopPropagation(); handleClearAll(); }}
                   className="p-1.5 hover:bg-white/10 rounded-full transition-colors text-white/40 hover:text-white"
-                  title="Close"
+                  title="Cancel remaining and close"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -388,7 +436,7 @@ function GlobalUploaderInner({
                   {/* List */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-none max-h-[55vh]">
                     <AnimatePresence initial={false}>
-                      {files.map((f) => (
+                      {visibleFiles.map((f) => (
                         <motion.div
                           key={f.id}
                           layout
@@ -433,7 +481,12 @@ function GlobalUploaderInner({
                           </div>
                         )}
 
-                        {(f.stage === "telegram" || f.stage === "processing" || f.stage === "converting") && (
+                        {f.stage === "queued" && (
+                          <span className="text-white/40 text-[11px] font-medium">Waiting…</span>
+                        )}
+
+                        {/* Any server-side stage (processing, converting, uploading to telegram, …) */}
+                        {!IDLE_STAGES.includes(f.stage) && f.stage !== "uploading" && (
                           <div className="flex items-center gap-1.5 text-yellow-500 text-[10px] font-semibold uppercase tracking-wider">
                             <span className="w-1 h-1 rounded-full bg-yellow-500 animate-pulse" />
                             Processing...
@@ -448,11 +501,13 @@ function GlobalUploaderInner({
                         )}
 
                         {f.stage === "error" && (
-                          <div className="flex items-center gap-2 text-red-400 text-[11px] font-medium">
-                            <span>Failed</span>
+                          <div className="flex items-center gap-2 text-red-400 text-[11px] font-medium min-w-0">
+                            <span className="truncate" title={f.error}>
+                              {f.error ? `Failed: ${f.error}` : "Failed"}
+                            </span>
                             <button
                               className="text-white/60 hover:text-white underline decoration-white/20 underline-offset-2"
-                              onClick={() => uploadFile(f)}
+                              onClick={() => handleRetry(f)}
                             >
                               Retry
                             </button>
@@ -468,7 +523,7 @@ function GlobalUploaderInner({
                     </div>
 
                     <button
-                      onClick={() => handleCancel(f.file)}
+                      onClick={() => handleCancel(f.id)}
                       className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 hover:bg-white/10 rounded-lg transition-all text-white/30 hover:text-white"
                     >
                       <X className="w-4 h-4" />
@@ -476,12 +531,17 @@ function GlobalUploaderInner({
                       </motion.div>
                     ))}
                   </AnimatePresence>
+                    {hiddenCount > 0 && (
+                      <p className="text-center text-white/40 text-[12px] py-1">
+                        + {hiddenCount} more
+                      </p>
+                    )}
                   </div>
 
                   {files.every(f => f.stage === 'done') && (
                     <div className="p-4 bg-white/5 border-t border-white/5">
-                      <button 
-                        onClick={() => setFiles([])}
+                      <button
+                        onClick={handleClearAll}
                         className="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-3 rounded-xl shadow-lg transition-all active:scale-[0.98]"
                       >
                         Clear and Close

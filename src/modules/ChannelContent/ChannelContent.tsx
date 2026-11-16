@@ -351,11 +351,11 @@ const ChannelContent = () => {
                     >
                       <MediaContent
                         item={stableItem}
+                        channelId={String(channelId)}
                         liveContentUrl={
                           liveContentUrls[item.messageId as any]
                         }
                         priority={item.originalIndex < 4}
-                        displayWidth={Math.round(item.displayWidth)}
                       />
                     </div>
                   </div>

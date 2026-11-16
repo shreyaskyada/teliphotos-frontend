@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Read our Privacy Policy to understand how Telephotos operates with a strict Zero Host policy and protects your personal data.',
+  description: 'Read our Privacy Policy to learn exactly what data Telephotos stores, why, for how long, and how we protect it.',
   openGraph: {
     images: [{ url: '/api/og?title=Privacy%20Policy', width: 1200, height: 630, alt: 'Privacy Policy' }],
     title: 'Privacy Policy',
-    description: 'Read our Privacy Policy to understand how Telephotos operates with a strict Zero Host policy and protects your personal data.',
+    description: 'Read our Privacy Policy to learn exactly what data Telephotos stores, why, for how long, and how we protect it.',
     url: 'https://telephotos.app/privacy',
   },
   twitter: {

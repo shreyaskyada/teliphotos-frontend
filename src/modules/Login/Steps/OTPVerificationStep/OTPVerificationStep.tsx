@@ -5,10 +5,11 @@ import { MessageSquare, RefreshCw } from "lucide-react";
 import React from "react";
 import { useOTPVerificationStep } from "./useOTPVerificationStep";
 
-const OtpVerificationStep: React.FC = () => {
+const OtpVerificationStep: React.FC<{ isActive: boolean }> = ({ isActive }) => {
   const {
     otpCode,
     isLoading,
+    isResending,
     error,
     countdown,
     otpRefs,
@@ -17,7 +18,7 @@ const OtpVerificationStep: React.FC = () => {
     handleOtpPaste,
     handleResendCode,
     phoneNumber,
-  } = useOTPVerificationStep();
+  } = useOTPVerificationStep(isActive);
 
   return (
     <div>
@@ -87,10 +88,11 @@ const OtpVerificationStep: React.FC = () => {
           ) : (
             <button
               onClick={handleResendCode}
-              className="text-sm text-violet-400 hover:text-violet-300 font-medium flex items-center space-x-2 mx-auto"
+              disabled={isResending}
+              className="text-sm text-violet-400 hover:text-violet-300 font-medium flex items-center space-x-2 mx-auto disabled:opacity-50"
             >
-              <RefreshCw className="w-4 h-4" />
-              <span>Resend verification code</span>
+              <RefreshCw className={`w-4 h-4 ${isResending ? "animate-spin" : ""}`} />
+              <span>{isResending ? "Sending..." : "Resend verification code"}</span>
             </button>
           )}
 
