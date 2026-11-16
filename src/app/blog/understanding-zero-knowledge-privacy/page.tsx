@@ -24,25 +24,25 @@ export default function BlogPost3() {
                 In an era dominated by massive data breaches and algorithmic surveillance, privacy is a luxury. When you upload photos to most cloud galleries, their algorithms immediately scan the contents—finding faces, mapping locations, categorizing objects to "improve search" but at the cost of your absolute privacy. 
             </p>
             <p>
-                Zero-knowledge architecture means the service provider has no way to see what you store. But how does Telephotos achieve this while offering lightning-fast gallery grids? Let's explore the underlying technology.
+                A true zero-knowledge service encrypts your files on your own device with a key only you hold, so the provider has no way to see what you store. It is the strongest privacy model there is, and you deserve to know exactly which services offer it and which do not. Here is an honest look at where Telephotos stands.
             </p>
 
-            <h2>Acting as a Stateless Tunnel</h2>
+            <h2>Telephotos Is Not Zero-Knowledge</h2>
             <p>
-                When you load Telephotos in your browser, our backend does not host the images or videos you see. Our application acts exclusively as a secure, fast, sophisticated viewer on top of your existing Telegram account.
+                We want to be upfront: Telephotos is not a zero-knowledge or end-to-end encrypted service, and neither are Telegram&apos;s cloud channels. Telegram encrypts cloud data between your device and its servers and stores it encrypted, but Telegram manages those keys. End-to-end encryption on Telegram only applies to Secret Chats, which cannot hold channel albums.
             </p>
             <p>
-                Unlike traditional website galleries that store the .jpeg file in their own AWS S3 Buckets, Telephotos holds nothing in its database. When you authenticate using your Telegram number, a secure session token is placed onto your browser. Whenever you click on a channel album, your own local device directly talks to Telegram's decentralized network of datacenters. Telephotos' intermediate severs strictly bounce those optimized UDP packets.
-            </p>
-            
-            <h2>Decentralized Protection</h2>
-            <p>
-                As a user, you rely on the world-class MTProto encryption protocol developed by Telegram. Since Telegram itself secures billions of messages daily against sophisticated hacking attempts, your personal cloud albums inherit the identical level of military-grade protection. By establishing a private channel and uploading photos to it through our platform, the only person with the decryption keys is you upon your successful SMS authentication. 
+                Telephotos also needs a Telegram login session to work. Like logging in to Telegram on a new device, this session lets our servers upload, list, and load the media in the channels you use with Telephotos. We store that session encrypted, use it only for those channels, and you can revoke it at any time from Telegram &rarr; Settings &rarr; Devices.
             </p>
 
-            <h2>Why Traditional Photos Apps Will Not Follow Suit</h2>
+            <h2>What We Actually Store</h2>
             <p>
-                Tech giants make money primarily by scanning your metadata to serve tailored advertisements across their network. Offering true zero-knowledge privacy destroys that business model. Telephotos, conversely, functions entirely as an independent interface provider. We do not want your data, we have no desire to scan it, and most critically, our technical architecture mathematically prevents us from doing so even if we were coerced.
+                Your original photos and videos live permanently in your own Telegram channels, not on our servers. When you upload, the file passes through our server on its way to Telegram and the temporary copy is deleted as soon as the upload finishes. To keep the gallery fast, we cache small preview thumbnails for about an hour, then delete them automatically. Beyond that, our database holds only what the gallery needs: your account identifiers, channel details, and file references such as message IDs and dimensions.
+            </p>
+
+            <h2>What We Will Never Do</h2>
+            <p>
+                Tech giants make money primarily by scanning your photos and metadata to build advertising profiles. We don&apos;t. Telephotos is funded by ads, but those ads are never based on the content of your photos. Nobody at Telephotos browses your media, we never sell your data, and we never use your photos to train AI. For the complete details, read our <Link href="/privacy">Privacy Policy</Link>.
             </p>
         </article>
       </main>

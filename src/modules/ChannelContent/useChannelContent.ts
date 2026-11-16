@@ -1,6 +1,8 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useDeleteMedia, useGetChannelContent } from "@telephotos/services";
+import { refreshChannelFirstPage } from "@telephotos/services/channels";
 import { getPhotoVideoThumbnailURL } from "@telephotos/services/media";
 import { useParams } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
@@ -17,6 +19,7 @@ export const useChannelContent = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { channelId } = useParams();
+  const queryClient = useQueryClient();
 
   const { mutate: deleteMediaMutation, isPending: isDeleting } =
     useDeleteMedia();
@@ -60,12 +63,15 @@ export const useChannelContent = () => {
           if (refetchTimerRef.current) clearTimeout(refetchTimerRef.current);
           
           refetchTimerRef.current = setTimeout(() => {
-            refetchMessages();
+            // Only the newest page can contain new uploads
+            refreshChannelFirstPage(queryClient, channelId as string).catch((error) =>
+              console.error("Failed to refresh channel content:", error)
+            );
             refetchTimerRef.current = null;
-          }, 1500); 
+          }, 1500);
         }
       }
-    }, [messages?.media, refetchMessages])
+    }, [messages?.media, queryClient, channelId])
   );
 
   const itemCacheRef = useRef<Map<string, RenderItem>>(new Map());

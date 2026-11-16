@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { ProgressIndicator } from "./ProgressIndicator";
 import { PhoneNumberStep } from "./Steps";
@@ -75,10 +76,19 @@ const Login = () => {
                     : "opacity-0 translate-x-8 absolute top-0 left-0 px-6 sm:px-10 pointer-events-none"
                 }`}
               >
-                <OTPVerificationStep />
+                <OTPVerificationStep isActive={loginStep === "otp"} />
               </div>
             </div>
           </div>
+
+          <p className="mt-5 px-2 text-center text-xs leading-relaxed text-slate-500">
+            By continuing, you agree to our{" "}
+            <Link href="/terms" className="text-slate-400 underline hover:text-white transition-colors">Terms of Service</Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-slate-400 underline hover:text-white transition-colors">Privacy Policy</Link>.
+            Logging in adds a Telegram session for Telephotos, which you can end anytime from Telegram &rarr; Settings &rarr; Devices.
+            Telephotos is an independent app and is not affiliated with Telegram.
+          </p>
         </div>
       </div>
     </div>

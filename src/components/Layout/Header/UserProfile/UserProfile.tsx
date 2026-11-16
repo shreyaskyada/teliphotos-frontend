@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { logout } from "@telephotos/app/login/actions";
 import {
   Avatar,
@@ -17,10 +18,13 @@ import useUserProfile from "./useUserProfile";
 
 const UserProfile: React.FC = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isLoading } = useUserProfile();
 
   const handleLogout = async () => {
     await logout();
+    // Drop cached profile/channels/media so the next user never sees them
+    queryClient.clear();
     router.push("/login");
   };
 

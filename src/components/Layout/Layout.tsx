@@ -7,9 +7,10 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { LayoutProps } from "./types";
 
-const queryClient = new QueryClient();
-
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  // One client per mount — a module-level client would be shared across
+  // server requests (and users) during SSR
+  const [queryClient] = useState(() => new QueryClient());
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleToggleSidebar = () => {

@@ -29,7 +29,7 @@ export default function BlogPost() {
                 MTProto is the proprietary security protocol developed alongside Telegram. It was built with one primary goal: blazing fast speed combined with military-grade security on weak mobile connections. It features 256-bit symmetric AES encryption, RSA 2048 encryption, and Diffie–Hellman secure key exchange.
             </p>
             <p>
-                When you use a platform like Telephotos, you are utilizing this exact infrastructure. As you drag a photo onto our dashboard to upload it into a private channel, the file is immediately chunked and encrypted with MTProto before it even reaches a destination server. 
+                When you use a platform like Telephotos, you are utilizing this exact infrastructure. As you drag a photo onto our dashboard to upload it into a private channel, it travels over encrypted HTTPS to our upload server, which immediately chunks it and sends it on to Telegram encrypted with MTProto.
             </p>
 
             <h2>The Difference Between Transport and Rest Encryption</h2>

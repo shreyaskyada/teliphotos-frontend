@@ -23,7 +23,7 @@ const posts = [
     title: "Understanding Zero-Knowledge Privacy in Cloud Storage",
     slug: "understanding-zero-knowledge-privacy",
     date: "February 15, 2024",
-    excerpt: "What does zero-knowledge architecture actually mean? Learn how Telephotos keeps your data safe by acting purely as a secure frontend to your encrypted Telegram channels.",
+    excerpt: "What does zero-knowledge architecture actually mean? An honest look at what it guarantees, why Telephotos isn't zero-knowledge, and exactly what we do and don't store.",
     readTime: "7 min read",
   },
   {

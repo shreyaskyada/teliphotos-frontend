@@ -27,6 +27,10 @@ export function PublicFooter() {
           &copy; {new Date().getFullYear()} Telephotos. All rights reserved.
         </div>
       </div>
+
+      <p className="max-w-7xl mx-auto mt-8 text-xs text-slate-500 text-center md:text-left">
+        Telephotos is an independent, unofficial app built on the Telegram API. It is not affiliated with, endorsed by, or sponsored by Telegram. &quot;Telegram&quot; is a trademark of its respective owner.
+      </p>
     </footer>
   );
 }

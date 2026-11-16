@@ -1,6 +1,6 @@
 "use client";
 
-import { getPhotoVideoThumbnailURL } from "@telephotos/services/media";
+import { getPhotoStreamURL, getPhotoVideoThumbnailURL, getVideoStreamURL } from "@telephotos/services/media";
 import { Button } from "@telephotos/ui";
 import {
     ArrowLeft,
@@ -27,18 +27,6 @@ import { AdBanner728x90Carousel } from "../../components/AdBanner728x90Carousel"
 import type { MediaViewerProps } from "./types";
 import { useMediaViewer } from "./useMediaViewer";
 
-// Helper function to get access token from cookies
-const getToken = (): string => {
-  if (typeof document === "undefined") return "";
-
-  const accessToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("telephotos_access_token="))
-    ?.split("=")[1];
-
-  return accessToken || "";
-};
-
 const MediaViewer = ({
   items,
   startIndex,
@@ -64,6 +52,7 @@ const MediaViewer = ({
     zoomState,
     goPrev,
     goNext,
+    goTo,
     resetZoom,
     zoomIn,
     zoomOut,
@@ -326,11 +315,7 @@ const MediaViewer = ({
               {/* Main high-quality image */}
               <Image
                 ref={mediaRef as unknown as React.RefObject<HTMLImageElement>}
-                src={`${
-                  process.env.NEXT_PUBLIC_BASE_BACKEND_URL
-                }/channels/stream/photos/${channelId}/${
-                  current.messageId
-                }?token=${getToken()}`}
+                src={getPhotoStreamURL(channelId as string, current.messageId)}
                 alt="Photo"
                 width={current.width || 1600}
                 height={current.height || 1200}
@@ -350,7 +335,7 @@ const MediaViewer = ({
             <div className="relative w-full h-full flex items-center justify-center">
               <video
                 ref={mediaRef as unknown as React.RefObject<HTMLVideoElement>}
-                src={`${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/videos/stream/${channelId}/${current.messageId}`}
+                src={getVideoStreamURL(channelId as string, current.messageId)}
                 poster={getPhotoVideoThumbnailURL(
                   channelId as string,
                   current.messageId
@@ -598,8 +583,7 @@ const MediaViewer = ({
               <button
                 key={item.id}
                 onClick={() => {
-                  // setIndex(idx);
-                  setIsLoaded(false);
+                  if (idx !== index) goTo(idx);
                 }}
                 className={`relative flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                   idx === index

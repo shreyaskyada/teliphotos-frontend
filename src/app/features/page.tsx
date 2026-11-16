@@ -34,11 +34,11 @@ export default function FeaturesPage() {
             />
 
             <FeatureSection 
-                title="2. Absolute Zero-Knowledge Privacy"
+                title="2. Privacy You Can Verify"
                 description={
                     <>
-                        <p>Unlike standard cloud galleries that index your images on their servers for varied purposes like ad-targeting or AI training, Telephotos is architectured so that your files never rest on our databases. We believe that your private photos should remain strictly private.</p>
-                        <p>Our application acts exclusively as a secure frontend tunnel. When a file is uploaded, it is channeled directly to your Telegram 'Saved Messages' or private 'Channel'. The media is entirely encrypted by Telegram's MTProto protocol, and only you hold the keys via your phone number. Because we do not store the images, we physically cannot access them, ensuring total confidentiality.</p>
+                        <p>Unlike standard cloud galleries that index your images on their servers for varied purposes like ad-targeting or AI training, Telephotos never keeps permanent copies of your files. We never scan your photos for advertising and never use them to train AI. We believe that your private photos should remain strictly private.</p>
+                        <p>When a file is uploaded, it passes through our server and goes straight to your private Telegram channel, where it is protected by Telegram's MTProto encryption. Temporary upload files are deleted as soon as the upload finishes, and preview thumbnails are cached for only about an hour. Your Telegram login session is stored encrypted, and you can revoke it anytime from Telegram → Settings → Devices. Our Privacy Policy lists exactly what we store and why.</p>
                     </>
                 }
                 icon={<ShieldCheck className="w-10 h-10 text-emerald-400" />}

@@ -1,4 +1,4 @@
-import { verifyOtp } from "@telephotos/services";
+import { sendOTPToPhoneNumber, verifyOtp } from "@telephotos/services";
 import {
     LOGIN_OTP_SESSION_ID_KEY,
     LOGIN_PHONE_NUMBER_KEY,
@@ -6,18 +6,31 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-export const useOTPVerificationStep = () => {
+const RESEND_COUNTDOWN_SECONDS = 60;
+
+export const useOTPVerificationStep = (isActive: boolean) => {
   const [otpCode, setOtpCode] = useState(["", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState("");
-  const [countdown, setCountdown] = useState(60);
+  const [countdown, setCountdown] = useState(RESEND_COUNTDOWN_SECONDS);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const router = useRouter(); // ✅ app router navigation
 
+  // This step is mounted (hidden) from the start, so read the phone number and
+  // restart the countdown only once the user actually reaches it.
   useEffect(() => {
+    if (!isActive) return;
     setPhoneNumber(sessionStorage.getItem(LOGIN_PHONE_NUMBER_KEY));
-  }, []);
+    setCountdown(RESEND_COUNTDOWN_SECONDS);
+  }, [isActive]);
+
+  useEffect(() => {
+    if (!isActive || countdown <= 0) return;
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [isActive, countdown]);
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length <= 1 && /^\d*$/.test(value)) {
@@ -104,7 +117,7 @@ export const useOTPVerificationStep = () => {
         response.data.refreshToken
       }; path=/; max-age=${40 * 24 * 60 * 60}; samesite=lax`;
 
-      router.push("dashboard");
+      router.push("/dashboard");
     } catch {
       setError("Please enter valid OTP.");
     } finally {
@@ -112,16 +125,43 @@ export const useOTPVerificationStep = () => {
     }
   };
 
-  const handleResendCode = () => {
-    setCountdown(60);
+  const handleResendCode = async () => {
+    const finalPhoneNumber =
+      sessionStorage.getItem(LOGIN_PHONE_NUMBER_KEY) || phoneNumber;
+
+    if (!finalPhoneNumber) {
+      setError("Session expired or missing phone number. Please refresh and try again.");
+      return;
+    }
+
     setOtpCode(["", "", "", "", ""]);
     setError("");
-    setTimeout(() => otpRefs.current[0]?.focus(), 100);
+
+    try {
+      setIsResending(true);
+      const { data } = await sendOTPToPhoneNumber(finalPhoneNumber);
+      // The previous phoneCodeHash is invalidated by a new code
+      sessionStorage.setItem(
+        LOGIN_OTP_SESSION_ID_KEY,
+        data.phoneCodeHash.phoneCodeHash
+      );
+      setCountdown(RESEND_COUNTDOWN_SECONDS);
+      setTimeout(() => otpRefs.current[0]?.focus(), 100);
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Failed to resend code. Please try again."
+      );
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return {
     otpCode,
     isLoading,
+    isResending,
     error,
     countdown,
     otpRefs,

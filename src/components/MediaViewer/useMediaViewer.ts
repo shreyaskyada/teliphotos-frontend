@@ -78,6 +78,21 @@ export const useMediaViewer = ({
     });
   }, []);
 
+  const goTo = useCallback(
+    (target: number) => {
+      if (target < 0 || target >= items.length) return;
+      setIndex(target);
+      setIsLoaded(false);
+      setZoomState({
+        scale: 1,
+        translateX: 0,
+        translateY: 0,
+        isZooming: false,
+      });
+    },
+    [items.length]
+  );
+
   const resetZoom = useCallback(() => {
     setZoomState({
       scale: 1,
@@ -275,6 +290,7 @@ export const useMediaViewer = ({
     gestureState,
     goPrev,
     goNext,
+    goTo,
     resetZoom,
     zoomIn,
     zoomOut,

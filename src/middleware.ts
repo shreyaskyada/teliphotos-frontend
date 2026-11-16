@@ -46,7 +46,7 @@ export async function middleware(req: NextRequest) {
   if (isLoginPage && !accessToken && refreshToken) {
     try {
       const refreshResponse = await fetch(
-        "http://localhost:5001/refresh-access-token",
+        `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/refresh-access-token`,
         {
           method: "POST",
           credentials: "include",
@@ -124,7 +124,7 @@ export async function middleware(req: NextRequest) {
       console.info("🔄 Attempting to refresh access token...");
 
       const refreshResponse = await fetch(
-        "http://localhost:5001/refresh-access-token",
+        `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}/refresh-access-token`,
         {
           method: "POST",
           credentials: "include",

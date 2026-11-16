@@ -9,14 +9,11 @@ export function AdSenseRenderer() {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    // Determine if we should load ads globally based on pathname
-    if (pathname === "/login") {
-      setShouldLoad(false);
-    } else if (pathname === "/dashboard") {
-      // Empty dashboard default screen -> no meaningful content
+    // AdSense only runs on public pages. The dashboard shows users' private photos,
+    // which isn't publisher content and can't be reviewed for AdSense policy compliance.
+    if (pathname === "/login" || pathname.startsWith("/dashboard")) {
       setShouldLoad(false);
     } else {
-      // For all public pages and specific dashboard sub-channels (if they have content)
       setShouldLoad(true);
     }
   }, [pathname]);
